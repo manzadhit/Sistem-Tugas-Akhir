@@ -6,6 +6,6 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Welcome</h1>
+  <h1>Dashboard Mahasiswa</h1>
 </body>
 </html>

@@ -1,15 +1,28 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+Route::middleware("auth")->get('/', function () {
+    $user = auth()->user();
+
+    if(!$user) {
+        return redirect()->route("login");
+    }
+
+    return redirect()->route("dashboard");
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->get("/dashboard", function () {
+    return match (auth()->user()->role) {
+        "mahasiswa" => redirect()->route('mahasiswa.dashboard'),
+        "dosen" => redirect()->route('dosen.dashboard'),
+        "kajur" => redirect()->route('kajur.dashboard'),
+        "admin" => redirect()->route('admin.dashboard'),
+        default => redirect('/'),
+    };
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
