@@ -1,11 +1,12 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware("auth")->get('/', function () {
-    $user = auth()->user();
+    $user = Auth::user();
 
     if(!$user) {
         return redirect()->route("login");
@@ -15,12 +16,12 @@ Route::middleware("auth")->get('/', function () {
 });
 
 Route::middleware('auth')->get("/dashboard", function () {
-    return match (auth()->user()->role) {
+    return match (Auth::user()->role) {
         "mahasiswa" => redirect()->route('mahasiswa.dashboard'),
         "dosen" => redirect()->route('dosen.dashboard'),
         "kajur" => redirect()->route('kajur.dashboard'),
         "admin" => redirect()->route('admin.dashboard'),
-        default => redirect('/'),
+        default => abort(403),
     };
 })->name('dashboard');
 

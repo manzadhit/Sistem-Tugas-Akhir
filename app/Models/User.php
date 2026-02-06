@@ -18,9 +18,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'username',
+        'email',
         'password',
         'role'
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -42,5 +44,16 @@ class User extends Authenticatable
         return [
             'password' => 'hashed',
         ];
+    }
+
+
+    public function profileMahasiswa()
+    {
+        return $this->hasOne(ProfileMahasiswa::class, 'user_id');
+    }
+
+    public function profileDosen()
+    {
+        return $this->hasOne(ProfileDosen::class, 'user_id');
     }
 }
