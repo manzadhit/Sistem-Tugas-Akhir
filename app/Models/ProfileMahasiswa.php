@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProfileMahasiswa extends Model
 {
@@ -25,8 +24,22 @@ class ProfileMahasiswa extends Model
         'status_akademik',
     ];
 
+    protected $casts = [
+        'ipk' => 'decimal:2',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function dosenPembimbing()
+    {
+        return $this->hasMany(DosenPembimbing::class, 'mahasiswa_id');
+    }
+
+    public function dosenPenguji()
+    {
+        return $this->hasMany(DosenPenguji::class, 'mahasiswa_id');
     }
 }

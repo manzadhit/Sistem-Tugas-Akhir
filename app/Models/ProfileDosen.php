@@ -27,4 +27,14 @@ class ProfileDosen extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function pembimbingMahasiswa()
+    {
+        return $this->hasMany(DosenPembimbing::class, 'dosen_id');
+    }
+
+    public function pengujiMahasiswa()
+    {
+        return $this->hasMany(DosenPenguji::class, 'dosen_id');
+    }
 }
