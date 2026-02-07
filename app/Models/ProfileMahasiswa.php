@@ -33,6 +33,11 @@ class ProfileMahasiswa extends Model
         return $this->belongsTo(User::class, 'user_id');
     }
 
+    public function tugasAkhir()
+    {
+        return $this->hasOne(TugasAkhir::class, 'mahasiswa_id');
+    }
+
     public function dosenPembimbing()
     {
         return $this->hasMany(DosenPembimbing::class, 'mahasiswa_id');
@@ -41,5 +46,10 @@ class ProfileMahasiswa extends Model
     public function dosenPenguji()
     {
         return $this->hasMany(DosenPenguji::class, 'mahasiswa_id');
+    }
+
+    public function permintaanPembimbing()
+    {
+        return $this->hasOne(PermintaanPembimbing::class, 'mahasiswa_id');
     }
 }
