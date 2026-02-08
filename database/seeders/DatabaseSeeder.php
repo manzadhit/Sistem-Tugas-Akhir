@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\DosenPembimbing;
 use App\Models\User;
 use App\Models\ProfileDosen;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -17,5 +18,6 @@ class DatabaseSeeder extends Seeder
     {
         ProfileMahasiswa::factory(5)->create();
         ProfileDosen::factory(5)->create();
+        DosenPembimbing::factory(2)->create();
     }
 }

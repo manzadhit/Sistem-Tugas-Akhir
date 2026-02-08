@@ -20,6 +20,8 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->timestamp('diproses_pada')->nullable();
             $table->timestamps();
+
+            $table->unique('mahasiswa_id');
         });
     }
 

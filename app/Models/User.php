@@ -56,4 +56,24 @@ class User extends Authenticatable
     {
         return $this->hasOne(ProfileDosen::class, 'user_id');
     }
+
+    public function getDisplayNameAttribute()
+    {
+        return match ($this->role) {
+            'mahasiswa' => $this->profileMahasiswa?->nama_lengkap ?? $this->username,
+            'dosen', 'kajur' => $this->profileDosen?->nama_lengkap ?? $this->username,
+            'admin' => $this->username,
+            default => $this->username,
+        };
+    }
+
+    public function getDisplaySubtitleAttribute()
+    {
+        return match ($this->role) {
+            'mahasiswa' => $this->profileMahasiswa?->nim,
+            'dosen', 'kajur' => $this->profileDosen?->nidn,
+            'admin' => $this->email,
+            default => null,
+        };
+    }
 }

@@ -16,8 +16,10 @@ Route::middleware("auth")->get('/', function () {
 });
 
 Route::middleware('auth')->get("/dashboard", function () {
-    return match (Auth::user()->role) {
-        "mahasiswa" => redirect()->route('mahasiswa.dashboard'),
+    $user = Auth::user();
+
+    return match ($user->role) {
+        "mahasiswa" => $user->profileMahasiswa?->dosenPembimbing()->exists() ? redirect()->route('mahasiswa.dashboard') : redirect()->route('mahasiswa.permintaan-pembimbing.create'),
         "dosen" => redirect()->route('dosen.dashboard'),
         "kajur" => redirect()->route('kajur.dashboard'),
         "admin" => redirect()->route('admin.dashboard'),
