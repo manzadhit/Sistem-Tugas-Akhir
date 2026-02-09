@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('jurusan');
             $table->string('program_studi');
             $table->string('keahlian');
+            $table->string('jabatan_fungsional');
             $table->string('foto')->nullable();
             $table->string('no_telp')->nullable();
             $table->timestamps();
