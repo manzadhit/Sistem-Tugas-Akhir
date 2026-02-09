@@ -17,18 +17,25 @@
     rel="stylesheet">
 </head>
 
-<body class="min-h-screen bg-slate-50 text-slate-900 font-sans">
-  <x-header />
+<body class="min-h-screen bg-[#f3f4f6] text-slate-900 font-sans">
+  @include('partials.header')
 
-  <main class="max-w-6xl mx-auto px-4 md:px-6 pt-24 pb-8">
-    @if (session('success'))
-      <div class="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
-        {{ session('success') }}
-      </div>
+  <div class="flex min-h-screen pt-[73px]">
+    @hasSection('sidebar')
+      {{-- Sidebar --}}
+      @yield('sidebar')
+
+      {{-- Main Content (with sidebar offset) --}}
+      <main class="flex-1 px-4 md:px-8 py-8">
+        @yield('content')
+      </main>
+    @else
+      {{-- Main Content (full width, no sidebar) --}}
+      <main class="flex-1 px-4 md:px-6 py-8">
+        @yield('content')
+      </main>
     @endif
-
-    @yield('content')
-  </main>
+  </div>
 </body>
 
 </html>

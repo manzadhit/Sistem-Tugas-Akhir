@@ -9,7 +9,7 @@
     @click="open = !open"
     :aria-expanded="open.toString()"
   >
-    <span class="hidden md:block text-sm font-medium">Hi, {{ $name }}</span>
+    <span class="hidden md:block text-sm">Hi, {{ $name }}</span>
     <i class="far fa-user-circle text-xl"></i>
     <i class="fas fa-chevron-down text-xs transition" :class="open ? 'rotate-180' : ''"></i>
   </button>
