@@ -3,16 +3,7 @@
 @section('title', 'Dashboard Ketua Jurusan')
 
 @section('sidebar')
-  <x-role-sidebar title="Ketua Jurusan" subtitle="Informatika" :items="[
-      [
-          'href' => route('kajur.dashboard'),
-          'icon' => 'fas fa-chart-line',
-          'label' => 'Dashboard',
-          'active' => request()->routeIs('kajur.dashboard'),
-      ],
-      ['href' => '#', 'icon' => 'fas fa-user-plus', 'label' => 'Permintaan Pembimbing'],
-      ['href' => '#', 'icon' => 'fas fa-clipboard-check', 'label' => 'Permintaan Penguji'],
-  ]" />
+  @include('kajur.sidebar')
 @endsection
 
 @section('content')

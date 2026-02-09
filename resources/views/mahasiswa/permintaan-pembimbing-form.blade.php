@@ -3,6 +3,12 @@
 @section('title', 'Pengajuan Dosen Pembimbing')
 
 @section('content')
+  @if (session('warning'))
+    <div class="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+      {{ session('warning') }}
+    </div>
+  @endif
+  
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
     <div>
       <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">

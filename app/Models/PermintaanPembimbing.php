@@ -16,6 +16,7 @@ class PermintaanPembimbing extends Model
         'judul_ta',
         'bukti_acc_path',
         'status',
+        'status_verifikasi_bukti',
         'catatan',
         'diproses_pada',
     ];

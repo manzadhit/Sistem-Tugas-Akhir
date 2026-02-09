@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('judul_ta');
             $table->string('bukti_acc_path');
             $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
-            $table->enum('status_verifikasi_acc', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->enum('status_verifikasi_bukti', ['pending', 'disetujui', 'ditolak'])->default('pending');
             $table->text('catatan')->nullable();
             $table->timestamp('diproses_pada')->nullable();
             $table->timestamps();

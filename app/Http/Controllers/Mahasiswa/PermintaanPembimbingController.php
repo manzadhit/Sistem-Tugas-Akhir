@@ -44,7 +44,9 @@ class PermintaanPembimbingController extends Controller
             Storage::disk('public')->delete($existing->bukti_acc_path);
         }
 
-        $path = $request->file('bukti_acc')->store('bukti-acc', 'public');
+        $file = $request->file('bukti_acc');
+        $filename = "{$mahasiswa->nim}_bukti_acc_judul.{$file->extension()}";
+        $path = $file->storeAs('bukti-acc', $filename, 'public');
 
         PermintaanPembimbing::updateOrCreate(
             ['mahasiswa_id' => $mahasiswa->id],

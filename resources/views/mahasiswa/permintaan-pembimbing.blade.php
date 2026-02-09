@@ -22,10 +22,8 @@
       </p>
 
       <div class="mt-6">
-        <a
-          href="{{ route('mahasiswa.permintaan-pembimbing.create') }}"
-          class="inline-flex items-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
-        >
+        <a href="{{ route('mahasiswa.permintaan-pembimbing.create') }}"
+          class="inline-flex items-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
           Cek Sekarang
         </a>
       </div>

@@ -19,6 +19,7 @@ class ProfileDosen extends Model
         'jurusan',
         'program_studi',
         'keahlian',
+        'jabatan_fungsional',
         'foto',
         'no_telp'
     ];
