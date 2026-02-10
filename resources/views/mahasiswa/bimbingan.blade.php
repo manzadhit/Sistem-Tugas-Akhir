@@ -52,8 +52,16 @@
     </div>
   </div>
 
+  <!-- Flash Messages -->
+  <x-alert type="success" />
+  <x-alert type="error" />
+  <x-alert type="warning" />
+
   <!-- Upload Form Card -->
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+  <form action="{{ route('mahasiswa.bimbingan.createSubmission') }}" method="POST" enctype="multipart/form-data"
+    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+    @csrf
+
     <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
       <h3 class="text-lg font-semibold text-gray-900">Upload Laporan Bimbingan</h3>
     </div>
@@ -63,12 +71,11 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Kirim ke Pembimbing <span class="text-red-600">*</span>
         </label>
-        <select
-          class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400"
-          id="selectPembimbing">
+        <select name="pembimbing"
+          class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400">
           <option value="">-- Pilih Pembimbing --</option>
           @foreach ($pembimbing as $index => $p)
-            <option value="{{ $p->dosen->nama_lengkap }}">
+            <option value="{{ $p->id }}">
               {{ 'Pembimbing ' . $index + 1 . ' - ' . $p->dosen->nama_lengkap }}
             </option>
           @endforeach
@@ -113,8 +120,8 @@
             atau beberapa BAB sekaligus
           </p>
         </div>
-        <input type="file" x-ref="fileInput" @change="handleFiles($event.target.files)" class="hidden"
-          accept=".pdf,.doc,.docx" multiple />
+        <input type="file" name="file_submission[]" x-ref="fileInput" @change="handleFiles($event.target.files)"
+          class="hidden" accept=".pdf,.doc,.docx" multiple />
 
         <!-- Selected Files -->
         <div class="mb-6" x-show="files.length > 0">
@@ -159,14 +166,14 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
-        <button
+        <button type="submit"
           class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium cursor-pointer transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed">
           <i class="fas fa-paper-plane"></i>
           Upload & Kirim
         </button>
       </div>
     </div>
-  </div>
+  </form>
 
   <!-- History Section -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
@@ -371,11 +378,19 @@
               return;
             }
 
+            const isDuplicate = this.files.some(existingFile =>
+              existingFile.name === file.name &&
+              existingFile.size === file.size &&
+              existingFile.lastModified === file.lastModified
+            );
+
+            if (isDuplicate) {
+              return;
+            }
+
             this.files.push(file);
           });
-
-          // Reset input agar file yang sama bisa diupload lagi setelah dihapus
-          this.$refs.fileInput.value = '';
+          this.syncInputFiles();
         },
 
         handleDrop(e) {
@@ -386,6 +401,7 @@
 
         removeFile(index) {
           this.files.splice(index, 1);
+          this.syncInputFiles();
         },
 
         viewFile(file) {
@@ -405,6 +421,16 @@
 
         formatFileSize(bytes) {
           return (bytes / 1024 / 1024).toFixed(2) + ' MB';
+        },
+
+        syncInputFiles() {
+          const dataTransfer = new DataTransfer();
+
+          this.files.forEach(file => {
+            dataTransfer.items.add(file);
+          });
+
+          this.$refs.fileInput.files = dataTransfer.files;
         }
       }
     }

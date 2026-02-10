@@ -14,5 +14,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
     Route::get('/bimbingan', [BimbinganController::class, 'index'])->name('bimbingan.index');
+
+    Route::post('/bimbingan/createSubmission', [BimbinganController::class, 'createSubmission'])->name('bimbingan.createSubmission');
   });
 });
