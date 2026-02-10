@@ -1,8 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Mahasiswa\BimbinganController;
 use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\PermintaanPembimbingController;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
   // Permintaan Pembimbing
@@ -11,5 +12,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
   Route::middleware('has.pembimbing')->group(function () {
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
+
+    Route::get('/bimbingan', [BimbinganController::class, 'index'])->name('bimbingan.index');
   });
 });
