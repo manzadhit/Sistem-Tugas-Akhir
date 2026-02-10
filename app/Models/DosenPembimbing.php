@@ -35,4 +35,9 @@ class DosenPembimbing extends Model
     {
         return $this->belongsTo(ProfileDosen::class, 'dosen_id');
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'dosen_pembimbing_id');
+    }
 }

@@ -21,8 +21,13 @@ class TugasAkhir extends Model
         'status',
     ];
 
-    public function mahasiswa(): BelongsTo
+    public function mahasiswa()
     {
         return $this->belongsTo(ProfileMahasiswa::class, 'mahasiswa_id');
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class, 'tugas_akhir_id');
     }
 }
