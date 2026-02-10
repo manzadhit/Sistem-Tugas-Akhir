@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
+use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,9 +17,12 @@ class DashboardController extends Controller
             abort(403, 'Profile mahasiswa belum lengkap.');
         }
 
+        $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->first();
+
+
         $dosenPembimbing = DosenPembimbing::with('dosen')->where('mahasiswa_id', $mahasiswa->id)->where('status_aktif', true)->orderby('jenis_pembimbing')->get();
 
 
-        return view('mahasiswa.dashboard', compact('dosenPembimbing'));
+        return view('mahasiswa.dashboard', compact('dosenPembimbing', 'tugasAkhir'));
     }
 }

@@ -21,7 +21,7 @@
       <h3 class="flex items-center gap-2 font-semibold text-slate-900">
         <i class="fas fa-user-graduate text-blue-600"></i> Profil Mahasiswa
       </h3>
-      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap: Proposal</span>
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap: {{ ucfirst($tugasAkhir->tahapan) }}</span>
     </div>
     <div class="grid grid-cols-2 gap-4 p-6">
       <div>
@@ -55,7 +55,7 @@
           </h3>
         </div>
         <div class="p-6">
-          <p class="italic text-slate-600 leading-relaxed">Belum ada judul tugas akhir yang disetujui.</p>
+          <p class="italic text-slate-600 leading-relaxed">{{ $tugasAkhir->judul }}</p>
         </div>
       </div>
 

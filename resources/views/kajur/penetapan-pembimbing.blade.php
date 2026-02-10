@@ -227,285 +227,173 @@
     </div>
   </div>
 
-  <!-- Form Penetapan Pembimbing -->
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
-      <div class="flex items-center gap-3">
-        <i class="fas fa-users text-blue-500 text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Rekomendasi Dosen Pembimbing</h3>
+  @if ($permintaan->status == 'pending' && $permintaan->status_verifikasi_bukti == 'disetujui')
+    <!-- Form Penetapan Pembimbing -->
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+      <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-users text-blue-500 text-xl"></i>
+          <h3 class="text-lg font-semibold text-gray-900">Rekomendasi Dosen Pembimbing</h3>
+        </div>
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+          <i class="fas fa-magic"></i> Auto-Recommended
+        </span>
       </div>
-      <span
-        class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
-        <i class="fas fa-magic"></i> Auto-Recommended
-      </span>
-    </div>
-    <div class="p-6">
-      <form id="formPembimbing">
-        <!-- Dosen Pembimbing -->
-        <div class="mb-5">
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            Dosen Pembimbing <span class="text-red-600">*</span>
-            <span class="text-xs text-gray-500 font-normal ml-1">(Direkomendasikan berdasarkan analisis sistem)</span>
-          </label>
+      <div class="p-6">
+        <form action="{{ route('kajur.tetapkanPembimbing', ['permintaan' => $permintaan->id]) }}" method="POST">
+          @csrf
+          <!-- Dosen Pembimbing -->
+          <div class="mb-5">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">
+              Dosen Pembimbing <span class="text-red-600">*</span>
+              <span class="text-xs text-gray-500 font-normal ml-1">(Direkomendasikan berdasarkan analisis sistem)</span>
+            </label>
 
-          <div class="flex flex-col gap-6" id="pembimbingContainer">
-            <!-- Pembimbing 1 -->
-            <div
-              class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-              id="pembimbingCard1" data-dosen-id="1">
-              <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-base font-bold">1</span>
-                  <span class="text-sm font-semibold text-gray-700">Pembimbing 1 (Ranking #1)</span>
-                </div>
-                <div class="flex gap-2">
+            <div class="flex flex-col gap-6" id="pembimbingContainer">
+              <!-- Pembimbing 1 -->
+              @foreach ($dosen as $index => $d)
+                <input type="hidden" name="dosen_ids[]" value={{ $d->id }}>
+                <div
+                  class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
+                  id="pembimbingCard1" data-dosen-id="1">
+                  <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-base font-bold">{{ $index + 1 }}</span>
+                      <span class="text-sm font-semibold text-gray-700">Pembimbing {{ $index + 1 }} (Ranking
+                        #{{ $index + 1 }})</span>
+                    </div>
+                    <div class="flex gap-2">
+                      <div
+                        class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
+                        <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
+                          Rekomendasi</span>
+                        <span class="text-lg font-bold text-green-900">0.892</span>
+                      </div>
+                    </div>
+                  </div>
+
                   <div
-                    class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
-                    <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
-                      Rekomendasi</span>
-                    <span class="text-lg font-bold text-green-900">0.892</span>
+                    class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
+                        FA</div>
+                      <div>
+                        <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5">{{ $d->nama_lengkap }}</h4>
+                        <div class="text-xs text-gray-600">
+                          <span class="mr-3"><i class="fas fa-id-badge"></i> {{ $d->nidn }}</span>
+                          <span><i class="fas fa-award"></i> {{ $d->jabatan_fungsional }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="button"
+                      class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
+                      onclick="openGantiModal(1)">
+                      <i class="fas fa-exchange-alt text-xs"></i> Ganti
+                    </button>
                   </div>
-                </div>
-              </div>
+                  <input type="hidden" id="pembimbing1" name="pembimbing1" value="1" required />
 
-              <div
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
-                    FA</div>
-                  <div>
-                    <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5">Dr. L.M. Fid Aksara, S.Si., M.T.</h4>
-                    <div class="text-xs text-gray-600">
-                      <span class="mr-3"><i class="fas fa-id-badge"></i> 197012251997021001</span>
-                      <span><i class="fas fa-award"></i> Lektor Kepala</span>
+                  <!-- Detail Perhitungan -->
+                  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                    <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                      onclick="toggleReason('reason1')">
+                      <i class="fas fa-calculator text-purple-600"></i>
+                      <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
+                      <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform"
+                        id="toggle1"></i>
+                    </div>
+                    <div class="hidden border-t border-gray-200 p-4 bg-gray-50" id="reason1">
+                      <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
+                        <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                          <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
+                        </div>
+                        <div
+                          class="flex justify-between items-center px-3 py-2 bg-blue-100 rounded-md text-xs font-semibold">
+                          <span class="text-blue-900">Nilai Similarity (CBF)</span>
+                          <span class="text-blue-900 text-sm">0.94</span>
+                        </div>
+                      </div>
+                      <div>
+                        <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
+                          <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
+                        </div>
+                        <div class="overflow-x-auto">
+                          <table class="w-full text-xs mb-2 bg-white border-collapse">
+                            <thead>
+                              <tr>
+                                <th
+                                  class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
+                                  Atribut</th>
+                                <th
+                                  class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
+                                  Nilai</th>
+                                <th
+                                  class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
+                                  Bobot</th>
+                                <th
+                                  class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
+                                  Utility</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td class="px-2 py-2 font-medium border border-gray-200">Similarity (CBF)</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.94</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.35</td>
+                                <td class="px-2 py-2 text-right border border-gray-200">0.329</td>
+                              </tr>
+                              <tr>
+                                <td class="px-2 py-2 font-medium border border-gray-200">Beban Bimbingan</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.25</td>
+                                <td class="px-2 py-2 text-right border border-gray-200">0.213</td>
+                              </tr>
+                              <tr>
+                                <td class="px-2 py-2 font-medium border border-gray-200">Jabatan Fungsional</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.90</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
+                                <td class="px-2 py-2 text-right border border-gray-200">0.180</td>
+                              </tr>
+                              <tr>
+                                <td class="px-2 py-2 font-medium border border-gray-200">Pengalaman Membimbing</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
+                                <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
+                                <td class="px-2 py-2 text-right border border-gray-200">0.170</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <div
+                          class="flex justify-between items-center px-3 py-2 bg-gradient-to-br from-green-200 to-green-300 rounded-md text-xs font-semibold">
+                          <span class="text-green-900">Total Skor MAUT</span>
+                          <span class="text-green-900 text-base">0.892</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <button type="button"
-                  class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
-                  onclick="openGantiModal(1)">
-                  <i class="fas fa-exchange-alt text-xs"></i> Ganti
-                </button>
-              </div>
-              <input type="hidden" id="pembimbing1" name="pembimbing1" value="1" required />
-
-              <!-- Detail Perhitungan -->
-              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onclick="toggleReason('reason1')">
-                  <i class="fas fa-calculator text-purple-600"></i>
-                  <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                  <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform" id="toggle1"></i>
-                </div>
-                <div class="hidden border-t border-gray-200 p-4 bg-gray-50" id="reason1">
-                  <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
-                    <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
-                      <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
-                    </div>
-                    <div
-                      class="flex justify-between items-center px-3 py-2 bg-blue-100 rounded-md text-xs font-semibold">
-                      <span class="text-blue-900">Nilai Similarity (CBF)</span>
-                      <span class="text-blue-900 text-sm">0.94</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
-                      <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
-                    </div>
-                    <div class="overflow-x-auto">
-                      <table class="w-full text-xs mb-2 bg-white border-collapse">
-                        <thead>
-                          <tr>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
-                              Atribut</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                              Nilai</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                              Bobot</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
-                              Utility</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Similarity (CBF)</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.94</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.35</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.329</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Beban Bimbingan</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.25</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.213</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Jabatan Fungsional</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.90</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.180</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Pengalaman Membimbing</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.170</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div
-                      class="flex justify-between items-center px-3 py-2 bg-gradient-to-br from-green-200 to-green-300 rounded-md text-xs font-semibold">
-                      <span class="text-green-900">Total Skor MAUT</span>
-                      <span class="text-green-900 text-base">0.892</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Pembimbing 2 -->
-            <div
-              class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-              id="pembimbingCard2" data-dosen-id="6">
-              <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-base font-bold">2</span>
-                  <span class="text-sm font-semibold text-gray-700">Pembimbing 2 (Ranking #2)</span>
-                </div>
-                <div class="flex gap-2">
-                  <div
-                    class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
-                    <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
-                      Rekomendasi</span>
-                    <span class="text-lg font-bold text-green-900">0.831</span>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
-                    BP</div>
-                  <div>
-                    <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5">Bambang Pramono, S.T., M.T.</h4>
-                    <div class="text-xs text-gray-600">
-                      <span class="mr-3"><i class="fas fa-id-badge"></i> 198305102008121002</span>
-                      <span><i class="fas fa-award"></i> Lektor</span>
-                    </div>
-                  </div>
-                </div>
-                <button type="button"
-                  class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
-                  onclick="openGantiModal(2)">
-                  <i class="fas fa-exchange-alt text-xs"></i> Ganti
-                </button>
-              </div>
-              <input type="hidden" id="pembimbing2" name="pembimbing2" value="6" required />
-
-              <!-- Detail Perhitungan -->
-              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onclick="toggleReason('reason2')">
-                  <i class="fas fa-calculator text-purple-600"></i>
-                  <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                  <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform" id="toggle2"></i>
-                </div>
-                <div class="hidden border-t border-gray-200 p-4 bg-gray-50" id="reason2">
-                  <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
-                    <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
-                      <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
-                    </div>
-                    <div
-                      class="flex justify-between items-center px-3 py-2 bg-blue-100 rounded-md text-xs font-semibold">
-                      <span class="text-blue-900">Nilai Similarity (CBF)</span>
-                      <span class="text-blue-900 text-sm">0.86</span>
-                    </div>
-                  </div>
-                  <div>
-                    <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
-                      <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
-                    </div>
-                    <div class="overflow-x-auto">
-                      <table class="w-full text-xs mb-2 bg-white border-collapse">
-                        <thead>
-                          <tr>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
-                              Atribut</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                              Nilai</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                              Bobot</th>
-                            <th
-                              class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
-                              Utility</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Similarity (CBF)</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.86</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.35</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.301</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Beban Bimbingan</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.90</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.25</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.225</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Jabatan Fungsional</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.75</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.150</td>
-                          </tr>
-                          <tr>
-                            <td class="px-2 py-2 font-medium border border-gray-200">Pengalaman Membimbing</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.78</td>
-                            <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                            <td class="px-2 py-2 text-right border border-gray-200">0.155</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <div
-                      class="flex justify-between items-center px-3 py-2 bg-gradient-to-br from-green-200 to-green-300 rounded-md text-xs font-semibold">
-                      <span class="text-green-900">Total Skor MAUT</span>
-                      <span class="text-green-900 text-base">0.831</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              @endforeach
             </div>
           </div>
-        </div>
 
 
-        <!-- Button Group -->
-        <div class="flex gap-4 justify-end pt-6 border-t border-gray-200">
-          <a href="{{ route("kajur.permintaan-pembimbing") }}"
-            class="flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg text-[15px] font-medium hover:bg-gray-50 hover:border-gray-400 transition-all">
-            <i class="fas fa-arrow-left"></i> Kembali
-          </a>
-          <button type="submit"
-            class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-[15px] font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">
-            <i class="fas fa-check"></i> Tetapkan Pembimbing
-          </button>
-        </div>
-      </form>
+          <!-- Button Group -->
+          <div class="flex gap-4 justify-end pt-6 border-t border-gray-200">
+            <a href="{{ route('kajur.permintaan-pembimbing') }}"
+              class="flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg text-[15px] font-medium hover:bg-gray-50 hover:border-gray-400 transition-all">
+              <i class="fas fa-arrow-left"></i> Kembali
+            </a>
+            <button type="submit"
+              class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-[15px] font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <i class="fas fa-check"></i> Tetapkan Pembimbing
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
+  @endif
+
 @endsection
