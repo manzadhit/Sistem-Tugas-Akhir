@@ -103,11 +103,11 @@
           </h3>
         </div>
         <div class="p-6 space-y-3">
-          @forelse(auth()->user()->profileMahasiswa?->dosenPembimbing ?? [] as $pembimbing)
+          @forelse($dosenPembimbing as $pembimbing)
             <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
               <div>
                 <p class="text-sm font-semibold text-slate-900">Pembimbing {{ $loop->iteration }}</p>
-                <p class="text-xs text-slate-500">{{ $pembimbing->profileDosen->nama_lengkap ?? '-' }}</p>
+                <p class="text-xs text-slate-500">{{ $pembimbing->dosen->nama_lengkap ?? '-' }}</p>
               </div>
               <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>
             </div>
