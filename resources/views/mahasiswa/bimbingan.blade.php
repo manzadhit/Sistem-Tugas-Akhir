@@ -74,15 +74,14 @@
         <select name="pembimbing"
           class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400">
           <option value="">-- Pilih Pembimbing --</option>
-          @foreach ($pembimbing as $index => $p)
-            <option value="{{ $p->id }}">
-              {{ 'Pembimbing ' . $index + 1 . ' - ' . $p->dosen->nama_lengkap }}
+          @foreach ($pembimbing as $p)
+            <option value="{{ $p->id }}" @disabled($p->hasSubmission)>
+              Pembimbing {{ $loop->iteration }} - {{ $p->dosen->nama_lengkap }} 
+              @if ($p->hasSubmission)
+                (Menunggu Review)
+              @endif
             </option>
           @endforeach
-
-          <option value="pembimbing2" disabled>
-            Pembimbing 2 - Dr. Siti Rahayu, M.T. (Menunggu Review)
-          </option>
         </select>
         <p class="text-xs text-amber-600 mt-1.5">
           <i class="fas fa-info-circle"></i> Pembimbing 2 belum bisa

@@ -17,14 +17,21 @@ class BimbinganController extends Controller
 {
     public function __construct(
         protected SubmissionService $submissionService
-    )
-    {}
+    ) {}
 
     public function index(Request $request)
     {
         $mahasiswa = $request->user()->profileMahasiswa;
 
-        $pembimbing = DosenPembimbing::with('dosen')->where('mahasiswa_id', $mahasiswa->id)->orderBy('jenis_pembimbing')->get();
+        $tugasAkhirId = $mahasiswa->tugasAkhir->id;
+
+        $pembimbing = DosenPembimbing::with('dosen')
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->orderBy('jenis_pembimbing')
+            ->get()
+            ->each(function ($p) use ($tugasAkhirId) {
+                $p->hasSubmission = $this->submissionService->pembimbingHasSubmission($tugasAkhirId, $p->id);
+            });
 
         return view('mahasiswa.bimbingan', compact('pembimbing'));
     }
@@ -43,7 +50,7 @@ class BimbinganController extends Controller
 
             return back()->with('success', 'Submission berhasil dikirim');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengirim submission: '. $e->getMessage());
+            return back()->with('error', 'Gagal mengirim submission: ' . $e->getMessage());
         }
     }
 }
