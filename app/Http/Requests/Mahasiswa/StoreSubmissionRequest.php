@@ -23,6 +23,7 @@ class StoreSubmissionRequest extends FormRequest
     {
         return [
             'pembimbing' => ['required', 'integer'],
+            'catatan' => ['nullable', 'string'],
             'file_submission' => ['required', 'array', 'min:1'],
             'file_submission.*' => ['file', 'mimes:pdf,doc,docx', 'max:10240'],
         ];

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhir')->cascadeOnDelete();
             $table->foreignId('dosen_pembimbing_id')->constrained('dosen_pembimbing')->cascadeOnDelete();
+            $table->text('catatan')->nullable();
             $table->enum('status', ['pending', 'acc', 'revisi', 'reject'])->default('pending');
             $table->text('review')->nullable();
             $table->timestamps();

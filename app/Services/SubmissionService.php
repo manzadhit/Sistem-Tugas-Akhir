@@ -12,17 +12,18 @@ use Illuminate\Support\Str;
 
 class SubmissionService
 {
-    public function createSubmission(ProfileMahasiswa $mahasiswa, int $dosenPembimbingId, array $files): Submission
+    public function createSubmission(ProfileMahasiswa $mahasiswa, int $dosenPembimbingId, ?string $catatan, array $files): Submission
     {
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->firstOrFail();
 
         throw_if($this->pembimbingHasSubmission($tugasAkhir->id, $dosenPembimbingId), AuthorizationException::class, 'Submission untuk pembimbing ini masih menunggu review.');
 
-        return DB::transaction(function () use ($tugasAkhir, $dosenPembimbingId, $files) {
+        return DB::transaction(function () use ($tugasAkhir, $dosenPembimbingId, $catatan, $files) {
             // Create submission
             $submission = Submission::create([
                 'tugas_akhir_id' => $tugasAkhir->id,
                 'dosen_pembimbing_id' => $dosenPembimbingId,
+                'catatan' => $catatan
             ]);
 
             // Upload files

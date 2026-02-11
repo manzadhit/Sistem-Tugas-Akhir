@@ -158,7 +158,7 @@
       <!-- Notes/Description -->
       <div class="mb-5">
         <label class="block text-sm font-medium text-gray-700 mb-2">Catatan untuk Pembimbing</label>
-        <textarea
+        <textarea name="catatan"
           class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] resize-y min-h-[100px] transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
           placeholder="Tambahkan catatan atau keterangan mengenai laporan yang diupload..."></textarea>
       </div>
@@ -258,6 +258,22 @@
 
             <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-{{ $historyId }}">
 
+              {{-- Mahasiswa --}}
+              @if ($fileMahasiswa->isNotEmpty())
+                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
+                @foreach ($fileMahasiswa as $file)
+                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                @endforeach
+              @endif
+
+              @if (!empty($submission->catatan))
+                <div class="mb-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-900">
+                  <div class="font-semibold">Catatan :</div>
+                  <div>{{ $submission->catatan }}</div>
+                </div>
+              @endif
+
+              {{-- Dosen   --}}
               @if ($fileDosen->isNotEmpty())
                 <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files dari Dosen:</div>
                 @foreach ($fileDosen as $file)
@@ -270,13 +286,6 @@
                   <div class="font-semibold">Catatan Pembimbing:</div>
                   <div>{{ $submission->review }}</div>
                 </div>
-              @endif
-
-              @if ($fileMahasiswa->isNotEmpty())
-                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
-                @foreach ($fileMahasiswa as $file)
-                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
-                @endforeach
               @endif
             </div>
           </div>

@@ -47,6 +47,7 @@ class BimbinganController extends Controller
             $this->submissionService->createSubmission(
                 mahasiswa: $mahasiswa,
                 dosenPembimbingId: $request->input('pembimbing'),
+                catatan: $request->input('catatan'),
                 files: $request->file('file_submission')
             );
 
