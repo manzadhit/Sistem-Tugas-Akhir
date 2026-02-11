@@ -33,7 +33,9 @@ class BimbinganController extends Controller
                 $p->hasSubmission = $this->submissionService->pembimbingHasSubmission($tugasAkhirId, $p->id);
             });
 
-        return view('mahasiswa.bimbingan', compact('pembimbing'));
+        $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId);
+
+        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission'));
     }
 
     public function createSubmission(StoreSubmissionRequest $request)

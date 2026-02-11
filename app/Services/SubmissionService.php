@@ -50,4 +50,12 @@ class SubmissionService
 
         return $hasSubmission;
     }
+
+    public function getHistorySubmission(int $tugasAkhirId)
+    {
+        return Submission::with(['submissionFiles', 'dosenPembimbing.dosen'])
+            ->where('tugas_akhir_id', $tugasAkhirId)
+            ->latest()
+            ->get();
+    }
 }

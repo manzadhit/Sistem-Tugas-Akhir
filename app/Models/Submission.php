@@ -21,7 +21,7 @@ class Submission extends Model
 
     public function dosenPembimbing()
     {
-        return $this->belongsTo(DosenPembimbing::class, 'dosen_pembimbing_id');
+        return $this->belongsTo(DosenPembimbing::class, 'dosen_pembimbing_id'); 
     }
 
     public function submissionFiles()

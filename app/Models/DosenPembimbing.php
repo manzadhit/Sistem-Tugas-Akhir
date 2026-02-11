@@ -40,4 +40,12 @@ class DosenPembimbing extends Model
     {
         return $this->hasMany(Submission::class, 'dosen_pembimbing_id');
     }
+
+    public function getJenisPembimbing() {
+        return match ($this->jenis_pembimbing) {
+            'pembimbing_1' => 'Pembimbing 1',
+            'pembimbing_2' => 'Pembimbing 2',
+            default => 'Pembimbing'
+        };
+    }
 }

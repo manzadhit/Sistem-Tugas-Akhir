@@ -146,28 +146,9 @@
             </div>
 
             <!-- File Preview -->
-            <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg mb-3">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-lg flex items-center justify-center">
-                  <i class="fas fa-file"></i>
-                </div>
-                <div>
-                  <div class="text-xs font-medium text-gray-700">{{ basename($permintaan->bukti_acc_path) }}</div>
-                  <div class="text-xs text-gray-400">Diupload {{ $permintaan->created_at->translatedFormat('d M Y') }}
-                  </div>
-                </div>
-              </div>
-              <div class="flex items-center gap-2">
-                <a href="{{ route('kajur.show-bukti', ['permintaan' => $permintaan->id]) }}" target="_blank"
-                  class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-md text-xs font-medium hover:bg-blue-100 hover:border-blue-300 transition-colors">
-                  <i class="fas fa-eye"></i>
-                </a>
-                <a href="{{ route('kajur.download-bukti', ['permintaan' => $permintaan->id]) }}"
-                  class="inline-flex items-center gap-1.5 px-3 py-2 bg-blue-50 text-blue-600 border border-blue-200 rounded-md text-xs font-medium hover:bg-blue-100 hover:border-blue-300 transition-colors">
-                  <i class="fas fa-download"></i>
-                </a>
-              </div>
-            </div>
+            <x-file-preview-item :path="$permintaan->bukti_acc_path" :view-url="route('kajur.show-bukti', ['permintaan' => $permintaan->id])"
+              :download-url="route('kajur.download-bukti', ['permintaan' => $permintaan->id])" :uploaded-at="$permintaan->created_at"
+              class="rounded-lg mb-3" />
 
             {{-- Form verifikasi: hanya muncul saat pending --}}
             @if ($statusBukti === 'pending')

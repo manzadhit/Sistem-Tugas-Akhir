@@ -76,7 +76,7 @@
           <option value="">-- Pilih Pembimbing --</option>
           @foreach ($pembimbing as $p)
             <option value="{{ $p->id }}" @disabled($p->hasSubmission)>
-              Pembimbing {{ $loop->iteration }} - {{ $p->dosen->nama_lengkap }} 
+              Pembimbing {{ $loop->iteration }} - {{ $p->dosen->nama_lengkap }}
               @if ($p->hasSubmission)
                 (Menunggu Review)
               @endif
@@ -183,170 +183,109 @@
           Riwayat Pengajuan
         </h3>
 
-        <!-- History Item 0 - Menunggu Review -->
-        <div class="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden last:mb-0">
-          <div class="p-4 cursor-pointer transition-colors hover:bg-gray-50" onclick="toggleHistory(0)">
-            <div class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div class="w-full lg:flex-1">
-                <h4 class="text-[0.95rem] font-medium text-gray-900 mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                  Laporan Proposal
-                  <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600">Menunggu
-                    Review</span>
-                </h4>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] sm:text-[0.8rem] text-gray-500">
-                  <span><i class="far fa-clock"></i> 22 Des 2024, 09:00</span>
-                  <span><i class="far fa-file"></i> 1 file</span>
-                  <span><i class="fas fa-user"></i> Dikirim ke: Pembimbing 2</span>
-                </div>
-              </div>
-              <div class="flex w-full items-center justify-between gap-2 sm:gap-3 lg:w-auto lg:justify-end">
-                <span
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-md font-medium bg-amber-500 text-white">
-                  <i class="fas fa-hourglass-half"></i>
-                  Menunggu
-                </span>
-                <i class="fas fa-chevron-down text-sm sm:text-base text-gray-400 transition-transform"
-                  id="chevron-0"></i>
-              </div>
-            </div>
-          </div>
-          <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-0">
-            <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files:</div>
-            <div
-              class="flex flex-col items-start justify-between gap-3 px-3 py-3 bg-white border border-gray-200 rounded-md mb-2 last:mb-0 sm:flex-row sm:items-center">
-              <div class="flex min-w-0 items-center gap-3">
-                <i class="fas fa-file-pdf text-xl text-red-600"></i>
-                <div class="min-w-0">
-                  <div class="truncate text-sm font-medium text-gray-900">
-                    Laporan_Proposal_v2.pdf
-                  </div>
-                  <div class="text-xs text-gray-500">3.5 MB</div>
-                </div>
-              </div>
-              <div class="flex w-full gap-3 sm:w-auto sm:justify-end">
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-blue-600 hover:underline">
-                  <i class="fas fa-eye"></i> View
-                </a>
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-green-600 hover:underline">
-                  <i class="fas fa-download"></i> Download
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        @php
+          $statusConfig = [
+              'pending' => [
+                  'label' => 'Menunggu Review',
+                  'badge_class' => 'bg-amber-50 text-amber-600',
+                  'action_text' => 'Menunggu',
+                  'action_class' => 'bg-amber-500 text-white',
+                  'action_icon' => 'fas fa-hourglass-half',
+              ],
+              'revisi' => [
+                  'label' => 'Revisi',
+                  'badge_class' => 'bg-amber-50 text-amber-800',
+                  'action_text' => 'Perlu Revisi',
+                  'action_class' => 'bg-amber-600 text-white',
+                  'action_icon' => 'fas fa-pen',
+              ],
+              'acc' => [
+                  'label' => 'ACC',
+                  'badge_class' => 'bg-emerald-50 text-emerald-700',
+                  'action_text' => 'Disetujui',
+                  'action_class' => 'bg-emerald-600 text-white',
+                  'action_icon' => 'fas fa-check',
+              ],
+              'reject' => [
+                  'label' => 'Ditolak',
+                  'badge_class' => 'bg-red-50 text-red-700',
+                  'action_text' => 'Ditolak',
+                  'action_class' => 'bg-red-600 text-white',
+                  'action_icon' => 'fas fa-times',
+              ],
+          ];
+        @endphp
 
-        <!-- History Item 1 - Revisi -->
-        <div class="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden last:mb-0">
-          <div class="p-4 cursor-pointer transition-colors hover:bg-gray-50" onclick="toggleHistory(1)">
-            <div class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div class="w-full lg:flex-1">
-                <h4 class="text-[0.95rem] font-medium text-gray-900 mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                  Laporan Proposal
-                  <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-800">Revisi</span>
-                </h4>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] sm:text-[0.8rem] text-gray-500">
-                  <span><i class="far fa-clock"></i> 20 Des 2024, 14:30</span>
-                  <span><i class="far fa-file"></i> 1 file</span>
-                  <span><i class="fas fa-user"></i> Dari: Pembimbing 1</span>
-                </div>
-              </div>
-              <div class="flex w-full items-center justify-between gap-2 sm:gap-3 lg:w-auto lg:justify-end">
-                <a href="detail-bimbingan.html"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-md font-medium bg-blue-600 text-white hover:bg-blue-800"
-                  onclick="event.stopPropagation()">
-                  <i class="fas fa-eye"></i>
-                  Lihat Review
-                </a>
-                <i class="fas fa-chevron-down text-sm sm:text-base text-gray-400 transition-transform"
-                  id="chevron-1"></i>
-              </div>
-            </div>
-          </div>
-          <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-1">
-            <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files:</div>
-            <div
-              class="flex flex-col items-start justify-between gap-3 px-3 py-3 bg-white border border-gray-200 rounded-md mb-2 last:mb-0 sm:flex-row sm:items-center">
-              <div class="flex min-w-0 items-center gap-3">
-                <i class="fas fa-file-pdf text-xl text-red-600"></i>
-                <div class="min-w-0">
-                  <div class="truncate text-sm font-medium text-gray-900">
-                    Laporan_Proposal_v1.pdf
-                  </div>
-                  <div class="text-xs text-gray-500">3.2 MB</div>
-                </div>
-              </div>
-              <div class="flex w-full gap-3 sm:w-auto sm:justify-end">
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-blue-600 hover:underline">
-                  <i class="fas fa-eye"></i> View
-                </a>
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-green-600 hover:underline">
-                  <i class="fas fa-download"></i> Download
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        @forelse ($allSubmission as $submission)
+          @php
+            $historyId = $loop->index;
+            $status = $statusConfig[$submission->status] ?? $statusConfig['pending'];
+            $fileCount = $submission->submissionFiles->count();
+            $fileMahasiswa = $submission->submissionFiles->where('uploaded_by', 'mahasiswa');
+            $fileDosen = $submission->submissionFiles->where('uploaded_by', 'dosen');
+          @endphp
 
-        <!-- History Item 2 - Lanjutkan -->
-        <div class="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden last:mb-0">
-          <div class="p-4 cursor-pointer transition-colors hover:bg-gray-50" onclick="toggleHistory(2)">
-            <div class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
-              <div class="w-full lg:flex-1">
-                <h4 class="text-[0.95rem] font-medium text-gray-900 mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
-                  Laporan Proposal
-                  <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">Lanjutkan</span>
-                </h4>
-                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] sm:text-[0.8rem] text-gray-500">
-                  <span><i class="far fa-clock"></i> 15 Des 2024, 10:00</span>
-                  <span><i class="far fa-file"></i> 1 file</span>
-                  <span><i class="fas fa-user"></i> Dari: Pembimbing 1</span>
-                </div>
-              </div>
-              <div class="flex w-full items-center justify-between gap-2 sm:gap-3 lg:w-auto lg:justify-end">
-                <a href="detail-bimbingan.html"
-                  class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-md font-medium bg-sky-500 text-white hover:bg-sky-700"
-                  onclick="event.stopPropagation()">
-                  <i class="fas fa-arrow-right"></i>
-                  Lanjutkan
-                </a>
-                <i class="fas fa-chevron-down text-sm sm:text-base text-gray-400 transition-transform"
-                  id="chevron-2"></i>
-              </div>
-            </div>
-          </div>
-          <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-2">
-            <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files:</div>
-            <div
-              class="flex flex-col items-start justify-between gap-3 px-3 py-3 bg-white border border-gray-200 rounded-md mb-2 last:mb-0 sm:flex-row sm:items-center">
-              <div class="flex min-w-0 items-center gap-3">
-                <i class="fas fa-file-pdf text-xl text-red-600"></i>
-                <div class="min-w-0">
-                  <div class="truncate text-sm font-medium text-gray-900">
-                    Laporan_Proposal_Draft.pdf
+          <div class="bg-white border border-gray-200 rounded-lg mb-3 overflow-hidden last:mb-0">
+            <div class="p-4 cursor-pointer transition-colors hover:bg-gray-50"
+              onclick="toggleHistory({{ $historyId }})">
+              <div class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
+                <div class="w-full lg:flex-1">
+                  <h4 class="text-[0.95rem] font-medium text-gray-900 mb-2 flex flex-wrap items-center gap-2 sm:gap-3">
+                    Bimbingan Proposal
+                    <span
+                      class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold {{ $status['badge_class'] }}">
+                      {{ $status['label'] }}
+                    </span>
+                  </h4>
+                  <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] sm:text-[0.8rem] text-gray-500">
+                    <span><i class="far fa-clock"></i> {{ $submission->created_at?->format('d M Y, H:i') }}</span>
+                    <span><i class="far fa-file"></i> {{ $fileCount }} file</span>
+                    <span><i class="fas fa-user"></i> {{ $submission->status == 'pending' ? 'Dikirim ke:' : 'Dari: ' }}
+                      {{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
                   </div>
-                  <div class="text-xs text-gray-500">2.8 MB</div>
+                </div>
+                <div class="flex w-full items-center justify-between gap-2 sm:gap-3 lg:w-auto lg:justify-end">
+                  <span
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-md font-medium {{ $status['action_class'] }}">
+                    <i class="{{ $status['action_icon'] }}"></i>
+                    {{ $status['action_text'] }}
+                  </span>
+                  <i class="fas fa-chevron-down text-sm sm:text-base text-gray-400 transition-transform"
+                    id="chevron-{{ $historyId }}"></i>
                 </div>
               </div>
-              <div class="flex w-full gap-3 sm:w-auto sm:justify-end">
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-blue-600 hover:underline">
-                  <i class="fas fa-eye"></i> View
-                </a>
-                <a href="#"
-                  class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-green-600 hover:underline">
-                  <i class="fas fa-download"></i> Download
-                </a>
-              </div>
+            </div>
+
+            <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-{{ $historyId }}">
+
+              @if ($fileDosen->isNotEmpty())
+                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files dari Dosen:</div>
+                @foreach ($fileDosen as $file)
+                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                @endforeach
+              @endif
+
+              @if (!empty($submission->review))
+                <div class="mb-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-900">
+                  <div class="font-semibold">Catatan Pembimbing:</div>
+                  <div>{{ $submission->review }}</div>
+                </div>
+              @endif
+
+              @if ($fileMahasiswa->isNotEmpty())
+                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
+                @foreach ($fileMahasiswa as $file)
+                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                @endforeach
+              @endif
             </div>
           </div>
-        </div>
+        @empty
+          <div
+            class="rounded-lg border border-dashed border-gray-300 bg-white px-4 py-6 text-center text-sm text-gray-500">
+            Belum ada riwayat pengajuan bimbingan.
+          </div>
+        @endforelse
       </div>
     </div>
   </div>
