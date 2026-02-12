@@ -57,9 +57,14 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
+  <!-- Status Alerts per Pembimbing -->
+  @foreach ($latestPerPembimbing as $latest)
+    <x-status-alert :status="$latest->status" :pembimbing-label="$latest->dosenPembimbing->getJenisPembimbing()" />
+  @endforeach
+
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission') }}" method="POST" enctype="multipart/form-data"
-    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing ? 'hidden' : '' }}">
     @csrf
 
     <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
@@ -75,33 +80,16 @@
           class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400">
           <option value="">-- Pilih Pembimbing --</option>
           @foreach ($pembimbing as $p)
-            <option value="{{ $p->id }}" @disabled($p->hasSubmission)>
+            <option value="{{ $p->id }}" {{ $p->hasSubmission || $p->isAcc ? 'disabled' : '' }}>
               Pembimbing {{ $loop->iteration }} - {{ $p->dosen->nama_lengkap }}
               @if ($p->hasSubmission)
                 (Menunggu Review)
+              @elseif ($p->isAcc)
+                (Sudah ACC)
               @endif
             </option>
           @endforeach
         </select>
-        <p class="text-xs text-amber-600 mt-1.5">
-          <i class="fas fa-info-circle"></i> Pembimbing 2 belum bisa
-          menerima laporan baru karena masih ada laporan yang menunggu
-          review
-        </p>
-      </div>
-
-      <!-- Alert for Revision -->
-      <div class="px-4 py-4 rounded-lg mb-6 flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800">
-        <i class="fas fa-exclamation-triangle text-lg mt-0.5"></i>
-        <div class="flex-1">
-          <div class="font-semibold mb-1">
-            Revisi Diperlukan dari Pembimbing 1
-          </div>
-          <div class="text-sm">
-            Silakan perbaiki laporan sesuai catatan pembimbing dan upload
-            kembali.
-          </div>
-        </div>
       </div>
 
       <div x-data="fileUpload()">
@@ -258,21 +246,6 @@
 
             <div class="hidden border-t border-gray-200 bg-gray-50 p-3 sm:p-4" id="files-{{ $historyId }}">
 
-              {{-- Mahasiswa --}}
-              @if ($fileMahasiswa->isNotEmpty())
-                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
-                @foreach ($fileMahasiswa as $file)
-                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
-                @endforeach
-              @endif
-
-              @if (!empty($submission->catatan))
-                <div class="mb-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-900">
-                  <div class="font-semibold">Catatan :</div>
-                  <div>{{ $submission->catatan }}</div>
-                </div>
-              @endif
-
               {{-- Dosen   --}}
               @if ($fileDosen->isNotEmpty())
                 <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files dari Dosen:</div>
@@ -285,6 +258,21 @@
                 <div class="mb-3 rounded-md border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-900">
                   <div class="font-semibold">Catatan Pembimbing:</div>
                   <div>{{ $submission->review }}</div>
+                </div>
+              @endif
+
+              {{-- Mahasiswa --}}
+              @if ($fileMahasiswa->isNotEmpty())
+                <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
+                @foreach ($fileMahasiswa as $file)
+                  <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                @endforeach
+              @endif
+
+              @if (!empty($submission->catatan))
+                <div class="mb-3 rounded-md border   px-3 py-2 text-sm ">
+                  <div class="font-semibold">Catatan :</div>
+                  <div>{{ $submission->catatan }}</div>
                 </div>
               @endif
             </div>

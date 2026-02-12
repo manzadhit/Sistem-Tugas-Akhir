@@ -15,8 +15,8 @@ class SubmissionService
     public function createSubmission(ProfileMahasiswa $mahasiswa, int $dosenPembimbingId, ?string $catatan, array $files): Submission
     {
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->firstOrFail();
-
-        throw_if($this->pembimbingHasSubmission($tugasAkhir->id, $dosenPembimbingId), AuthorizationException::class, 'Submission untuk pembimbing ini masih menunggu review.');
+        
+        throw_if($this->pembimbingHasSubmissionOrAcc($tugasAkhir->id, $dosenPembimbingId), AuthorizationException::class, 'Submission untuk pembimbing ini masih menunggu review atau sudah ACC.');
 
         return DB::transaction(function () use ($tugasAkhir, $dosenPembimbingId, $catatan, $files) {
             // Create submission
@@ -42,14 +42,14 @@ class SubmissionService
         });
     }
 
-    public function pembimbingHasSubmission(int $tugasAkhirId, int $pembimbingId)
+    public function pembimbingHasSubmissionOrAcc(int $tugasAkhirId, int $pembimbingId)
     {
-        $hasSubmission = Submission::where('tugas_akhir_id', $tugasAkhirId)
+        $hasSubmissionOrAcc = Submission::where('tugas_akhir_id', $tugasAkhirId)
             ->where('dosen_pembimbing_id', $pembimbingId)
-            ->where('status', 'pending')
+            ->whereIn('status', ['pending', 'acc'])
             ->exists();
 
-        return $hasSubmission;
+        return $hasSubmissionOrAcc;
     }
 
     public function getHistorySubmission(int $tugasAkhirId)

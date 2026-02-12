@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
-use App\Models\Submission;
-use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 use App\Models\DosenPembimbing;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
-use App\Models\SubmissionFile;
 use App\Services\SubmissionService;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Node\Stmt\TryCatch;
 
 class BimbinganController extends Controller
 {
@@ -25,17 +20,29 @@ class BimbinganController extends Controller
 
         $tugasAkhirId = $mahasiswa->tugasAkhir->id;
 
+        $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId);
+        $latestSubmissionPerPembimbing = $allSubmission
+            ->groupBy('dosen_pembimbing_id')
+            ->map->first();
+
         $pembimbing = DosenPembimbing::with('dosen')
             ->where('mahasiswa_id', $mahasiswa->id)
             ->orderBy('jenis_pembimbing')
             ->get()
-            ->each(function ($p) use ($tugasAkhirId) {
-                $p->hasSubmission = $this->submissionService->pembimbingHasSubmission($tugasAkhirId, $p->id);
+            ->each(function ($p) use ($latestSubmissionPerPembimbing) {
+                $latestSubmission = $latestSubmissionPerPembimbing->get($p->id);
+                $p->hasSubmission = $latestSubmission?->status === 'pending';
+                $p->isAcc = $latestSubmission?->status === 'acc';
             });
 
-        $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId);
+        $latestPerPembimbing = $latestSubmissionPerPembimbing
+            ->where('status', '!=', 'pending');
 
-        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission'));
+        $hasTwoAccPembimbing = $latestSubmissionPerPembimbing
+            ->where('status', 'acc')
+            ->count() >= 2;
+
+        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing'));
     }
 
     public function createSubmission(StoreSubmissionRequest $request)
