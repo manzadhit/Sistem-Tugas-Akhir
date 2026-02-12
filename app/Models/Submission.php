@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Submission extends Model
 {
-    //
+    use HasFactory;
+    
     protected $fillable = [
         'tugas_akhir_id',
         'dosen_pembimbing_id',
@@ -22,7 +24,7 @@ class Submission extends Model
 
     public function dosenPembimbing()
     {
-        return $this->belongsTo(DosenPembimbing::class, 'dosen_pembimbing_id'); 
+        return $this->belongsTo(DosenPembimbing::class, 'dosen_pembimbing_id');
     }
 
     public function submissionFiles()

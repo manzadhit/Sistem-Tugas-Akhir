@@ -3,25 +3,7 @@
 @section('title', 'Dashboard Dosen')
 
 @section('sidebar')
-  <x-role-sidebar title="Portal Dosen" :items="[
-      [
-          'href' => route('dosen.dashboard'),
-          'icon' => 'fas fa-chart-line',
-          'label' => 'Dashboard',
-          'active' => request()->routeIs('dosen.dashboard'),
-      ],
-  
-      ['section' => 'Pembimbingan'],
-      ['href' => '#', 'icon' => 'fas fa-users', 'label' => 'Mahasiswa Bimbingan'],
-  
-      ['section' => 'Pengujian'],
-      ['href' => '#', 'icon' => 'fas fa-envelope-open-text', 'label' => 'Undangan'],
-      ['href' => '#', 'icon' => 'fas fa-clipboard-list', 'label' => 'Jadwal Ujian'],
-      ['href' => '#', 'icon' => 'fas fa-edit', 'label' => 'Input Nilai'],
-  
-      ['section' => 'Publikasi'],
-      ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Publikasi Saya'],
-  ]" />
+  @include('dosen.sidebar')
 @endsection
 
 @section('content')
@@ -35,24 +17,18 @@
 
   {{-- Stats --}}
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
-    <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-600">
+    <x-stats label="Mahasiswa Bimbingan" total=10 bg-color="bg-blue-100" text-color='text-blue-600'> 
+      <x-slot:icon>
         <i class="fas fa-users"></i>
-      </div>
-      <div>
-        <p class="text-sm text-slate-500">Mahasiswa Bimbingan</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-    </div>
-    <div class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-      <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-emerald-100 text-xl text-emerald-600">
+      </x-slot:icon>
+    </x-stats>
+
+    <x-stats label="Total Publikasi" total=10 bg-color="bg-emerald-100" text-color='text-emerald-600'> 
+      <x-slot:icon>
         <i class="fas fa-book"></i>
-      </div>
-      <div>
-        <p class="text-sm text-slate-500">Total Publikasi</p>
-        <p class="text-2xl font-bold text-slate-900">0</p>
-      </div>
-    </div>
+      </x-slot:icon>
+    </x-stats>
+
   </div>
 
   {{-- Content Grid --}}
