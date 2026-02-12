@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers\Dosen;
 
-use App\Http\Controllers\Controller;
-use App\Models\DosenPembimbing;
-use App\Services\Dosen\BimbinganService;
+use App\Models\Submission;
 use Illuminate\Http\Request;
+use App\Models\DosenPembimbing;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Dosen\ReviewSubmissionRequest;
+use App\Models\SubmissionFile;
+use App\Services\Dosen\BimbinganService;
 
 class MahasiswaBimbingan extends Controller
 {
-    public function __construct(protected BimbinganService $bimbinganService)
-    {}
+    public function __construct(protected BimbinganService $bimbinganService) {}
 
-    public function index(Request $request) 
+    public function index(Request $request)
     {
         $dosenId = $request->user()?->profileDosen->id;
 
@@ -24,5 +26,30 @@ class MahasiswaBimbingan extends Controller
 
 
         return view('dosen.bimbingan', compact('mahasiswaBimbingan', 'totalMahasiswaBimbingan', 'pendingSubmissions'));
+    }
+
+    public function getDetail(Submission $submission)
+    {
+        $submission->loadMissing([
+            'tugasAkhir.mahasiswa',
+            'submissionFiles'
+        ]);
+
+        return view('dosen.detail-bimbingan', compact('submission'));
+    }
+
+    public function review(ReviewSubmissionRequest $request, Submission $submission)
+    {
+        try {
+            $this->bimbinganService->reviewSubmission(
+                submission: $submission,
+                payload: $request->validated(),
+                files: $request->file('files', [])
+            );
+
+            return back()->with('success', 'Review berhasil diberikan.');
+        } catch (\Exception $e) {
+            return back()->with('error', "Review gagal diberikan. Silahkan coba lagi");
+        }
     }
 }

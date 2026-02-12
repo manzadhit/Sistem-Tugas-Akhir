@@ -7,7 +7,7 @@
       ],
   
       ['section' => 'Pembimbingan'],
-      ['href' => route('dosen.bimbingan.index'), 'icon' => 'fas fa-users', 'label' => 'Mahasiswa Bimbingan', 'active' => request()->routeIs('dosen.bimbingan.index')],
+      ['href' => route('dosen.bimbingan.index'), 'icon' => 'fas fa-users', 'label' => 'Mahasiswa Bimbingan', 'active' => request()->routeIs(['dosen.bimbingan.index', 'dosen.bimbingan.detail'])],
   
       ['section' => 'Pengujian'],
       ['href' => '#', 'icon' => 'fas fa-envelope-open-text', 'label' => 'Undangan'],

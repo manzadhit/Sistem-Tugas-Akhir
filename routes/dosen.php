@@ -9,4 +9,8 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
   })->name("dashboard");
 
   Route::get('/bimbingan', [MahasiswaBimbingan::class, 'index'])->name('bimbingan.index');
+
+  Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbingan::class, 'getDetail'])->name('bimbingan.detail');
+
+  Route::put('/bimbingan/{submission}/review', [MahasiswaBimbingan::class, 'review'])->name('bimbingan.review');
 });

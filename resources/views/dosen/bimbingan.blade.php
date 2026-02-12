@@ -61,10 +61,50 @@
     </div>
   </div>
 
-  <!-- Table -->
-  <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+  <!-- Mobile Cards -->
+  <div class="space-y-4 md:hidden">
+    @forelse ($pendingSubmissions as $submission)
+      <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
+        <div class="flex items-start justify-between gap-3 mb-3">
+          <div>
+            <div class="text-sm font-semibold text-gray-900">{{ $submission->tugasAkhir->mahasiswa->nama_lengkap }}</div>
+            <div class="text-xs text-gray-500">NIM: {{ $submission->tugasAkhir->mahasiswa->nim }}</div>
+          </div>
+          <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
+            {{ $submission->tugasAkhir->tahapan }}
+          </span>
+        </div>
+
+        <div class="space-y-2 text-sm">
+          <div>
+            <div class="text-xs text-gray-500">Tanggal Submit</div>
+            <div class="text-gray-700">{{ $submission->created_at->format('d M Y') }}</div>
+          </div>
+          <div>
+            <div class="text-xs text-gray-500">Judul</div>
+            <div class="text-gray-700 leading-snug">{{ $submission->tugasAkhir->judul }}</div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <a href="{{ route('dosen.bimbingan.detail', ['submission' => $submission->id]) }}"
+            class="inline-flex items-center gap-2 rounded-md bg-blue-100 text-blue-700 px-3 py-2 text-xs font-semibold hover:bg-blue-200 transition-all">
+            <i class="fas fa-eye"></i>
+            Lihat Detail
+          </a>
+        </div>
+      </div>
+    @empty
+      <div class="bg-white rounded-xl shadow-sm border border-dashed border-gray-300 p-6 text-sm text-gray-500 text-center">
+        Belum ada submission yang menunggu review.
+      </div>
+    @endforelse
+  </div>
+
+  <!-- Desktop Table -->
+  <div class="hidden md:block bg-white rounded-xl shadow-sm overflow-hidden">
     <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
+      <table class="w-full min-w-[920px] border-collapse">
         <thead class="bg-gray-50">
           <tr>
             <th class="p-4 text-left text-sm font-semibold text-gray-700 border-b-2 border-gray-200 whitespace-nowrap">No
@@ -84,8 +124,7 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Row 1 -->
-          @foreach ($pendingSubmissions as $submission)
+          @forelse ($pendingSubmissions as $submission)
             <tr class="hover:bg-gray-50 transition-colors">
               <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $loop->iteration }}</td>
               <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $submission->tugasAkhir->mahasiswa->nim }}
@@ -105,21 +144,21 @@
               </td>
               <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
                 <div class="flex gap-2">
-                  <a href="detail-bimbingan.html"
+                  <a href="{{ route('dosen.bimbingan.detail', ['submission' => $submission->id]) }}"
                     class="w-8 h-8 rounded-md flex items-center justify-center bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all text-sm">
                     <i class="fas fa-eye"></i>
                   </a>
                 </div>
               </td>
             </tr>
-          @endforeach
-
+          @empty
+            <tr>
+              <td colspan="7" class="p-6 text-sm text-gray-500 text-center">Belum ada submission yang menunggu review.</td>
+            </tr>
+          @endforelse
         </tbody>
       </table>
-
-
     </div>
-
   </div>
   <div class="mt-4">
     {{ $pendingSubmissions->links('pagination::tailwind') }}
