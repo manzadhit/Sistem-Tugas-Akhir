@@ -18,7 +18,7 @@ class ProfileDosenFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->state(['role' => fake()->randomElement(['dosen', 'kajur'])]),
+            'user_id' => User::factory()->state(['role' => fake()->randomElement(['dosen'])]),
             'nidn' => fake()->unique()->numerify('########'),
             'nama_lengkap' => fake()->name(),
             'jurusan' => fake()->randomElement(['Informatika', 'Sistem Informasi', 'Teknik Komputer']),

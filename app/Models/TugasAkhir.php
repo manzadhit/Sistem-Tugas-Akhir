@@ -30,4 +30,9 @@ class TugasAkhir extends Model
     {
         return $this->hasMany(Submission::class, 'tugas_akhir_id');
     }
+
+    public function kajurSubmissions()
+    {
+        return $this->hasMany(Submission::class, 'tugas_akhir_id');
+    }
 }

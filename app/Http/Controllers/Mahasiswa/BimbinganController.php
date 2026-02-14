@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
-use Illuminate\Http\Request;
-use App\Models\DosenPembimbing;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
+use App\Models\DosenPembimbing;
+use App\Models\User;
 use App\Services\SubmissionService;
+use Illuminate\Http\Request;
 
 class BimbinganController extends Controller
 {
@@ -62,5 +63,12 @@ class BimbinganController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal mengirim submission: ' . $e->getMessage());
         }
+    }
+
+    public function mintaPenguji()
+    {
+        $kajur = User::with('profileDosen')->where('role', 'kajur')->first();
+
+        return view('mahasiswa.minta-penguji', compact('kajur'));
     }
 }
