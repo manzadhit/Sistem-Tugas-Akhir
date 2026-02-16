@@ -49,7 +49,7 @@
             <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Pembimbing</th>
             <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Tanggal
               Pengajuan</th>
-            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Status
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Status Laporan
             </th>
             <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Aksi
             </th>
@@ -81,7 +81,7 @@
                 {{ $permintaan->created_at->translatedFormat('d M Y') }}</td>
               <td class="px-5 py-4">
                 <span
-                  class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">{{ $permintaan->status }}</span>
+                  class="inline-flex rounded-full {{ $permintaan->status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800' }} px-2.5 py-0.5 text-xs font-medium">{{ $permintaan->status }}</span>
               </td> 
               <td class="px-5 py-4">
                 <a href="{{ route('kajur.penetapan-penguji', ['permintaan' => $permintaan->id]) }}"

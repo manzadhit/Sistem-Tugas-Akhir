@@ -20,4 +20,5 @@ Route::middleware(['auth', 'role:kajur'])->prefix('kajur')->name('kajur.')->grou
   Route::get('/permintaan-penguji', [PengujiController::class, 'index'])->name('permintaan-penguji.index');
   Route::get('/permintaan-penguji/{permintaan}', [PengujiController::class, 'show'])->name('penetapan-penguji');
   Route::put('/permintaan-penguji/{permintaan}/verify-laporan', [PengujiController::class, 'verifyLaporan'])->name('verify-laporan');
+  Route::post('/permintaan-penguji/{permintaan}/tetapkan', [PengujiController::class, 'tetapkanPenguji'])->name('tetapkanPenguji');
 });

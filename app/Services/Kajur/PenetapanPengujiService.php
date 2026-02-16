@@ -2,6 +2,7 @@
 
 namespace App\Services\Kajur;
 
+use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\KajurSubmissionFile;
 use Illuminate\Support\Facades\DB;
@@ -30,6 +31,19 @@ class PenetapanPengujiService
       }
 
       return $kajurSubmission->refresh();
+    });
+  }
+
+  public function tetapkanPenguji(int $mahasiswaId, array $dosen_ids)
+  {
+    return DB::transaction(function () use ($mahasiswaId, $dosen_ids) {
+      foreach($dosen_ids as $index => $id) {
+        DosenPenguji::create([
+          'mahasiswa_id' => $mahasiswaId,
+          'dosen_id' => $id,
+          'jenis_penguji' => 'penguji_'.$index + 1,
+        ]);
+      }
     });
   }
 }

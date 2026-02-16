@@ -161,16 +161,13 @@
 
                 {{-- Tombol Aksi --}}
                 <div x-show="status === 'pending'" class="flex flex-wrap gap-2">
-                  <x-action-button @click="showAccModal = true"
-                    class="bg-emerald-500 hover:bg-emerald-600">
+                  <x-action-button @click="showAccModal = true" class="bg-emerald-500 hover:bg-emerald-600">
                     <i class="fas fa-check-circle mr-1"></i> Acc
                   </x-action-button>
-                  <x-action-button @click="status = 'revisi'"
-                    class="bg-amber-500 hover:bg-amber-600">
+                  <x-action-button @click="status = 'revisi'" class="bg-amber-500 hover:bg-amber-600">
                     <i class="fas fa-pen mr-1"></i> Revisi
                   </x-action-button>
-                  <x-action-button @click="status = 'reject'"
-                    class="bg-red-500 hover:bg-red-600">
+                  <x-action-button @click="status = 'reject'" class="bg-red-500 hover:bg-red-600">
                     <i class="fas fa-times-circle"></i> Tolak
                   </x-action-button>
                 </div>
@@ -322,6 +319,7 @@
     </div>
   </div>
 
+  @if(!$hasPenguji && $permintaan->status == "acc")
   <!-- Form Penetapan Penguji -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
     <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
@@ -335,7 +333,9 @@
       </span>
     </div>
     <div class="p-6">
-      <form class="mt-2" id="formPenguji">
+      <form class="mt-2" action="{{ route('kajur.tetapkanPenguji', ['permintaan' => $permintaan->id]) }}" method="POST">
+        @csrf
+
         <!-- Dosen Penguji Label -->
         <div class="mb-5">
           <label class="block text-sm font-semibold text-gray-700 mb-4">
@@ -345,383 +345,135 @@
 
           <div class="flex flex-col gap-6" id="pengujiContainer">
 
-            <!-- ==================== Penguji 1 ==================== -->
-            <div
-              class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-              id="pengujiCard1" data-dosen-id="6">
-              <!-- Header -->
-              <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center text-base font-bold flex-shrink-0">1</span>
-                  <span class="text-sm font-semibold text-gray-700">Penguji 1 (Ranking #1)</span>
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                  <div
-                    class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100">
-                    <span class="text-[10px] font-semibold uppercase tracking-wide text-emerald-800">Skor
-                      Rekomendasi</span>
-                    <span class="text-lg font-bold text-emerald-600">0.847</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Info Display -->
+            @foreach ($dosenPenguji as $penguji)
+              <input type="hidden" name="penguji_ids[]" value="{{ $penguji->id }}" required />
               <div
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-200 rounded-lg mb-3">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-base">
-                    NR</div>
-                  <div>
-                    <h4 class="text-[15px] font-semibold text-gray-800">Natalis Ransi, S.Kom., M.Cs.</h4>
-                    <div class="text-xs text-gray-500 mt-0.5">
-                      <span class="mr-3"><i class="fas fa-id-badge"></i> 197605152005011001</span>
-                      <span><i class="fas fa-award"></i> Lektor</span>
-                    </div>
+                class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all">
+                <!-- Header -->
+                <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+                  <div class="flex items-center gap-3">
+                    <span
+                      class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center text-base font-bold flex-shrink-0">{{ $loop->iteration }}</span>
+                    <span class="text-sm font-semibold text-gray-700">Penguji {{ $loop->iteration }} (Ranking
+                      #{{ $loop->iteration }})</span>
                   </div>
-                </div>
-                <button type="button"
-                  class="px-4 py-2 bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold hover:bg-amber-200 hover:border-amber-400 transition-all flex items-center gap-1.5 cursor-pointer"
-                  onclick="openGantiModal(1)">
-                  <i class="fas fa-exchange-alt text-[11px]"></i> Ganti
-                </button>
-              </div>
-              <input type="hidden" id="penguji1" name="penguji1" value="6" required />
-
-              <!-- Detail Perhitungan -->
-              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onclick="toggleReason('reason1')">
-                  <i class="fas fa-calculator text-violet-500"></i>
-                  <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                  <i class="fas fa-chevron-down text-gray-400 text-xs ml-auto transition-transform" id="toggle1"></i>
-                </div>
-                <div class="hidden border-t border-gray-200 bg-gray-50 p-4" id="reason1">
-                  <!-- CBF -->
-                  <div class="mb-4 pb-4 border-b border-dashed border-gray-200">
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
-                    </div>
+                  <div class="flex gap-2 flex-wrap">
                     <div
-                      class="flex items-center justify-between px-3 py-2 bg-blue-100 rounded-md text-sm font-semibold">
-                      <span class="text-blue-800">Nilai Similarity (CBF)</span>
-                      <span class="text-blue-800 text-base">0.90</span>
+                      class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100">
+                      <span class="text-[10px] font-semibold uppercase tracking-wide text-emerald-800">Skor
+                        Rekomendasi</span>
+                      <span class="text-lg font-bold text-emerald-600">0.847</span>
                     </div>
                   </div>
-                  <!-- MAUT -->
-                  <div>
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
-                    </div>
-                    <table class="w-full border-collapse text-xs mb-2 bg-white">
-                      <thead>
-                        <tr>
-                          <th class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
-                            Atribut</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Nilai</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Bobot</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
-                            Utility</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Similarity (CBF)</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.90</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.35</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.315</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Beban Bimbingan</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.80</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.25</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.200</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Jabatan Fungsional</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.85</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.170</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Pengalaman Menguji</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.81</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.162</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                </div>
+
+                <!-- Info Display -->
+                <div
+                  class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-200 rounded-lg mb-3">
+                  <div class="flex items-center gap-3">
                     <div
-                      class="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-md text-sm font-semibold">
-                      <span class="text-emerald-800">Total Skor MAUT</span>
-                      <span class="text-emerald-800 text-base">0.847</span>
+                      class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-base">
+                      NR</div>
+                    <div>
+                      <h4 class="text-[15px] font-semibold text-gray-800">{{ $penguji->nama_lengkap }}</h4>
+                      <div class="text-xs text-gray-500 mt-0.5">
+                        <span class="mr-3"><i class="fas fa-id-badge"></i> {{ $penguji->nidn }}</span>
+                        <span><i class="fas fa-award"></i> {{ $penguji->jabatan_fungsional }}</span>
+                      </div>
                     </div>
                   </div>
+                  <button type="button"
+                    class="px-4 py-2 bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold hover:bg-amber-200 hover:border-amber-400 transition-all flex items-center gap-1.5 cursor-pointer"
+                    onclick="openGantiModal(1)">
+                    <i class="fas fa-exchange-alt text-[11px]"></i> Ganti
+                  </button>
                 </div>
-              </div>
-            </div>
 
-            <!-- ==================== Penguji 2 ==================== -->
-            <div
-              class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-              id="pengujiCard2" data-dosen-id="5">
-              <!-- Header -->
-              <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center text-base font-bold flex-shrink-0">2</span>
-                  <span class="text-sm font-semibold text-gray-700">Penguji 2 (Ranking #2)</span>
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                  <div
-                    class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100">
-                    <span class="text-[10px] font-semibold uppercase tracking-wide text-emerald-800">Skor
-                      Rekomendasi</span>
-                    <span class="text-lg font-bold text-emerald-600">0.793</span>
-                  </div>
-                </div>
-              </div>
 
-              <!-- Info Display -->
-              <div
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-200 rounded-lg mb-3">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-base">
-                    MY</div>
-                  <div>
-                    <h4 class="text-[15px] font-semibold text-gray-800">Muh. Yamin, S.T., M.Eng.</h4>
-                    <div class="text-xs text-gray-500 mt-0.5">
-                      <span class="mr-3"><i class="fas fa-id-badge"></i> 197803252006041002</span>
-                      <span><i class="fas fa-award"></i> Lektor</span>
-                    </div>
+                <!-- Detail Perhitungan -->
+                <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                  <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onclick="toggleReason('reason1')">
+                    <i class="fas fa-calculator text-violet-500"></i>
+                    <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs ml-auto transition-transform"
+                      id="toggle1"></i>
                   </div>
-                </div>
-                <button type="button"
-                  class="px-4 py-2 bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold hover:bg-amber-200 hover:border-amber-400 transition-all flex items-center gap-1.5 cursor-pointer"
-                  onclick="openGantiModal(2)">
-                  <i class="fas fa-exchange-alt text-[11px]"></i> Ganti
-                </button>
-              </div>
-              <input type="hidden" id="penguji2" name="penguji2" value="5" required />
-
-              <!-- Detail Perhitungan -->
-              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onclick="toggleReason('reason2')">
-                  <i class="fas fa-calculator text-violet-500"></i>
-                  <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                  <i class="fas fa-chevron-down text-gray-400 text-xs ml-auto transition-transform" id="toggle2"></i>
-                </div>
-                <div class="hidden border-t border-gray-200 bg-gray-50 p-4" id="reason2">
-                  <!-- CBF -->
-                  <div class="mb-4 pb-4 border-b border-dashed border-gray-200">
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
+                  <div class="hidden border-t border-gray-200 bg-gray-50 p-4" id="reason1">
+                    <!-- CBF -->
+                    <div class="mb-4 pb-4 border-b border-dashed border-gray-200">
+                      <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
+                        <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
+                      </div>
+                      <div
+                        class="flex items-center justify-between px-3 py-2 bg-blue-100 rounded-md text-sm font-semibold">
+                        <span class="text-blue-800">Nilai Similarity (CBF)</span>
+                        <span class="text-blue-800 text-base">0.90</span>
+                      </div>
                     </div>
-                    <div
-                      class="flex items-center justify-between px-3 py-2 bg-blue-100 rounded-md text-sm font-semibold">
-                      <span class="text-blue-800">Nilai Similarity (CBF)</span>
-                      <span class="text-blue-800 text-base">0.81</span>
-                    </div>
-                  </div>
-                  <!-- MAUT -->
-                  <div>
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
-                    </div>
-                    <table class="w-full border-collapse text-xs mb-2 bg-white">
-                      <thead>
-                        <tr>
-                          <th class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
-                            Atribut</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Nilai</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Bobot</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
-                            Utility</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Similarity (CBF)</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.81</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.35</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.284</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Beban Bimbingan</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.90</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.25</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.225</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Jabatan Fungsional</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.72</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.144</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Pengalaman Menguji</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.70</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.140</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div
-                      class="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-md text-sm font-semibold">
-                      <span class="text-emerald-800">Total Skor MAUT</span>
-                      <span class="text-emerald-800 text-base">0.793</span>
+                    <!-- MAUT -->
+                    <div>
+                      <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
+                        <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
+                      </div>
+                      <table class="w-full border-collapse text-xs mb-2 bg-white">
+                        <thead>
+                          <tr>
+                            <th
+                              class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
+                              Atribut</th>
+                            <th
+                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
+                              Nilai</th>
+                            <th
+                              class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
+                              Bobot</th>
+                            <th
+                              class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
+                              Utility</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Similarity (CBF)</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.90</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.35</td>
+                            <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.315</td>
+                          </tr>
+                          <tr>
+                            <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Beban Bimbingan</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.80</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.25</td>
+                            <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.200</td>
+                          </tr>
+                          <tr>
+                            <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Jabatan Fungsional
+                            </td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.85</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
+                            <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.170</td>
+                          </tr>
+                          <tr>
+                            <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Pengalaman Menguji
+                            </td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.81</td>
+                            <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
+                            <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.162</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div
+                        class="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-md text-sm font-semibold">
+                        <span class="text-emerald-800">Total Skor MAUT</span>
+                        <span class="text-emerald-800 text-base">0.847</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <!-- ==================== Penguji 3 ==================== -->
-            <div
-              class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-              id="pengujiCard3" data-dosen-id="2">
-              <!-- Header -->
-              <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
-                <div class="flex items-center gap-3">
-                  <span
-                    class="w-9 h-9 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-full flex items-center justify-center text-base font-bold flex-shrink-0">3</span>
-                  <span class="text-sm font-semibold text-gray-700">Penguji 3 (Ranking #3)</span>
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                  <div
-                    class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-100 to-emerald-100">
-                    <span class="text-[10px] font-semibold uppercase tracking-wide text-emerald-800">Skor
-                      Rekomendasi</span>
-                    <span class="text-lg font-bold text-emerald-600">0.756</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Info Display -->
-              <div
-                class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-200 rounded-lg mb-3">
-                <div class="flex items-center gap-3">
-                  <div
-                    class="w-11 h-11 bg-gradient-to-br from-indigo-500 to-violet-500 rounded-full flex items-center justify-center text-white font-bold text-base">
-                    RA</div>
-                  <div>
-                    <h4 class="text-[15px] font-semibold text-gray-800">Rizal Adi Saputra, S.Kom., M.Kom.</h4>
-                    <div class="text-xs text-gray-500 mt-0.5">
-                      <span class="mr-3"><i class="fas fa-id-badge"></i> 198507122010121003</span>
-                      <span><i class="fas fa-award"></i> Asisten Ahli</span>
-                    </div>
-                  </div>
-                </div>
-                <button type="button"
-                  class="px-4 py-2 bg-amber-100 text-amber-800 border border-amber-300 rounded-lg text-xs font-semibold hover:bg-amber-200 hover:border-amber-400 transition-all flex items-center gap-1.5 cursor-pointer"
-                  onclick="openGantiModal(3)">
-                  <i class="fas fa-exchange-alt text-[11px]"></i> Ganti
-                </button>
-              </div>
-              <input type="hidden" id="penguji3" name="penguji3" value="2" required />
-
-              <!-- Detail Perhitungan -->
-              <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                  onclick="toggleReason('reason3')">
-                  <i class="fas fa-calculator text-violet-500"></i>
-                  <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                  <i class="fas fa-chevron-down text-gray-400 text-xs ml-auto transition-transform" id="toggle3"></i>
-                </div>
-                <div class="hidden border-t border-gray-200 bg-gray-50 p-4" id="reason3">
-                  <!-- CBF -->
-                  <div class="mb-4 pb-4 border-b border-dashed border-gray-200">
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
-                    </div>
-                    <div
-                      class="flex items-center justify-between px-3 py-2 bg-blue-100 rounded-md text-sm font-semibold">
-                      <span class="text-blue-800">Nilai Similarity (CBF)</span>
-                      <span class="text-blue-800 text-base">0.76</span>
-                    </div>
-                  </div>
-                  <!-- MAUT -->
-                  <div>
-                    <div class="text-xs font-semibold text-indigo-500 mb-2 flex items-center gap-2">
-                      <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
-                    </div>
-                    <table class="w-full border-collapse text-xs mb-2 bg-white">
-                      <thead>
-                        <tr>
-                          <th class="bg-gray-100 px-2 py-2 text-left font-semibold text-gray-700 border border-gray-200">
-                            Atribut</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Nilai</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                            Bobot</th>
-                          <th
-                            class="bg-gray-100 px-2 py-2 text-right font-semibold text-gray-700 border border-gray-200">
-                            Utility</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Similarity (CBF)</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.76</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.35</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.266</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Beban Bimbingan</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.85</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.25</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.213</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Jabatan Fungsional</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.70</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.140</td>
-                        </tr>
-                        <tr>
-                          <td class="px-2 py-2 border border-gray-200 font-medium text-gray-600">Pengalaman Menguji</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.69</td>
-                          <td class="px-2 py-2 border border-gray-200 text-center text-gray-600">0.20</td>
-                          <td class="px-2 py-2 border border-gray-200 text-right text-gray-600">0.137</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                    <div
-                      class="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-green-100 to-emerald-100 rounded-md text-sm font-semibold">
-                      <span class="text-emerald-800">Total Skor MAUT</span>
-                      <span class="text-emerald-800 text-base">0.756</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            @endforeach
 
           </div>
-        </div>
-
-        <!-- Catatan -->
-        <div class="mb-5">
-          <label class="block text-sm font-semibold text-gray-700 mb-2">
-            Catatan <span class="text-xs text-gray-500 font-normal">(Opsional)</span>
-          </label>
-          <textarea
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg text-sm text-gray-700 resize-y min-h-[100px] font-inherit transition-all focus:outline-none focus:border-blue-500 focus:ring-[3px] focus:ring-blue-500/10"
-            id="catatan" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
         </div>
 
         <!-- Button Group -->
@@ -738,6 +490,7 @@
       </form>
     </div>
   </div>
+  @endif
 
   <script>
     // Alpine.js Component for File Upload
