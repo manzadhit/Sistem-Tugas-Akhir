@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('mahasiswa_id')->constrained('profile_mahasiswa')->cascadeOnDelete();
             $table->string('judul')->unique();
             $table->text('abstrak')->nullable();
+            $table->string('kata_kunci')->nullable();
             $table->enum('tahapan', ['proposal', 'hasil', 'skripsi'])->default('proposal');
             $table->string('file_path')->nullable();
             $table->enum('status', ['draft', 'revisi', 'acc', 'reject'])->default('draft');

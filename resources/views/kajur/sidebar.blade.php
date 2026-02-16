@@ -11,5 +11,10 @@
         'label' => 'Permintaan Pembimbing',
         'active' => request()->routeIs('kajur.permintaan-pembimbing', 'kajur.penetapan-pembimbing'),
     ],
-    ['href' => '#', 'icon' => 'fas fa-clipboard-check', 'label' => 'Permintaan Penguji'],
+    [
+        'href' => route('kajur.permintaan-penguji.index'),
+        'icon' => 'fas fa-clipboard-check',
+        'label' => 'Permintaan Penguji',
+        'active' => request()->routeIs('kajur.permintaan-penguji.index', 'kajur.penetapan-penguji'),
+    ],
 ]" />
