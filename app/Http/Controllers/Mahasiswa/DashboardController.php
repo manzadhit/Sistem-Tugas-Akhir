@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
+use App\Models\DosenPenguji;
 use App\Models\TugasAkhir;
 use Illuminate\Http\Request;
 
@@ -20,9 +21,17 @@ class DashboardController extends Controller
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->first();
 
 
-        $dosenPembimbing = DosenPembimbing::with('dosen')->where('mahasiswa_id', $mahasiswa->id)->where('status_aktif', true)->orderby('jenis_pembimbing')->get();
+        $dosenPembimbing = DosenPembimbing::with('dosen')
+        ->where('mahasiswa_id', $mahasiswa->id)
+        ->where('status_aktif', true)
+        ->orderBy('jenis_pembimbing')->get();
 
 
-        return view('mahasiswa.dashboard', compact('dosenPembimbing', 'tugasAkhir'));
+        $dosenPenguji = DosenPenguji::with('dosen')
+        ->where('mahasiswa_id', $mahasiswa->id)
+        ->where('status_aktif', true)
+        ->orderBy('jenis_penguji')->get();
+
+        return view('mahasiswa.dashboard', compact('dosenPembimbing', 'tugasAkhir', 'dosenPenguji'));
     }
 }

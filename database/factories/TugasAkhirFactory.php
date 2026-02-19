@@ -21,6 +21,7 @@ class TugasAkhirFactory extends Factory
             'mahasiswa_id' => ProfileMahasiswa::factory(),
             'judul' => fake()->sentence(6),
             'abstrak' => null,
+            'kata_kunci' => implode(', ', fake()->words(5)),
             'tahapan' => 'proposal',
             'file_path' => null,
             'status' => 'draft'

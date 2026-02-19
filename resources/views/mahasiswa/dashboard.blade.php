@@ -21,7 +21,8 @@
       <h3 class="flex items-center gap-2 font-semibold text-slate-900">
         <i class="fas fa-user-graduate text-blue-600"></i> Profil Mahasiswa
       </h3>
-      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap: {{ ucfirst($tugasAkhir->tahapan) }}</span>
+      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap:
+        {{ ucfirst($tugasAkhir->tahapan) }}</span>
     </div>
     <div class="grid grid-cols-2 gap-4 p-6">
       <div>
@@ -105,8 +106,20 @@
             <i class="fas fa-users text-blue-600"></i> Penguji
           </h3>
         </div>
-        <div class="p-6 space-y-3">
-          <p class="text-sm text-slate-500 text-center py-2">Belum ditetapkan.</p>
+        <div class='p-6 space-y-3'>
+          @forelse ($dosenPenguji as $penguji)
+            <div class="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-4 py-3">
+              <div>
+                <p class="text-sm font-semibold text-slate-900">Penguji {{ $loop->iteration }}</p>
+                <p class="text-xs text-slate-500">{{ $penguji->dosen->nama_lengkap ?? '-' }}</p>
+              </div>
+              <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>
+            </div>
+          @empty
+            <div class="p-6 space-y-3">
+              <p class="text-sm text-slate-500 text-center py-2">Belum ditetapkan.</p>
+            </div>
+          @endforelse
         </div>
       </div>
     </div>

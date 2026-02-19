@@ -16,6 +16,7 @@ class TugasAkhir extends Model
         'mahasiswa_id',
         'judul',
         'abstrak',
+        'kata_kunci',
         'tahapan',
         'file_path',
         'status',
@@ -34,5 +35,10 @@ class TugasAkhir extends Model
     public function kajurSubmissions()
     {
         return $this->hasMany(Submission::class, 'tugas_akhir_id');
+    }
+
+    public function ujian()
+    {
+        return $this->hasMany(Ujian::class, 'tugas_akhir_id');
     }
 }

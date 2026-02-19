@@ -1,11 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Mahasiswa\BimbinganController;
 use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\KajurSubmissionController;
 use App\Http\Controllers\Mahasiswa\PermintaanPembimbingController;
+use App\Http\Controllers\Mahasiswa\UjianController;
 use App\Models\KajurSubmission;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
   // Permintaan Pembimbing
@@ -22,5 +23,11 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
     Route::get('/bimbingan/minta-penguji', [BimbinganController::class, 'mintaPenguji'])->name('bimbingan.mintaPenguji');
 
     Route::post('/bimbingan/create-kajur-submission', [KajurSubmissionController::class, 'createKajurSubmission'])->name('bimbingan.createKajurSubmission');
+
+    Route::middleware('ujian.sequence')->prefix('ujian')->group(function () {
+      Route::get('/{jenis}', [UjianController::class, 'show'])->name('ujian')->whereIn('jenis', ['proposal', 'hasil', 'skripsi']);
+
+      Route::post('/{jenis}/dokumen', [UjianController::class, 'uploadDokumen'])->name('ujian.upload.dokumen')->whereIn('jenis', ['proposal', 'hasil', 'skripsi']);
+    });
   });
 });
