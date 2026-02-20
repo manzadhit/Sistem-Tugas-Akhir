@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhir')->cascadeOnDelete();
             $table->enum('jenis_ujian', ['proposal', 'hasil', 'skripsi']);
-            $table->enum('status', ['draft', 'diajukan', 'disetujui', 'ditolak', 'selesai'])->default('draft');
+            $table->enum('status', ['draft', 'menunggu_verifikasi', 'menunggu_undangan', 'menunggu_hasil', 'selesai'])->default('draft');
             $table->string('catatan')->nullable();
             $table->timestamps();
         });

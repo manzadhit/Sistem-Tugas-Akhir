@@ -58,4 +58,20 @@ class UjianService
       ]
     );
   }
+
+  public function isDokumenLengkap(Ujian $ujian, string $jenis, string $kategori = 'syarat'): bool
+  {
+      $syaratConfig = config("ujian.{$jenis}");
+      if (!$syaratConfig) {
+          return false;
+      }
+
+      $jumlahSyarat = count($syaratConfig);
+      
+      $dokumenUploaded = DokumenUjian::where('ujian_id', $ujian->id)
+          ->where('kategori', $kategori)
+          ->count();
+
+      return $dokumenUploaded >= $jumlahSyarat;
+  }
 }

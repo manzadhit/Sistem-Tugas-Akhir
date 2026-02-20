@@ -28,12 +28,10 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
       ->prefix('ujian')
       ->where(['jenis' => 'proposal|hasil|skripsi'])
       ->group(function () {
-      Route::get('/{jenis}', [UjianController::class, 'show'])->name('ujian');
-
-      Route::post('/{jenis}/dokumen', [UjianController::class, 'uploadDokumen'])->name('ujian.upload.dokumen');
-
-      Route::get('/{jenis}/jadwal', [UjianController::class, 'showJadwal'])->name('jadwal');
-      Route::post('/{jenis}/jadwal', [UjianController::class, 'addJadwal'])->name("addJadwal");
+      Route::get('/{jenis}', [UjianController::class, 'index'])->name('ujian');
+      
+      Route::get('/{jenis}/pengajuan', [UjianController::class, 'showPengajuan'])->name('ujian.pengajuan');
+      Route::post('/{jenis}/pengajuan', [UjianController::class, 'submitPengajuan'])->name('ujian.submitPengajuan');
     });
   });
 });

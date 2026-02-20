@@ -21,19 +21,19 @@
           'href' => route('mahasiswa.ujian', ['jenis' => 'proposal']),
           'icon' => 'fas fa-graduation-cap',
           'label' => 'Ujian Proposal',
-          'active' => request()->routeIs('mahasiswa.ujian') && request()->route('jenis') === 'proposal',
+          'active' => request()->is('mahasiswa/ujian/proposal*'),
       ],
       [
           'href' => route('mahasiswa.ujian', ['jenis' => 'hasil']),
           'icon' => 'fas fa-clipboard-check',
           'label' => 'Ujian Hasil',
-          'active' => request()->routeIs('mahasiswa.ujian') && request()->route('jenis') === 'hasil',
+          'active' => request()->is('mahasiswa/ujian/hasil*'),
       ],
       [
           'href' => route('mahasiswa.ujian', ['jenis' => 'skripsi']),
           'icon' => 'fas fa-user-graduate',
           'label' => 'Ujian Skripsi',
-          'active' => request()->routeIs('mahasiswa.ujian') && request()->route('jenis') === 'skripsi',
+          'active' => request()->is('mahasiswa/ujian/skripsi*'),
       ],
   
       ['section' => 'Lainnya'],

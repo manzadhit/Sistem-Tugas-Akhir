@@ -3,10 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Mahasiswa\StoreJadwalUjianRequest;
-use App\Http\Requests\Mahasiswa\UploadDokumenUjianRequest;
-use App\Models\JadwalUjian;
-use App\Models\TugasAkhir;
+use App\Http\Requests\Mahasiswa\SubmitPengajuanUjianRequest;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
 
@@ -14,14 +11,41 @@ class UjianController extends Controller
 {
     public function __construct(protected UjianService $ujianService) {}
 
-    public function show(Request $request)
+    public function index(Request $request)
     {
         $jenis = $request->route('jenis');
-        $daftarSyarat = config("ujian.{$jenis}");
-        return view("mahasiswa.ujian", compact('jenis', 'daftarSyarat'));
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        if (!$tugasAkhirId) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Tugas akhir belum tersedia.');
+        }
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        return match ($ujian->status) {
+            'draft'               => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
+            'menunggu_verifikasi' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
+            // 'menunggu_undangan'   => redirect()->route('mahasiswa.undangan', ['jenis' => $jenis]),
+            // 'menunggu_hasil'      => redirect()->route('mahasiswa.hasil', ['jenis' => $jenis]),
+            // 'selesai'             => redirect()->route('mahasiswa.selesai', ['jenis' => $jenis]),
+            default               => abort(500, 'Status ujian tidak valid')
+        };
     }
 
-    public function uploadDokumen(UploadDokumenUjianRequest $request)
+    public function showPengajuan(Request $request)
+    {
+        $jenis = $request->route('jenis');
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $daftarSyarat = config("ujian.{$jenis}");
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        return view("mahasiswa.ujian.upload-syarat", compact('jenis', 'daftarSyarat', 'ujian'));
+    }
+
+    public function submitPengajuan(SubmitPengajuanUjianRequest $request)
     {
         $jenis = $request->route('jenis');
         $mahasiswa = $request->user()->profileMahasiswa;
@@ -30,35 +54,13 @@ class UjianController extends Controller
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
         $files = $request->file('files', []);
+        
         try {
+            // Upload Dokumen
             $this->ujianService->uploadDokumen($ujian, $files, 'syarat', $mahasiswa->nim);
 
-            return back()->with('success', 'Berhasil upload berkas syarat ujian.');
-        } catch (\Throwable $th) {
-            return back()->with('error', 'Gagal upload berkas: ' . $th->getMessage());
-        }
-    }
-
-    public function showJadwal(Request $request)
-    {
-        $jenis = $request->route('jenis');
-
-        return view('mahasiswa.jadwal', compact('jenis'));
-    }
-
-    public function addJadwal(StoreJadwalUjianRequest $request)
-    {
-        $mahasiswa = $request->user()->profileMahasiswa;
-        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
-        $jenis = $request->route('jenis');
-
-        abort_if(!$tugasAkhirId, 403, 'Tugas akhir belum tersedia.');
-
-        [$jamMulai, $jamSelesai] = explode('-', $request->input('slot_waktu'));
-
-        try {
-            $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
-
+            // Simpan Jadwal
+            [$jamMulai, $jamSelesai] = explode('-', $request->input('slot_waktu'));
             $this->ujianService->simpanJadwal($ujian, [
                 'tanggal_ujian' => $request->input('tanggal_ujian'),
                 'jam_mulai'     => $jamMulai,
@@ -66,9 +68,19 @@ class UjianController extends Controller
                 'ruangan'       => $request->input('ruang_ujian'),
             ]);
 
-            return back()->with('success', 'Jadwal ujian berhasil disimpan.');
+            // Mengecek kelengkapan jika kurang
+            if (!$this->ujianService->isDokumenLengkap($ujian, $jenis)) {
+                return back()->with('success', 'Berhasil upload berkas dan jadwal. Namun berkas syarat belum lengkap.')->withInput();
+            }
+
+            // Update status ke menunggu_verifikasi jika semua lengkap
+            $ujian->update(['status' => 'menunggu_verifikasi']);
+            
+            // Redirect ke index (sementara akan abort 500 sampai route menunggu dibuat)
+            return back()->with('success', 'Berhasil mengajukan ujian. Menunggu verifikasi dari admin.');
+
         } catch (\Throwable $th) {
-            return back()->with('error', 'Gagal menyimpan jadwal ujian: ' . $th->getMessage());
+            return back()->with('error', 'Gagal memproses pengajuan: ' . $th->getMessage())->withInput();
         }
     }
 }
