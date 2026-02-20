@@ -3,6 +3,7 @@
 namespace App\Services\Mahasiswa;
 
 use App\Models\DokumenUjian;
+use App\Models\JadwalUjian;
 use App\Models\Ujian;
 use Illuminate\Support\Facades\DB;
 
@@ -16,13 +17,18 @@ class UjianService
     );
   }
 
-  public function uploadDokumen(Ujian $ujian, array $files, string $kategoriFile): void
+  public function uploadDokumen(Ujian $ujian, array $files, string $kategoriFile, string $mahasiswaNim): void
   {
-    DB::transaction(function () use ($ujian, $files, $kategoriFile) {
+
+    DB::transaction(function () use ($ujian, $files, $kategoriFile, $mahasiswaNim) {
       foreach ($files as $jenisDokumen => $file) {
         $extension = $file->getClientOriginalExtension();
-        $filename  = "{$jenisDokumen}_{$ujian->jenis_ujian}_" . now()->format('YmdHi') . ".{$extension}";
-        $path      = $file->storeAs("dokumen-ujian/{$ujian->jenis_ujian}/{$kategoriFile}", $filename, 'public');
+        $filename  = "{$jenisDokumen}" . ".{$extension}";
+        $path      = $file->storeAs("dokumen-ujian/{$mahasiswaNim}/{$ujian->jenis_ujian}/{$kategoriFile}", $filename, 'public');
+
+        if (!$path) {
+          throw new \RuntimeException("Gagal menyimpan file: {$filename}");
+        }
 
         DokumenUjian::updateOrCreate(
           [
@@ -38,5 +44,18 @@ class UjianService
         );
       }
     });
+  }
+
+  public function simpanJadwal(Ujian $ujian, array $dataJadwal): void
+  {
+    JadwalUjian::updateOrCreate(
+      ['ujian_id' => $ujian->id],
+      [
+        'tanggal_ujian' => $dataJadwal['tanggal_ujian'],
+        'jam_mulai'     => $dataJadwal['jam_mulai'],
+        'jam_selesai'   => $dataJadwal['jam_selesai'],
+        'ruangan'       => $dataJadwal['ruangan'],
+      ]
+    );
   }
 }

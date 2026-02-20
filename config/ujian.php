@@ -8,13 +8,13 @@ return [
       'desc' => 'Upload berkas pengajuan judul dan penunjukan pembimbing',
       'placeholder' => 'Pilih file pengajuan judul',
     ],
-    // [
-    //   'name' => 'toefl',
-    //   'id' => 'toefl-name',
-    //   'label' => 'TOEFL Sementara atau TOEFL Akhir',
-    //   'desc' => 'Upload bukti TOEFL sementara atau TOEFL akhir',
-    //   'placeholder' => 'Pilih file TOEFL',
-    // ],
+    [
+      'name' => 'toefl',
+      'id' => 'toefl-name',
+      'label' => 'TOEFL Sementara atau TOEFL Akhir',
+      'desc' => 'Upload bukti TOEFL sementara atau TOEFL akhir',
+      'placeholder' => 'Pilih file TOEFL',
+    ],
     // [
     //   'name' => 'pengesahan_kajur',
     //   'id' => 'pengesahan-kajur-name',

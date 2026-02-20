@@ -24,10 +24,16 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
     Route::post('/bimbingan/create-kajur-submission', [KajurSubmissionController::class, 'createKajurSubmission'])->name('bimbingan.createKajurSubmission');
 
-    Route::middleware('ujian.sequence')->prefix('ujian')->group(function () {
-      Route::get('/{jenis}', [UjianController::class, 'show'])->name('ujian')->whereIn('jenis', ['proposal', 'hasil', 'skripsi']);
+    Route::middleware('ujian.sequence')
+      ->prefix('ujian')
+      ->where(['jenis' => 'proposal|hasil|skripsi'])
+      ->group(function () {
+      Route::get('/{jenis}', [UjianController::class, 'show'])->name('ujian');
 
-      Route::post('/{jenis}/dokumen', [UjianController::class, 'uploadDokumen'])->name('ujian.upload.dokumen')->whereIn('jenis', ['proposal', 'hasil', 'skripsi']);
+      Route::post('/{jenis}/dokumen', [UjianController::class, 'uploadDokumen'])->name('ujian.upload.dokumen');
+
+      Route::get('/{jenis}/jadwal', [UjianController::class, 'showJadwal'])->name('jadwal');
+      Route::post('/{jenis}/jadwal', [UjianController::class, 'addJadwal'])->name("addJadwal");
     });
   });
 });

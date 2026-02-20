@@ -70,7 +70,7 @@
     </div>
   </div>
 
-    <!-- Flash Messages -->
+  <!-- Flash Messages -->
   <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
@@ -111,7 +111,11 @@
               </div>
             </div>
 
-            <p class="text-xs text-gray-500 mt-1.5">{{ $syarat['hint'] ?? 'Format: PDF, DOC, DOCX. Maksimal 2MB' }}</p>
+            @error('files.' . $syarat['name'])
+              <p class="text-xs text-red-600 mt-1.5"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
+            @enderror
+
+            <p class="text-xs text-gray-500 mt-1">Format: PDF. Maksimal 10MB</p>
           </div>
         @endforeach
 
