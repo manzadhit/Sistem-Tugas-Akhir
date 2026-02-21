@@ -27,6 +27,6 @@ class Ujian extends Model
 
     public function jadwalUjian()
     {
-        return $this->hasMany(JadwalUjian::class, 'ujian_id');
+        return $this->hasOne(JadwalUjian::class, 'ujian_id');
     }
 }
