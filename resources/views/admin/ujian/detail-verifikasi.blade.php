@@ -150,85 +150,114 @@
   </div>
 
   {{-- Berkas Syarat --}}
-  <form method="POST" action="{{ route('admin.ujian.verifikasi.proses', [$jenis, $ujian->id]) }}">
-    @csrf
-    <section class="mb-6 overflow-hidden bg-white shadow-sm rounded-xl">
-      <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
-        <div>
-          <h2 class="text-base font-semibold text-gray-900">Berkas Syarat</h2>
-          <p class="text-xs text-gray-500">Verifikasi setiap berkas, pilih ACC atau Tolak.</p>
+  <div x-data="{ showModal: false }">
+    <form id="verifikasiForm" method="POST" action="{{ route('admin.ujian.verifikasi.proses', [$jenis, $ujian->id]) }}">
+      @csrf
+      <section class="mb-6 overflow-hidden bg-white shadow-sm rounded-xl">
+        <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
+          <div>
+            <h2 class="text-base font-semibold text-gray-900">Berkas Syarat</h2>
+            <p class="text-xs text-gray-500">Verifikasi setiap berkas, pilih ACC atau Tolak.</p>
+          </div>
         </div>
-      </div>
-      <div class="p-6 space-y-4">
+        <div class="p-6 space-y-4">
 
-        @forelse ($ujian->dokumenUjian as $index => $dokumen)
-          <div x-data="{ status: 'acc' }"
-            class="flex items-start gap-4 p-4 border rounded-xl bg-yellow-50 border-yellow-300">
-            <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-yellow-400 rounded-full">
-              <i class="fas fa-exclamation text-sm"></i>
+          @php
+            $dokumenPending = $ujian->dokumenUjian->where('status', 'pending');
+            $dokumenAcc = $ujian->dokumenUjian->where('status', 'acc');
+          @endphp
+
+          {{-- Section: Sudah Disetujui (ACC) --}}
+          @if ($dokumenAcc->isNotEmpty())
+            <div class="{{ $dokumenPending->isNotEmpty() ? 'mb-8 pb-6 border-b border-gray-200' : '' }}">
+              <h3 class="mb-3 text-sm font-bold text-gray-800">Sudah Disetujui (ACC)</h3>
+              @foreach ($dokumenAcc as $index => $dokumen)
+                <div class="flex items-start gap-4 p-4 border rounded-xl bg-green-50 border-green-300 mb-4">
+                  <div
+                    class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-green-500 rounded-full">
+                    <i class="fas fa-check text-sm"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="mb-2 text-sm font-semibold text-gray-800">
+                      {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
+
+                    {{-- File Preview using Component --}}
+                    <x-file-preview-item :path="$dokumen->file_path" :uploadedAt="$dokumen->created_at" class="border-green-200 shadow-sm mb-0" />
+                  </div>
+                </div>
+              @endforeach
             </div>
-            <div class="flex-1 min-w-0">
-              <div class="mb-0.5 text-sm font-semibold text-gray-800">
-                {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
-              <div class="mb-3 text-xs text-gray-500">
-                Diunggah {{ $dokumen->created_at->translatedFormat('d M Y') }}
-              </div>
+          @endif
 
-              {{-- File Preview --}}
-              <div class="flex items-center gap-3 px-3 py-2 mb-3 bg-white border border-yellow-200 rounded-lg">
-                <div class="flex items-center justify-center w-9 h-9 text-red-500 bg-red-50 rounded-lg shrink-0">
-                  <i class="fas fa-file-pdf text-base"></i>
+          {{-- Section: Membutuhkan Verifikasi --}}
+          @if ($dokumenPending->isNotEmpty())
+            <h3 class="mb-3 text-sm font-bold text-gray-800">Membutuhkan Verifikasi</h3>
+            @foreach ($dokumenPending as $index => $dokumen)
+              <div x-data="{ status: 'acc' }"
+                class="flex items-start gap-4 p-4 border rounded-xl bg-yellow-50 border-yellow-300 mb-4">
+                <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-yellow-400 rounded-full">
+                  <i class="fas fa-exclamation text-sm"></i>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <div class="text-sm font-medium text-gray-900 truncate">{{ basename($dokumen->file_path) }}</div>
-                </div>
-                <div class="flex gap-3 shrink-0">
-                  <a href="{{ asset('storage/' . $dokumen->file_path) }}"
-                    class="text-xs font-semibold text-blue-600 hover:underline">
-                    <i class="fas fa-eye mr-1"></i>Lihat
-                  </a>
-                  <a href="{{ asset('storage/' . $dokumen->file_path) }}" download
-                    class="text-xs font-semibold text-green-500 hover:underline">
-                    <i class="fas fa-download mr-1"></i>Unduh
-                  </a>
-                </div>
-              </div>
+                  <div class="mb-2 text-sm font-semibold text-gray-800">
+                    {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
 
-              {{-- ACC / Tolak --}}
-              <div class="flex gap-4 mb-2">
-                <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
-                  <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="acc" x-model="status"
-                    class="accent-green-600" />
-                  <span>ACC</span>
-                </label>
-                <label class="inline-flex items-center gap-1.5 text-sm text-red-600 cursor-pointer">
-                  <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="tolak" x-model="status"
-                    class="accent-red-600" />
-                  <span>Tolak</span>
-                </label>
+                  {{-- File Preview using Component --}}
+                  <x-file-preview-item :path="$dokumen->file_path" :uploadedAt="$dokumen->created_at" class="mb-3 border-yellow-200 shadow-sm" />
+
+                  {{-- ACC / Tolak --}}
+                  <div class="flex gap-4 mb-2">
+                    <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                      <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="acc" x-model="status"
+                        class="accent-green-600" />
+                      <span>ACC</span>
+                    </label>
+                    <label class="inline-flex items-center gap-1.5 text-sm text-red-600 cursor-pointer">
+                      <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="tolak" x-model="status"
+                        class="accent-red-600" />
+                      <span>Tolak</span>
+                    </label>
+                  </div>
+                  <textarea x-show="status === 'tolak'" x-transition.duration.200ms name="dokumen[{{ $dokumen->id }}][catatan]"
+                    placeholder="Alasan penolakan (isi jika ditolak)"
+                    class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-y min-h-[70px] focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-100"></textarea>
+                </div>
               </div>
-              <textarea x-show="status === 'tolak'" x-transition.duration.200ms name="dokumen[{{ $dokumen->id }}][catatan]"
-                placeholder="Alasan penolakan (isi jika ditolak)"
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-y min-h-[70px] focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-100"></textarea>
+            @endforeach
+          @endif
+
+
+          @if ($dokumenPending->isEmpty() && $dokumenAcc->isEmpty())
+            <div class="flex flex-col items-center justify-center gap-2 py-10 text-center text-gray-400">
+              <i class="fas fa-folder-open text-2xl"></i>
+              <p class="text-sm">Tidak ada berkas yang dilampirkan</p>
             </div>
-          </div>
-        @empty
-          <div class="flex flex-col items-center justify-center gap-2 py-10 text-center text-gray-400">
-            <i class="fas fa-folder-open text-2xl"></i>
-            <p class="text-sm">Tidak ada berkas yang perlu diverifikasi</p>
-          </div>
-        @endforelse
+          @endif
 
-      </div>
+        </div>
 
-      {{-- Submit Buttons --}}
-      <div class="flex flex-wrap items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
-        <button type="submit"
-          class="px-5 py-2.5 text-sm font-semibold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
-          <i class="fas fa-check mr-1.5"></i> ACC &amp; Buat Undangan
-        </button>
-      </div>
-    </section>
-  </form>
+        {{-- Submit Buttons --}}
+        @if ($dokumenPending->isNotEmpty())
+          <div class="flex flex-wrap items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
+            <button type="button" @click="showModal = true"
+              class="px-5 py-2.5 text-sm font-semibold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
+              <i class="fas fa-check mr-1.5"></i> Simpan Verifikasi
+            </button>
+          </div>
+        @endif
+      </section>
+
+      {{-- Modal Konfirmasi --}}
+      <x-modal-confirm title="Konfirmasi Verifikasi" confirmText="Ya, Simpan">
+        <p class="mb-2">
+          Apakah Anda yakin proses verifikasi sudah benar?
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-sm text-gray-500">
+          <li>Jika ada yang <b>Ditolak</b>: Ujian dikembalikan ke revisi.</li>
+          <li>Jika semua <b>Di-ACC</b>: Status lanjut ke Menunggu Undangan.</li>
+        </ul>
+      </x-modal-confirm>
+    </form>
+  </div>
 
 @endsection

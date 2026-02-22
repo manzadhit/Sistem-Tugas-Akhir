@@ -222,57 +222,17 @@
         </div>
 
         {{-- Modal Konfirmasi (Alpine JS) --}}
-        <div x-show="showModal" style="display: none;" class="relative z-50">
-          <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-black/50"></div>
-
-          <div class="fixed inset-0 z-10 overflow-y-auto">
-            <div class="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
-              <div x-show="showModal" x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave="ease-in duration-200"
-                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                @click.away="showModal = false"
-                class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-
-                <div class="sm:flex sm:items-start">
-                  <div
-                    class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto {{ $isRevisi ? 'bg-red-100' : 'bg-blue-100' }} rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                    <i class="text-xl {{ $isRevisi ? 'text-red-600' : 'text-blue-600' }} fas fa-question"></i>
-                  </div>
-                  <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <h3 class="text-lg font-semibold leading-6 text-gray-900">
-                      {{ $isRevisi ? 'Konfirmasi Upload Ulang' : 'Konfirmasi Submit Dokumen' }}
-                    </h3>
-                    <div class="mt-2">
-                      <p class="text-sm text-gray-500">
-                        @if ($isRevisi)
-                          Apakah Anda yakin dokumen yang diupload ulang sudah benar? Dokumen akan dikirim ulang untuk
-                          diverifikasi.
-                        @else
-                          Apakah Anda yakin semua dokumen yang diupload sudah benar dan lengkap? Anda tidak dapat mengubah
-                          file setelah proses submit berhasil.
-                        @endif
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="mt-5 flex justify-end gap-3">
-                  <button type="button" @click="showModal = false"
-                    class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg hover:bg-gray-50 sm:w-auto">
-                    Batal
-                  </button>
-                  <button type="submit"
-                    class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-white shadow-sm rounded-lg {{ $isRevisi ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500' }} sm:ml-3 sm:mt-0 sm:w-auto">
-                    {{ $isRevisi ? 'Ya, Upload Ulang' : 'Ya, Submit Sekarang' }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <x-modal-confirm :title="$isRevisi ? 'Konfirmasi Upload Ulang' : 'Konfirmasi Submit Dokumen'" :theme="$isRevisi ? 'red' : 'blue'" :confirmText="$isRevisi ? 'Ya, Upload Ulang' : 'Ya, Submit Sekarang'">
+          <p class="text-sm text-gray-500">
+            @if ($isRevisi)
+              Apakah Anda yakin dokumen yang diupload ulang sudah benar? Dokumen akan dikirim ulang untuk
+              diverifikasi.
+            @else
+              Apakah Anda yakin semua dokumen yang diupload sudah benar dan lengkap? Anda tidak dapat mengubah
+              file setelah proses submit berhasil.
+            @endif
+          </p>
+        </x-modal-confirm>
 
       </form>
     </div>

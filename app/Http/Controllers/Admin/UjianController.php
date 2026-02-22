@@ -29,7 +29,7 @@ class UjianController extends Controller
         $ujian = Ujian::with([
             'tugasAkhir.mahasiswa.dosenPembimbing.dosen',
             'tugasAkhir.mahasiswa.dosenPenguji.dosen',
-            'dokumenUjian' => fn($q) => $q->where('kategori', 'syarat')->where('status', 'pending'),
+            'dokumenUjian' => fn($q) => $q->where('kategori', 'syarat'),
             'jadwalUjian',
         ])
             ->where('jenis_ujian', $jenis)
