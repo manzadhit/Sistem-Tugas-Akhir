@@ -15,9 +15,11 @@
       <h1 class="text-2xl font-bold mb-1">Pengajuan Ujian {{ ucfirst($jenis) }}</h1>
       <p class="text-base opacity-90">
         @if ($ujian->status === 'draft')
-        Lengkapi dokumen persyaratan untuk mengajukan ujian {{ $jenis }}
+          Lengkapi dokumen persyaratan untuk mengajukan ujian {{ $jenis }}
+        @elseif ($ujian->status === 'revisi')
+          Upload ulang dokumen yang ditolak oleh Admin
         @elseif ($ujian->status === 'menunggu_verifikasi')
-        Pengajuan ujian Anda sedang ditinjau oleh Koordinator/Kajur
+          Pengajuan ujian Anda sedang ditinjau oleh Koordinator/Kajur
         @endif
       </p>
     </div>
@@ -56,170 +58,215 @@
     </div>
   </div>
 
-  @if ($ujian->status === 'draft')
-  {{-- Info Alert --}}
-  <div class="flex items-start gap-3 p-4 mb-6 border rounded-lg bg-amber-50 border-amber-300">
-    <i class="flex-shrink-0 text-xl mt-0.5 text-amber-600 fas fa-info-circle"></i>
-    <div>
-      <h4 class="mb-1 text-sm font-semibold text-amber-800">Informasi Penting</h4>
-      <p class="text-xs text-amber-700">
-        Pastikan berkas benar dan jadwal telah dikoordinasikan dengan Penguji & Pembimbing. 
-        Jika terdapat berkas yang salah, ujian akan dikembalikan ke status revisi.
-      </p>
-    </div>
-  </div>
-
-  <!-- Flash Messages -->
-  <x-alert type="success" />
-  <x-alert type="error" />
-  <x-alert type="warning" />
-
-  <div x-data="{ showModal: false }">
-    <form id="ujianForm" action="{{ route('mahasiswa.ujian.submitPengajuan', ['jenis' => $jenis]) }}" method="POST"
-      enctype="multipart/form-data">
-      @csrf
-      
-      {{-- Form Card: Upload Dokumen --}}
-      <div class="overflow-hidden mb-6 bg-white shadow-sm rounded-xl">
-        <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
-          <i class="text-xl text-blue-600 fas fa-file-upload"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Upload Dokumen Persyaratan</h3>
+  @if (in_array($ujian->status, ['draft', 'revisi']))
+    {{-- Alert --}}
+    @if ($isRevisi)
+      <div class="flex items-start gap-3 p-4 mb-6 border rounded-lg bg-red-50 border-red-300">
+        <i class="flex-shrink-0 text-xl mt-0.5 text-red-600 fas fa-exclamation-triangle"></i>
+        <div>
+          <h4 class="mb-1 text-sm font-semibold text-red-800">Dokumen Ditolak</h4>
+          <p class="text-xs text-red-700">
+            Beberapa dokumen Anda ditolak oleh Admin. Silakan upload ulang dokumen yang ditolak di bawah ini.
+          </p>
         </div>
-        <div class="p-6">
-          @foreach ($daftarSyarat as $syarat)
-            <div class="mb-6">
-              <label class="block mb-1 text-sm font-semibold text-gray-700">
-                {{ $syarat['label'] }} <span class="text-red-600">*</span>
-              </label>
-              <p class="mb-2 text-xs text-gray-500">{{ $syarat['desc'] }}</p>
+      </div>
+    @else
+      <div class="flex items-start gap-3 p-4 mb-6 border rounded-lg bg-amber-50 border-amber-300">
+        <i class="flex-shrink-0 text-xl mt-0.5 text-amber-600 fas fa-info-circle"></i>
+        <div>
+          <h4 class="mb-1 text-sm font-semibold text-amber-800">Informasi Penting</h4>
+          <p class="text-xs text-amber-700">
+            Pastikan berkas benar dan jadwal telah dikoordinasikan dengan Penguji & Pembimbing.
+            Jika terdapat berkas yang salah, ujian akan dikembalikan ke status revisi.
+          </p>
+        </div>
+      </div>
+    @endif
 
-              <div
-                class="relative overflow-hidden transition bg-white border-2 border-blue-600 rounded-xl focus-within:ring-4 focus-within:ring-blue-100">
-                <input type="file" name="files[{{ $syarat['name'] }}]" id="{{ $syarat['name'] }}" accept=".pdf" required
-                  onchange="document.getElementById('label-{{ $syarat['name'] }}').textContent = this.files[0]?.name ?? '{{ $syarat['placeholder'] }}'"
-                  class="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer" />
-                <div class="flex items-stretch">
-                  <div
-                    class="flex items-center flex-shrink-0 gap-2 px-5 py-3 text-sm font-medium text-white transition bg-blue-800 hover:bg-blue-900">
-                    <i class="fas fa-cloud-upload-alt"></i>
-                    Browse File
+    <!-- Flash Messages -->
+    <x-alert type="success" />
+    <x-alert type="error" />
+    <x-alert type="warning" />
+
+    <div x-data="{ showModal: false }">
+      <form id="ujianForm" action="{{ route('mahasiswa.ujian.submitPengajuan', ['jenis' => $jenis]) }}" method="POST"
+        enctype="multipart/form-data">
+        @csrf
+
+        {{-- Form Card: Upload Dokumen --}}
+        <div class="overflow-hidden mb-6 bg-white shadow-sm rounded-xl">
+          <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
+            <i class="text-xl {{ $isRevisi ? 'text-red-600' : 'text-blue-600' }} fas fa-file-upload"></i>
+            <h3 class="text-lg font-semibold text-gray-900">
+              {{ $isRevisi ? 'Upload Ulang Dokumen' : 'Upload Dokumen Persyaratan' }}
+            </h3>
+          </div>
+          <div class="p-6">
+            @foreach ($daftarSyarat as $syarat)
+              <div class="mb-6">
+                {{-- Catatan Admin --}}
+                @if ($isRevisi && $rejectedDokumen->has($syarat['name']) && $rejectedDokumen[$syarat['name']]->catatan)
+                  <div class="flex items-start gap-2 p-3 mb-3 text-xs border rounded-lg bg-red-50 border-red-200">
+                    <i class="flex-shrink-0 mt-0.5 text-red-500 fas fa-comment-alt"></i>
+                    <div>
+                      <span class="font-semibold text-red-700">Catatan Admin:</span>
+                      <span class="text-red-600">{{ $rejectedDokumen[$syarat['name']]->catatan }}</span>
+                    </div>
                   </div>
-                  <div class="flex items-center flex-1 px-4 py-3 text-sm text-gray-500 border-l border-gray-200 bg-gray-50"
-                    id="label-{{ $syarat['name'] }}">
-                    {{ $syarat['placeholder'] }}
+                @endif
+
+                <label class="block mb-1 text-sm font-semibold text-gray-700">
+                  {{ $syarat['label'] }} <span class="text-red-600">*</span>
+                </label>
+                <p class="mb-2 text-xs text-gray-500">{{ $syarat['desc'] }}</p>
+
+                <div
+                  class="relative overflow-hidden transition bg-white border-2 {{ $isRevisi ? 'border-red-500 focus-within:ring-red-100' : 'border-blue-600 focus-within:ring-blue-100' }} rounded-xl focus-within:ring-4">
+                  <input type="file" name="files[{{ $syarat['name'] }}]" id="{{ $syarat['name'] }}" accept=".pdf"
+                    required
+                    onchange="document.getElementById('label-{{ $syarat['name'] }}').textContent = this.files[0]?.name ?? '{{ $syarat['placeholder'] ?? 'Pilih file' }}'"
+                    class="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer" />
+                  <div class="flex items-stretch">
+                    <div
+                      class="flex items-center flex-shrink-0 gap-2 px-5 py-3 text-sm font-medium text-white transition {{ $isRevisi ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-800 hover:bg-blue-900' }}">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      Browse File
+                    </div>
+                    <div
+                      class="flex items-center flex-1 px-4 py-3 text-sm text-gray-500 border-l border-gray-200 bg-gray-50"
+                      id="label-{{ $syarat['name'] }}">
+                      {{ $syarat['placeholder'] ?? 'Pilih file' }}
+                    </div>
                   </div>
+                </div>
+
+                @error('files.' . $syarat['name'])
+                  <p class="text-xs text-red-600 mt-1.5"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
+                @enderror
+
+                <p class="mt-1 text-xs text-gray-500">Format: PDF. Maksimal 10MB</p>
+              </div>
+            @endforeach
+          </div>
+        </div>
+
+        {{-- Form Card: Jadwal Ujian --}}
+        @if (!$isRevisi)
+          <div class="overflow-hidden bg-white shadow-sm rounded-xl">
+            <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
+              <i class="text-xl text-blue-600 fas fa-calendar-alt"></i>
+              <h3 class="text-lg font-semibold text-gray-900">Input Rencana Jadwal Ujian</h3>
+            </div>
+
+            <div class="p-6 space-y-6">
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label for="tanggal_ujian" class="block mb-1 text-sm font-semibold text-gray-700">Tanggal Ujian <span
+                      class="text-red-600">*</span></label>
+                  <input type="date" id="tanggal_ujian" name="tanggal_ujian" required
+                    value="{{ old('tanggal_ujian') }}" onclick="this.showPicker()"
+                    class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('tanggal_ujian') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}" />
+                  @error('tanggal_ujian')
+                    <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </p>
+                  @enderror
+                </div>
+
+                <div>
+                  <label for="slot_waktu" class="block mb-1 text-sm font-semibold text-gray-700">Slot Waktu <span
+                      class="text-red-600">*</span></label>
+                  <select id="slot_waktu" name="slot_waktu" required
+                    class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('slot_waktu') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}">
+                    <option value="">Pilih slot waktu</option>
+                    <option value="08:00-09:00" @selected(old('slot_waktu') === '08:00-09:00')>08.00 – 09.00</option>
+                    <option value="09:30-11:00" @selected(old('slot_waktu') === '09:30-11:00')>09.30 – 11.00</option>
+                    <option value="13:30-15:00" @selected(old('slot_waktu') === '13:30-15:00')>13.30 – 15.00</option>
+                    <option value="15:00-16:30" @selected(old('slot_waktu') === '15:00-16:30')>15.00 – 16.30</option>
+                  </select>
+                  @error('slot_waktu')
+                    <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
+                    </p>
+                  @enderror
                 </div>
               </div>
 
-              @error('files.' . $syarat['name'])
-                <p class="text-xs text-red-600 mt-1.5"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
-              @enderror
-
-              <p class="mt-1 text-xs text-gray-500">Format: PDF. Maksimal 10MB</p>
-            </div>
-          @endforeach
-        </div>
-      </div>
-
-      {{-- Form Card: Jadwal Ujian --}}
-      <div class="overflow-hidden bg-white shadow-sm rounded-xl">
-        <div class="flex items-center gap-3 px-6 py-5 border-b border-gray-200">
-          <i class="text-xl text-blue-600 fas fa-calendar-alt"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Input Rencana Jadwal Ujian</h3>
-        </div>
-
-        <div class="p-6 space-y-6">
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label for="tanggal_ujian" class="block mb-1 text-sm font-semibold text-gray-700">Tanggal Ujian <span class="text-red-600">*</span></label>
-              <input type="date" id="tanggal_ujian" name="tanggal_ujian" required value="{{ old('tanggal_ujian') }}"
-                onclick="this.showPicker()"
-                class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('tanggal_ujian') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}" />
-              @error('tanggal_ujian')
-                <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
-              @enderror
-            </div>
-
-            <div>
-              <label for="slot_waktu" class="block mb-1 text-sm font-semibold text-gray-700">Slot Waktu <span class="text-red-600">*</span></label>
-              <select id="slot_waktu" name="slot_waktu" required
-                class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('slot_waktu') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}">
-                <option value="">Pilih slot waktu</option>
-                <option value="08:00-09:00" @selected(old('slot_waktu') === '08:00-09:00')>08.00 – 09.00</option>
-                <option value="09:30-11:00" @selected(old('slot_waktu') === '09:30-11:00')>09.30 – 11.00</option>
-                <option value="13:30-15:00" @selected(old('slot_waktu') === '13:30-15:00')>13.30 – 15.00</option>
-                <option value="15:00-16:30" @selected(old('slot_waktu') === '15:00-16:30')>15.00 – 16.30</option>
-              </select>
-              @error('slot_waktu')
-                <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
-              @enderror
+              <div>
+                <label for="ruang_ujian" class="block mb-1 text-sm font-semibold text-gray-700">Ruang Ujian <span
+                    class="text-red-600">*</span></label>
+                <select id="ruang_ujian" name="ruang_ujian" required
+                  class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('ruang_ujian') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}">
+                  <option value="">Pilih ruangan</option>
+                  <option value="ruang-sidang-1" @selected(old('ruang_ujian') === 'ruang-sidang-1')>Ruang Sidang 1</option>
+                  <option value="ruang-sidang-2" @selected(old('ruang_ujian') === 'ruang-sidang-2')>Ruang Sidang 2</option>
+                  <option value="ruang-seminar" @selected(old('ruang_ujian') === 'ruang-seminar')>Ruang Seminar</option>
+                  <option value="lab-multimedia" @selected(old('ruang_ujian') === 'lab-multimedia')>Lab Multimedia</option>
+                  <option value="ruang-utama" @selected(old('ruang_ujian') === 'ruang-utama')>Ruang Utama</option>
+                </select>
+                @error('ruang_ujian')
+                  <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
+                  </p>
+                @enderror
+              </div>
             </div>
           </div>
+        @endif
 
-          <div>
-            <label for="ruang_ujian" class="block mb-1 text-sm font-semibold text-gray-700">Ruang Ujian <span class="text-red-600">*</span></label>
-            <select id="ruang_ujian" name="ruang_ujian" required
-              class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('ruang_ujian') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}">
-              <option value="">Pilih ruangan</option>
-              <option value="ruang-sidang-1" @selected(old('ruang_ujian') === 'ruang-sidang-1')>Ruang Sidang 1</option>
-              <option value="ruang-sidang-2" @selected(old('ruang_ujian') === 'ruang-sidang-2')>Ruang Sidang 2</option>
-              <option value="ruang-seminar" @selected(old('ruang_ujian') === 'ruang-seminar')>Ruang Seminar</option>
-              <option value="lab-multimedia" @selected(old('ruang_ujian') === 'lab-multimedia')>Lab Multimedia</option>
-              <option value="ruang-utama" @selected(old('ruang_ujian') === 'ruang-utama')>Ruang Utama</option>
-            </select>
-            @error('ruang_ujian')
-              <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}</p>
-            @enderror
-          </div>
-
-          {{-- Action Buttons --}}
-          <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
-            <button type="button" 
-              @click="if(document.getElementById('ujianForm').checkValidity()) { showModal = true } else { document.getElementById('ujianForm').reportValidity() }"
-              class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
-              <i class="fas fa-paper-plane"></i>
-              Ajukan Ujian
-            </button>
-          </div>
+        {{-- Action Buttons --}}
+        <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
+          <button type="button"
+            @click="if(document.getElementById('ujianForm').checkValidity()) { showModal = true } else { document.getElementById('ujianForm').reportValidity() }"
+            class="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium text-white transition {{ $isRevisi ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700' }} rounded-lg">
+            <i class="fas fa-paper-plane"></i>
+            {{ $isRevisi ? 'Upload Ulang Dokumen' : 'Ajukan Ujian' }}
+          </button>
         </div>
-      </div>
 
         {{-- Modal Konfirmasi (Alpine JS) --}}
         <div x-show="showModal" style="display: none;" class="relative z-50">
           <div x-show="showModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-black/50"></div>
-          
+
           <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
-              <div x-show="showModal" 
-                   x-transition:enter="ease-out duration-300"
-                   x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                   x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-                   x-transition:leave="ease-in duration-200"
-                   x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
-                   x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-                   @click.away="showModal = false"
-                   class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-                
+              <div x-show="showModal" x-transition:enter="ease-out duration-300"
+                x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave="ease-in duration-200"
+                x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+                x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                @click.away="showModal = false"
+                class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
+
                 <div class="sm:flex sm:items-start">
-                  <div class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto bg-blue-100 rounded-full sm:mx-0 sm:h-10 sm:w-10">
-                    <i class="text-xl text-blue-600 fas fa-question"></i>
+                  <div
+                    class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto {{ $isRevisi ? 'bg-red-100' : 'bg-blue-100' }} rounded-full sm:mx-0 sm:h-10 sm:w-10">
+                    <i class="text-xl {{ $isRevisi ? 'text-red-600' : 'text-blue-600' }} fas fa-question"></i>
                   </div>
                   <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                    <h3 class="text-lg font-semibold leading-6 text-gray-900">Konfirmasi Submit Dokumen</h3>
+                    <h3 class="text-lg font-semibold leading-6 text-gray-900">
+                      {{ $isRevisi ? 'Konfirmasi Upload Ulang' : 'Konfirmasi Submit Dokumen' }}
+                    </h3>
                     <div class="mt-2">
                       <p class="text-sm text-gray-500">
-                        Apakah Anda yakin semua dokumen yang diupload sudah benar dan lengkap? Anda tidak dapat mengubah file setelah proses submit berhasil.
+                        @if ($isRevisi)
+                          Apakah Anda yakin dokumen yang diupload ulang sudah benar? Dokumen akan dikirim ulang untuk
+                          diverifikasi.
+                        @else
+                          Apakah Anda yakin semua dokumen yang diupload sudah benar dan lengkap? Anda tidak dapat mengubah
+                          file setelah proses submit berhasil.
+                        @endif
                       </p>
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="mt-5 flex justify-end gap-3">
-                  <button type="button" @click="showModal = false" class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg hover:bg-gray-50 sm:w-auto">
+                  <button type="button" @click="showModal = false"
+                    class="inline-flex justify-center w-full px-3 py-2 text-sm font-semibold text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg hover:bg-gray-50 sm:w-auto">
                     Batal
                   </button>
-                  <button type="submit" class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-white shadow-sm rounded-lg bg-blue-600 hover:bg-blue-500 sm:ml-3 sm:mt-0 sm:w-auto">
-                    Ya, Submit Sekarang
+                  <button type="submit"
+                    class="inline-flex justify-center w-full px-3 py-2 mt-3 text-sm font-semibold text-white shadow-sm rounded-lg {{ $isRevisi ? 'bg-red-600 hover:bg-red-500' : 'bg-blue-600 hover:bg-blue-500' }} sm:ml-3 sm:mt-0 sm:w-auto">
+                    {{ $isRevisi ? 'Ya, Upload Ulang' : 'Ya, Submit Sekarang' }}
                   </button>
                 </div>
               </div>
@@ -229,31 +276,32 @@
 
       </form>
     </div>
-  </div>
-
   @elseif ($ujian->status === 'menunggu_verifikasi')
-  <div class="overflow-hidden bg-white shadow-sm rounded-xl mb-8">
-    <div class="p-6 flex flex-col items-center justify-center text-center">
-      <div class="w-12 h-12 mb-4 text-blue-600 bg-blue-50 rounded-full flex items-center justify-center text-xl">
-        <i class="fas fa-sync-alt fa-spin"></i>
-      </div>
-      <h3 class="text-base font-bold text-gray-900 mb-1">Sedang Diverifikasi</h3>
-      <p class="text-xs text-gray-500 max-w-md mx-auto">
-        Berkas dan jadwal ujian <span class="font-medium text-gray-700">{{ ucfirst($jenis) }}</span> Anda sedang ditinjau oleh Admin/Staf Jurusan.
-      </p>
-      <p class="text-xs text-gray-500 max-w-md mx-auto mt-1">
-        Cek halaman ini secara berkala untuk memantau status atau melihat surat undangan.
-      </p>
-      <div class="mt-5 flex gap-3 justify-center">
-        <a href="{{ route('mahasiswa.dashboard') }}" class="px-4 py-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
-          <i class="fas fa-arrow-left mr-1"></i> Beranda
-        </a>
-        <button onclick="window.location.reload()" class="px-4 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
-          <i class="fas fa-sync-alt mr-1"></i> Refresh
-        </button>
+    <div class="overflow-hidden bg-white shadow-sm rounded-xl mb-8">
+      <div class="p-6 flex flex-col items-center justify-center text-center">
+        <div class="w-12 h-12 mb-4 text-blue-600 bg-blue-50 rounded-full flex items-center justify-center text-xl">
+          <i class="fas fa-sync-alt fa-spin"></i>
+        </div>
+        <h3 class="text-base font-bold text-gray-900 mb-1">Sedang Diverifikasi</h3>
+        <p class="text-xs text-gray-500 max-w-md mx-auto">
+          Berkas dan jadwal ujian <span class="font-medium text-gray-700">{{ ucfirst($jenis) }}</span> Anda sedang
+          ditinjau oleh Admin/Staf Jurusan.
+        </p>
+        <p class="text-xs text-gray-500 max-w-md mx-auto mt-1">
+          Cek halaman ini secara berkala untuk memantau status atau melihat surat undangan.
+        </p>
+        <div class="mt-5 flex gap-3 justify-center">
+          <a href="{{ route('mahasiswa.dashboard') }}"
+            class="px-4 py-2 text-xs font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition">
+            <i class="fas fa-arrow-left mr-1"></i> Beranda
+          </a>
+          <button onclick="window.location.reload()"
+            class="px-4 py-2 text-xs font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition">
+            <i class="fas fa-sync-alt mr-1"></i> Refresh
+          </button>
+        </div>
       </div>
     </div>
-  </div>
   @endif
 
 @endsection

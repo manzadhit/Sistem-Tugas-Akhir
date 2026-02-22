@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhir')->cascadeOnDelete();
             $table->enum('jenis_ujian', ['proposal', 'hasil', 'skripsi']);
-            $table->enum('status', ['draft', 'menunggu_verifikasi', 'menunggu_undangan', 'menunggu_hasil', 'selesai'])->default('draft');
+            $table->enum('status', ['draft', 'menunggu_verifikasi', 'revisi', 'menunggu_undangan', 'menunggu_hasil', 'selesai'])->default('draft');
             $table->string('catatan')->nullable();
             $table->timestamps();
         });

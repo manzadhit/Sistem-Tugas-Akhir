@@ -32,6 +32,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
       
       Route::get('/{jenis}/pengajuan', [UjianController::class, 'showPengajuan'])->name('ujian.pengajuan');
       Route::post('/{jenis}/pengajuan', [UjianController::class, 'submitPengajuan'])->name('ujian.submitPengajuan');
+
+      Route::get('/{jenis}/undangan', [UjianController::class, 'showUndangan'])->name('ujian.undangan');
     });
   });
 });

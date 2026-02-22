@@ -64,7 +64,7 @@ class UjianController extends Controller
         }
 
         if ($adaTolak) {
-            $ujian->update(['status' => 'draft']);
+            $ujian->update(['status' => 'revisi']);
 
             return redirect()
                 ->back()
