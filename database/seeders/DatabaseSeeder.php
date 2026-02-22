@@ -5,12 +5,12 @@ namespace Database\Seeders;
 use App\Models\DosenPembimbing;
 use App\Models\User;
 use App\Models\ProfileDosen;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\ProfileMahasiswa;
 use App\Models\Submission;
 use App\Models\SubmissionFile;
 use App\Models\TugasAkhir;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -19,9 +19,51 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $dosens = ProfileDosen::factory()->count(6)->create();
-        $mahasiswas = ProfileMahasiswa::factory()->count(10)->create();
+        // ─── Admin ───
+        User::create([
+            'username' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
 
+        // ─── Kajur ───
+        User::create([
+            'username' => 'kajur',
+            'email' => 'kajur@example.com',
+            'password' => Hash::make('password'),
+            'role' => 'kajur',
+        ]);
+
+        // ─── Dosen (dosen1 – dosen6) ───
+        $dosens = collect();
+        for ($i = 1; $i <= 6; $i++) {
+            $dosens->push(
+                ProfileDosen::factory()->create([
+                    'user_id' => User::factory()->state([
+                        'username' => "dosen{$i}",
+                        'role' => 'dosen',
+                    ]),
+                    'nama_lengkap' => "Dosen {$i}",
+                ])
+            );
+        }
+
+        // ─── Mahasiswa (mahasiswa1 – mahasiswa10) ───
+        $mahasiswas = collect();
+        for ($i = 1; $i <= 10; $i++) {
+            $mahasiswas->push(
+                ProfileMahasiswa::factory()->create([
+                    'user_id' => User::factory()->state([
+                        'username' => "mahasiswa{$i}",
+                        'role' => 'mahasiswa',
+                    ]),
+                    'nama_lengkap' => "Mahasiswa {$i}",
+                ])
+            );
+        }
+
+        // ─── Relasi Pembimbing, Tugas Akhir, Submission ───
         foreach ($mahasiswas as $mahasiswa) {
             $pair = $dosens->random(2)->values();
 
@@ -52,13 +94,13 @@ class DatabaseSeeder extends Seeder
             SubmissionFile::create([
                 'submission_id' => $submission1->id,
                 'uploaded_by' => 'mahasiswa',
-                'file_path' => 'submission-file/Nyoman_CV_2025.pdf'
+                'file_path' => 'submission-file/Nyoman_CV_2025.pdf',
             ]);
 
             SubmissionFile::create([
                 'submission_id' => $submission2->id,
                 'uploaded_by' => 'mahasiswa',
-                'file_path' => 'submission-file/Nyoman_CV_2025.pdf'
+                'file_path' => 'submission-file/Nyoman_CV_2025.pdf',
             ]);
         }
     }

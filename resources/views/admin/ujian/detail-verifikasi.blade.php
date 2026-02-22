@@ -40,6 +40,11 @@
     </div>
   </div>
 
+  {{-- Flash Messages --}}
+  <x-alert type="success" />
+  <x-alert type="error" />
+  <x-alert type="warning" />
+
   {{-- Info Grid: 3 Kolom (Mahasiswa 2/3, Jadwal 1/3) --}}
   <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-4">
 
@@ -145,80 +150,85 @@
   </div>
 
   {{-- Berkas Syarat --}}
-  <section class="mb-6 overflow-hidden bg-white shadow-sm rounded-xl">
-    <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
-      <div>
-        <h2 class="text-base font-semibold text-gray-900">Berkas Syarat</h2>
-        <p class="text-xs text-gray-500">Verifikasi setiap berkas, pilih ACC atau Tolak.</p>
+  <form method="POST" action="{{ route('admin.ujian.verifikasi.proses', [$jenis, $ujian->id]) }}">
+    @csrf
+    <section class="mb-6 overflow-hidden bg-white shadow-sm rounded-xl">
+      <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
+        <div>
+          <h2 class="text-base font-semibold text-gray-900">Berkas Syarat</h2>
+          <p class="text-xs text-gray-500">Verifikasi setiap berkas, pilih ACC atau Tolak.</p>
+        </div>
       </div>
-    </div>
-    <div class="p-6 space-y-4">
+      <div class="p-6 space-y-4">
 
-      @forelse ($ujian->dokumenUjian as $index => $dokumen)
-        <div class="flex items-start gap-4 p-4 border rounded-xl bg-yellow-50 border-yellow-300">
-          <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-yellow-400 rounded-full">
-            <i class="fas fa-exclamation text-sm"></i>
+        @forelse ($ujian->dokumenUjian as $index => $dokumen)
+          <div x-data="{ status: 'acc' }"
+            class="flex items-start gap-4 p-4 border rounded-xl bg-yellow-50 border-yellow-300">
+            <div class="flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-yellow-400 rounded-full">
+              <i class="fas fa-exclamation text-sm"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="mb-0.5 text-sm font-semibold text-gray-800">
+                {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
+              <div class="mb-3 text-xs text-gray-500">
+                Diunggah {{ $dokumen->created_at->translatedFormat('d M Y') }}
+              </div>
+
+              {{-- File Preview --}}
+              <div class="flex items-center gap-3 px-3 py-2 mb-3 bg-white border border-yellow-200 rounded-lg">
+                <div class="flex items-center justify-center w-9 h-9 text-red-500 bg-red-50 rounded-lg shrink-0">
+                  <i class="fas fa-file-pdf text-base"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-gray-900 truncate">{{ basename($dokumen->file_path) }}</div>
+                </div>
+                <div class="flex gap-3 shrink-0">
+                  <a href="{{ asset('storage/' . $dokumen->file_path) }}"
+                    class="text-xs font-semibold text-blue-600 hover:underline">
+                    <i class="fas fa-eye mr-1"></i>Lihat
+                  </a>
+                  <a href="{{ asset('storage/' . $dokumen->file_path) }}" download
+                    class="text-xs font-semibold text-green-500 hover:underline">
+                    <i class="fas fa-download mr-1"></i>Unduh
+                  </a>
+                </div>
+              </div>
+
+              {{-- ACC / Tolak --}}
+              <div class="flex gap-4 mb-2">
+                <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
+                  <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="acc" x-model="status"
+                    class="accent-green-600" />
+                  <span>ACC</span>
+                </label>
+                <label class="inline-flex items-center gap-1.5 text-sm text-red-600 cursor-pointer">
+                  <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="tolak" x-model="status"
+                    class="accent-red-600" />
+                  <span>Tolak</span>
+                </label>
+              </div>
+              <textarea x-show="status === 'tolak'" x-transition.duration.200ms name="dokumen[{{ $dokumen->id }}][catatan]"
+                placeholder="Alasan penolakan (isi jika ditolak)"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-y min-h-[70px] focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-100"></textarea>
+            </div>
           </div>
-          <div class="flex-1 min-w-0">
-            <div class="mb-0.5 text-sm font-semibold text-gray-800">
-              {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
-            <div class="mb-3 text-xs text-gray-500">
-              Diunggah {{ $dokumen->created_at->translatedFormat('d M Y') }}
-            </div>
-
-            {{-- File Preview --}}
-            <div class="flex items-center gap-3 px-3 py-2 mb-3 bg-white border border-yellow-200 rounded-lg">
-              <div class="flex items-center justify-center w-9 h-9 text-red-500 bg-red-50 rounded-lg shrink-0">
-                <i class="fas fa-file-pdf text-base"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="text-sm font-medium text-gray-900 truncate">{{ basename($dokumen->file_path) }}</div>
-              </div>
-              <div class="flex gap-3 shrink-0">
-                <a href="{{ asset('storage/' . $dokumen->file_path) }}" target="_blank"
-                  class="text-xs font-semibold text-blue-600 hover:underline">
-                  <i class="fas fa-eye mr-1"></i>Lihat
-                </a>
-                <a href="{{ asset('storage/' . $dokumen->file_path) }}" download
-                  class="text-xs font-semibold text-gray-500 hover:underline">
-                  <i class="fas fa-download mr-1"></i>Unduh
-                </a>
-              </div>
-            </div>
-
-            {{-- ACC / Tolak --}}
-            <div class="flex gap-4 mb-2">
-              <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 cursor-pointer">
-                <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="acc" checked
-                  class="accent-green-600" />
-                <span>ACC</span>
-              </label>
-              <label class="inline-flex items-center gap-1.5 text-sm text-red-600 cursor-pointer">
-                <input type="radio" name="dokumen[{{ $dokumen->id }}][status]" value="tolak"
-                  class="accent-red-600" />
-                <span>Tolak</span>
-              </label>
-            </div>
-            <textarea name="dokumen[{{ $dokumen->id }}][catatan]" placeholder="Alasan penolakan (isi jika ditolak)"
-              class="hidden w-full px-3 py-2 text-sm border border-gray-300 rounded-lg resize-y min-h-[70px] focus:outline-none focus:border-red-400 focus:ring-1 focus:ring-red-100"></textarea>
+        @empty
+          <div class="flex flex-col items-center justify-center gap-2 py-10 text-center text-gray-400">
+            <i class="fas fa-folder-open text-2xl"></i>
+            <p class="text-sm">Tidak ada berkas yang perlu diverifikasi</p>
           </div>
-        </div>
-      @empty
-        <div class="flex flex-col items-center justify-center gap-2 py-10 text-center text-gray-400">
-          <i class="fas fa-folder-open text-2xl"></i>
-          <p class="text-sm">Tidak ada berkas yang perlu diverifikasi</p>
-        </div>
-      @endforelse
+        @endforelse
 
-    </div>
+      </div>
 
-    {{-- Submit Buttons --}}
-    <div class="flex flex-wrap items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
-      <button type="submit"
-        class="px-5 py-2.5 text-sm font-semibold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
-        <i class="fas fa-check mr-1.5"></i> ACC &amp; Buat Undangan
-      </button>
-    </div>
-  </section>
+      {{-- Submit Buttons --}}
+      <div class="flex flex-wrap items-center justify-end gap-3 px-6 py-4 border-t border-gray-200">
+        <button type="submit"
+          class="px-5 py-2.5 text-sm font-semibold text-white transition bg-blue-600 rounded-lg hover:bg-blue-700">
+          <i class="fas fa-check mr-1.5"></i> ACC &amp; Buat Undangan
+        </button>
+      </div>
+    </section>
+  </form>
 
 @endsection

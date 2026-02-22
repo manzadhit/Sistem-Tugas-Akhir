@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('kategori', ['syarat', 'hasil']);
             $table->string('jenis_dokumen');
             $table->string('file_path');
-            $table->enum('status', ['pending', 'valid', 'revisi', 'reject'])->default('pending');
+            $table->enum('status', ['pending', 'acc', 'tolak'])->default('pending');
             $table->string('catatan')->nullable();
             $table->timestamps();
         });
