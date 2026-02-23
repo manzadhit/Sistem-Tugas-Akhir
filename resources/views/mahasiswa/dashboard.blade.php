@@ -10,8 +10,8 @@
   {{-- Banner --}}
   <div class="relative h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 mb-8">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-      <h1 class="text-2xl font-bold mb-1">Dashboard Mahasiswa</h1>
-      <p class="text-sm opacity-90">Ringkasan informasi tugas akhir dan bimbingan</p>
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-1">Dashboard Mahasiswa</h1>
+      <p class="text-xs sm:text-sm opacity-90">Ringkasan informasi tugas akhir dan bimbingan</p>
     </div>
   </div>
 

@@ -28,7 +28,7 @@ class UjianController extends Controller
         return match ($ujian->status) {
             'draft', 'revisi' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_verifikasi' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
-            // 'menunggu_undangan'   => redirect()->route('mahasiswa.undangan', ['jenis' => $jenis]),
+            'menunggu_undangan'   => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             // 'menunggu_hasil'      => redirect()->route('mahasiswa.hasil', ['jenis' => $jenis]),
             // 'selesai'             => redirect()->route('mahasiswa.selesai', ['jenis' => $jenis]),
             default => abort(500, 'Status ujian tidak valid')
@@ -100,5 +100,10 @@ class UjianController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', 'Gagal memproses pengajuan: ' . $th->getMessage())->withInput();
         }
+    }
+
+    public function showUndangan($jenis)
+    {
+        return view('mahasiswa.ujian.undangan', compact('jenis'));
     }
 }

@@ -10,8 +10,8 @@
   <!-- Page Banner -->
   <div class="relative mb-8 h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-blue-700">
     <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-      <h1 class="mb-2 text-[1.75rem] font-bold">Pengajuan Penguji</h1>
-      <p class="text-base opacity-90">
+      <h1 class="mb-2 text-xl sm:text-[1.75rem] md:text-[2rem] font-bold">Pengajuan Penguji</h1>
+      <p class="text-xs sm:text-sm md:text-base opacity-90">
         Upload laporan Tugas Akhir untuk pengajuan penguji ke Ketua Jurusan
       </p>
     </div>
@@ -26,14 +26,14 @@
         <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
           <i class="fas fa-comments text-base"></i>
         </div>
-        <span class="text-center text-xs font-medium text-emerald-500">Bimbingan</span>
+        <span class="text-center text-[10px] sm:text-xs font-medium text-emerald-500">Bimbingan</span>
       </div>
 
       <div class="relative z-10 flex flex-1 flex-col items-center">
         <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
           <i class="fas fa-check-double text-base"></i>
         </div>
-        <span class="text-center text-xs font-medium text-emerald-500">ACC Pembimbing</span>
+        <span class="text-center text-[10px] sm:text-xs font-medium text-emerald-500">ACC Pembimbing</span>
       </div>
 
       <div class="relative z-10 flex flex-1 flex-col items-center">
@@ -41,7 +41,7 @@
           class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white ring-4 ring-blue-100">
           <i class="fas fa-user-check text-base"></i>
         </div>
-        <span class="text-center text-xs font-semibold text-blue-600">Minta Penguji</span>
+        <span class="text-center text-[10px] sm:text-xs font-semibold text-blue-600">Minta Penguji</span>
       </div>
     </div>
   </div>

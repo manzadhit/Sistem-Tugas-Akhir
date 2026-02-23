@@ -11,9 +11,9 @@
   {{-- Page Banner --}}
   <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-blue-600 to-blue-800">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-      <i class="fas fa-graduation-cap text-4xl mb-3"></i>
-      <h1 class="text-2xl font-bold mb-1">Pengajuan Ujian {{ ucfirst($jenis) }}</h1>
-      <p class="text-base opacity-90">
+      <i class="fas fa-graduation-cap text-3xl sm:text-4xl mb-3"></i>
+      <h1 class="text-xl sm:text-2xl md:text-[1.75rem] font-bold mb-1">Pengajuan Ujian {{ ucfirst($jenis) }}</h1>
+      <p class="text-xs sm:text-sm md:text-base opacity-90">
         @if ($ujian->status === 'draft')
           Lengkapi dokumen persyaratan untuk mengajukan ujian {{ $jenis }}
         @elseif ($ujian->status === 'revisi')
@@ -37,7 +37,7 @@
           class="flex items-center justify-center w-10 h-10 mb-2 text-base text-white bg-blue-600 rounded-full ring-4 ring-blue-100">
           <i class="fas fa-file-upload"></i>
         </div>
-        <span class="text-xs font-semibold text-center text-blue-600">Pengajuan Ujian</span>
+        <span class="text-[10px] sm:text-xs font-semibold text-center text-blue-600">Pengajuan Ujian</span>
       </div>
 
       {{-- Step: Verifikasi & Undangan (pending) --}}
@@ -45,7 +45,7 @@
         <div class="flex items-center justify-center w-10 h-10 mb-2 text-base text-gray-400 bg-gray-200 rounded-full">
           <i class="fas fa-envelope-open-text"></i>
         </div>
-        <span class="text-xs font-medium text-center text-gray-500">Undangan</span>
+        <span class="text-[10px] sm:text-xs font-medium text-center text-gray-500">Undangan</span>
       </div>
 
       {{-- Step: Hasil Ujian & Selesai (pending) --}}
@@ -53,7 +53,7 @@
         <div class="flex items-center justify-center w-10 h-10 mb-2 text-base text-gray-400 bg-gray-200 rounded-full">
           <i class="fas fa-check-circle"></i>
         </div>
-        <span class="text-xs font-medium text-center text-gray-500">Selesai</span>
+        <span class="text-[10px] sm:text-xs font-medium text-center text-gray-500">Selesai</span>
       </div>
     </div>
   </div>

@@ -10,8 +10,8 @@
   <!-- Page Banner -->
   <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-blue-600 to-blue-800">
     <div class="absolute inset-0 flex items-center justify-center flex-col text-white text-center p-4">
-      <h1 class="text-3xl font-bold mb-2">Bimbingan Proposal</h1>
-      <p class="text-base opacity-90">
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">Bimbingan Proposal</h1>
+      <p class="text-xs sm:text-sm md:text-base opacity-90">
         Upload dan kelola laporan bimbingan proposal Anda
       </p>
     </div>
@@ -29,7 +29,7 @@
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)] transition-all duration-300">
           <i class="fas fa-comments"></i>
         </div>
-        <span class="text-xs font-semibold text-blue-600 text-center">Bimbingan</span>
+        <span class="text-[10px] sm:text-xs font-semibold text-blue-600 text-center">Bimbingan</span>
       </div>
 
       <!-- Step 2 - Pending -->
@@ -38,7 +38,7 @@
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400 transition-all duration-300">
           <i class="fas fa-check-double"></i>
         </div>
-        <span class="text-xs font-medium text-gray-500 text-center">ACC Pembimbing</span>
+        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">ACC Pembimbing</span>
       </div>
 
       <!-- Step 3 - Pending -->
@@ -47,7 +47,7 @@
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400 transition-all duration-300">
           <i class="fas fa-user-check"></i>
         </div>
-        <span class="text-xs font-medium text-gray-500 text-center">Minta Penguji</span>
+        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">Minta Penguji</span>
       </div>
     </div>
   </div>

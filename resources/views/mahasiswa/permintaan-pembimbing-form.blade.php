@@ -8,13 +8,13 @@
       {{ session('warning') }}
     </div>
   @endif
-  
+
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
     <div>
-      <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">
+      <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
         Pengajuan Dosen Pembimbing
       </h1>
-      <p class="text-slate-500 mt-1">Isi judul & unggah bukti ACC (maks. 2MB)</p>
+      <p class="text-slate-500 mt-1 text-xs sm:text-sm">Isi judul & unggah bukti ACC (maks. 2MB)</p>
     </div>
 
     <span
