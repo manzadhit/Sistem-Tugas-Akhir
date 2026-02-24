@@ -131,7 +131,7 @@
             </div>
           </div>
           <div class="flex gap-2 w-full sm:w-auto mt-1 sm:mt-0">
-            <a href="{{ Storage::url($ujian->undanganUjian->file_path) }}" target="_blank"
+            <a href="{{ Storage::url($ujian->undanganUjian->file_path) }}"
               class="flex-1 sm:flex-none flex items-center justify-center px-3 py-2 sm:py-1.5 rounded-md border border-gray-200 bg-white text-xs font-medium text-gray-700 hover:border-blue-500 hover:text-blue-600 transition-all cursor-pointer">
               <i class="fas fa-eye mr-1.5 sm:mr-0 text-blue-600"></i> <span class="sm:hidden">Lihat</span>
             </a>
