@@ -78,11 +78,16 @@
               </td>
               <td class="px-6 py-4 text-sm text-gray-700 align-middle">
                 <span
-                  class="inline-block px-3 py-1 text-xs font-semibold text-amber-800 whitespace-nowrap bg-amber-100 rounded-full">Menunggu Verifikasi</span>
+                  class="inline-block px-3 py-1 text-xs font-semibold text-amber-800 whitespace-nowrap bg-amber-100 rounded-full">{{ ucwords(str_replace('_', ' ', $item->status)) }}</span>
               </td>
               <td class="px-6 py-4 text-sm text-gray-700 align-middle">
-                <a class="inline-flex items-center justify-center px-5 py-2 text-sm font-medium text-white transition rounded-lg whitespace-nowrap bg-gradient-to-br from-blue-500 to-blue-600 hover:-translate-y-px hover:shadow-md hover:shadow-blue-500/30"
-                  href="{{ route('admin.ujian.verifikasi.detail', ['jenis' => $item->jenis_ujian, 'id' => $item->id]) }}">Verifikasi</a>
+                @if ($item->status === 'menunggu_undangan')
+                  <a class="inline-flex items-center justify-center px-5 py-2 text-xs font-medium text-white transition rounded-lg whitespace-nowrap bg-gradient-to-br from-emerald-500 to-emerald-600 hover:-translate-y-px hover:shadow-md hover:shadow-emerald-500/30"
+                    href="{{ route('admin.ujian.undangan', ['jenis' => $item->jenis_ujian, 'id' => $item->id]) }}">Buat Undangan</a>
+                @else
+                  <a class="inline-flex items-center justify-center px-5 py-2 text-xs font-medium text-white transition rounded-lg whitespace-nowrap bg-gradient-to-br from-blue-500 to-blue-600 hover:-translate-y-px hover:shadow-md hover:shadow-blue-500/30"
+                    href="{{ route('admin.ujian.verifikasi.detail', ['jenis' => $item->jenis_ujian, 'id' => $item->id]) }}">Verifikasi Berkas</a>
+                @endif
               </td>
             </tr>
           @empty

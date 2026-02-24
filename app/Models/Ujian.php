@@ -11,7 +11,7 @@ class Ujian extends Model
     protected $fillable = [
         'tugas_akhir_id',
         'jenis_ujian',
-        'status', 
+        'status',
         'catatan'
     ];
 
@@ -28,5 +28,10 @@ class Ujian extends Model
     public function jadwalUjian()
     {
         return $this->hasOne(JadwalUjian::class, 'ujian_id');
+    }
+
+    public function undanganUjian()
+    {
+        return $this->hasOne(UndanganUjian::class, 'ujian_id');
     }
 }

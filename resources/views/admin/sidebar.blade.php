@@ -16,7 +16,7 @@
           'href' => route('admin.ujian.verifikasi', 'proposal'),
           'icon' => 'fas fa-file-signature',
           'label' => 'Proposal',
-          'active' => request()->is('admin/ujian/verifikasi/proposal*'),
+          'active' => request()->is('admin/ujian/proposal*'),
       ],
       ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Hasil'],
       ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],

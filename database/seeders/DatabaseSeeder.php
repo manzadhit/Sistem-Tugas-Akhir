@@ -23,16 +23,46 @@ class DatabaseSeeder extends Seeder
         User::create([
             'username' => 'admin',
             'email' => 'admin@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('1'),
             'role' => 'admin',
         ]);
 
         // ─── Kajur ───
-        User::create([
+        $kajurUser = User::create([
             'username' => 'kajur',
             'email' => 'kajur@example.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make('1'),
             'role' => 'kajur',
+        ]);
+        ProfileDosen::create([
+            'user_id' => $kajurUser->id,
+            'nidn' => '0012345601',
+            'nama_lengkap' => 'Dr. Ahmad Fauzi, M.Kom.',
+            'jurusan' => 'Informatika',
+            'program_studi' => 'S1',
+            'keahlian' => 'Rekayasa Perangkat Lunak',
+            'jabatan_fungsional' => 'Lektor Kepala',
+            'foto' => null,
+            'no_telp' => '081234567890',
+        ]);
+
+        // ─── Sekjur ───
+        $sekjurUser = User::create([
+            'username' => 'sekjur',
+            'email' => 'sekjur@example.com',
+            'password' => Hash::make('1'),
+            'role' => 'sekjur',
+        ]);
+        ProfileDosen::create([
+            'user_id' => $sekjurUser->id,
+            'nidn' => '0098765402',
+            'nama_lengkap' => 'Ir. Siti Rahayu, M.T.',
+            'jurusan' => 'Informatika',
+            'program_studi' => 'S1',
+            'keahlian' => 'Sistem Informasi',
+            'jabatan_fungsional' => 'Lektor',
+            'foto' => null,
+            'no_telp' => '089876543210',
         ]);
 
         // ─── Dosen (dosen1 – dosen6) ───
@@ -55,7 +85,7 @@ class DatabaseSeeder extends Seeder
             $mahasiswas->push(
                 ProfileMahasiswa::factory()->create([
                     'user_id' => User::factory()->state([
-                        'username' => "mahasiswa{$i}",
+                        'username' => "mhs{$i}",
                         'role' => 'mahasiswa',
                     ]),
                     'nama_lengkap' => "Mahasiswa {$i}",

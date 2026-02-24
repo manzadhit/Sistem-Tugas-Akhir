@@ -27,7 +27,7 @@ class DosenPenguji extends Model
         return $this->belongsTo(ProfileMahasiswa::class, 'mahasiswa_id');
     }
 
-    public function dosen()
+    public function dosen() 
     {
         return $this->belongsTo(ProfileDosen::class, 'dosen_id');
     }
