@@ -46,7 +46,7 @@ class SubmitPengajuanUjianRequest extends FormRequest
             ->where('jenis_ujian', $jenis)
             ->first();
 
-        return $ujian && $ujian->status === 'revisi';
+        return $ujian && $ujian->status === 'revisi_syarat';
     }
 
     public function messages(): array

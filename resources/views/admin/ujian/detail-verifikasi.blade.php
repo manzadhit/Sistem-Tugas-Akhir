@@ -253,7 +253,7 @@
           Apakah Anda yakin proses verifikasi sudah benar?
         </p>
         <ul class="list-disc pl-5 space-y-1 text-sm text-gray-500">
-          <li>Jika ada yang <b>Ditolak</b>: Ujian dikembalikan ke revisi.</li>
+          <li>Jika ada yang <b>Ditolak</b>: Ujian dikembalikan ke revisi syarat.</li>
           <li>Jika semua <b>Di-ACC</b>: Status lanjut ke Menunggu Undangan.</li>
         </ul>
       </x-modal-confirm>

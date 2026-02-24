@@ -16,9 +16,9 @@
       <p class="text-xs sm:text-sm md:text-base opacity-90">
         @if ($ujian->status === 'draft')
           Lengkapi dokumen persyaratan untuk mengajukan ujian {{ $jenis }}
-        @elseif ($ujian->status === 'revisi')
+        @elseif ($ujian->status === 'revisi_syarat')
           Upload ulang dokumen yang ditolak oleh Admin
-        @elseif ($ujian->status === 'menunggu_verifikasi')
+        @elseif ($ujian->status === 'menunggu_verifikasi_syarat')
           Pengajuan ujian Anda sedang ditinjau oleh Koordinator/Kajur
         @endif
       </p>
@@ -58,7 +58,7 @@
     </div>
   </div>
 
-  @if (in_array($ujian->status, ['draft', 'revisi']))
+  @if (in_array($ujian->status, ['draft', 'revisi_syarat']))
     {{-- Alert --}}
     @if ($isRevisi)
       <div class="flex items-start gap-3 p-4 mb-6 border rounded-lg bg-red-50 border-red-300">
@@ -77,7 +77,7 @@
           <h4 class="mb-1 text-sm font-semibold text-amber-800">Informasi Penting</h4>
           <p class="text-xs text-amber-700">
             Pastikan berkas benar dan jadwal telah dikoordinasikan dengan Penguji & Pembimbing.
-            Jika terdapat berkas yang salah, ujian akan dikembalikan ke status revisi.
+            Jika terdapat berkas yang salah, ujian akan dikembalikan ke status revisi syarat.
           </p>
         </div>
       </div>
@@ -236,7 +236,7 @@
 
       </form>
     </div>
-  @elseif ($ujian->status === 'menunggu_verifikasi')
+  @elseif ($ujian->status === 'menunggu_verifikasi_syarat')
     <div class="overflow-hidden bg-white shadow-sm rounded-xl mb-8">
       <div class="p-6 flex flex-col items-center justify-center text-center">
         <div class="w-12 h-12 mb-4 text-blue-600 bg-blue-50 rounded-full flex items-center justify-center text-xl">

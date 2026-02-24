@@ -48,6 +48,19 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
+  @if ($errors->any())
+    <div class="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 shadow-sm">
+      <div class="flex items-center gap-2 mb-2">
+        <i class="fas fa-exclamation-triangle text-red-600"></i>
+        <h3 class="text-sm font-semibold text-red-800">Terdapat Kesalahan</h3>
+      </div>
+      <ul class="list-disc pl-5 text-sm text-red-700 space-y-1">
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
 
   {{-- Info Grid: 3 Kolom (Mahasiswa 2/3, Jadwal 1/3) --}}
   <div class="grid grid-cols-1 gap-6 mb-6 lg:grid-cols-4">
@@ -169,24 +182,34 @@
         </div>
         <div class="flex flex-col gap-4 px-6 py-5">
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-semibold text-gray-700">Nomor Surat</label>
+            <label class="text-xs font-semibold text-gray-700">Nomor Surat <span class="text-red-500">*</span></label>
             <input name="nomor_surat"
-              class="px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
-              type="text" placeholder="Masukkan Nomor Surat" value="/UN29.13.2.1/PP/{{ now()->year }}" />
+              class="px-3 py-2.5 border {{ $errors->has('nomor_surat') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+              type="text" required placeholder="Masukkan Nomor Surat"
+              value="{{ old('nomor_surat', '/UN29.13.2.1/PP/' . now()->year) }}" />
+            @error('nomor_surat')
+              <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
+            @enderror
           </div>
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-semibold text-gray-700">Tanggal Surat</label>
+            <label class="text-xs font-semibold text-gray-700">Tanggal Surat <span class="text-red-500">*</span></label>
             <input name="tanggal_surat" onclick="this.showPicker()"
-              class="px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
-              type="date" placeholder="Pilih Tanggal Surat"
-              value="{{ optional($ujian->undanganUjian?->tanggal_surat)->format('Y-m-d') }}" />
+              class="px-3 py-2.5 border {{ $errors->has('tanggal_surat') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+              type="date" required placeholder="Pilih Tanggal Surat"
+              value="{{ old('tanggal_surat', optional($ujian->undanganUjian?->tanggal_surat)->format('Y-m-d')) }}" />
+            @error('tanggal_surat')
+              <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
+            @enderror
           </div>
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-semibold text-gray-700">Perihal</label>
+            <label class="text-xs font-semibold text-gray-700">Perihal <span class="text-red-500">*</span></label>
             <input name="hal"
-              class="px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
-              type="text" placeholder="Masukkan Perihal Surat"
-              value="{{ $ujian->undanganUjian->hal ?? 'Undangan Seminar ' . ucfirst($jenis) }}" />
+              class="px-3 py-2.5 border {{ $errors->has('hal') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+              type="text" required placeholder="Masukkan Perihal Surat"
+              value="{{ old('hal', $ujian->undanganUjian->hal ?? 'Undangan Seminar ' . ucfirst($jenis)) }}" />
+            @error('hal')
+              <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
+            @enderror
           </div>
           <div class="flex flex-col gap-1.5">
             <label class="text-xs font-semibold text-gray-700">Ketua Sidang</label>
@@ -196,17 +219,24 @@
               type="text" readonly value="{{ $ketuaSidang->nama_lengkap ?? '' }}" />
           </div>
           <div class="flex flex-col gap-1.5">
-            <label class="text-xs font-semibold text-gray-700">Sekertaris Sidang</label>
-            <select name="sekretaris_sidang_id"
-              class="px-3 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-900 bg-gray-50 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
-              type="text" placeholder="Masukkan Nama Sekertaris Sidang">
+            <label class="text-xs font-semibold text-gray-700">Sekertaris Sidang <span
+                class="text-red-500">*</span></label>
+            <select name="sekretaris_sidang_id" required
+              class="px-3 py-2.5 border {{ $errors->has('sekretaris_sidang_id') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
+              placeholder="Masukkan Nama Sekertaris Sidang">
               <option value="">Pilih Sekertaris Sidang</option>
-              <option value="{{ $ketuaJurusan->id }}">{{ $ketuaJurusan->nama_lengkap }} - Ketua Jurusan
+              <option value="{{ $ketuaJurusan->id }}"
+                {{ old('sekretaris_sidang_id', $sekretarisJurusan->id) == $ketuaJurusan->id ? 'selected' : '' }}>
+                {{ $ketuaJurusan->nama_lengkap }} - Ketua Jurusan
               </option>
-              <option selected value="{{ $sekretarisJurusan->id }}">{{ $sekretarisJurusan->nama_lengkap }} - Sekertaris
-                Jurusan
+              <option value="{{ $sekretarisJurusan->id }}"
+                {{ old('sekretaris_sidang_id', $sekretarisJurusan->id) == $sekretarisJurusan->id ? 'selected' : '' }}>
+                {{ $sekretarisJurusan->nama_lengkap }} - Sekertaris Jurusan
               </option>
             </select>
+            @error('sekretaris_sidang_id')
+              <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
+            @enderror
           </div>
         </div>
         <div class="px-4 sm:px-6 py-4 sm:py-5 bg-gray-50 border-t border-gray-100">
@@ -264,20 +294,63 @@
   </div>
 
   {{-- Action Footer --}}
-  <div
-    class="flex items-center justify-between p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 mt-6 max-sm:flex-col max-sm:gap-4 max-sm:text-center">
-    <div class="flex items-center gap-3">
-      <div>
-        <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan Mahasiswa
-        </p>
+  <div x-data="{ showConfirmModal: false, showSuccessModal: {{ session('show_success_modal') ? 'true' : 'false' }} }">
+    <form method="POST" action="{{ route('admin.ujian.undangan.kirim', [$jenis, $ujian->id]) }}">
+      @csrf
+      <div
+        class="flex items-center justify-between p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 mt-6 max-sm:flex-col max-sm:gap-4 max-sm:text-center">
+        <div class="flex items-center gap-3">
+          <div>
+            <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan
+              Mahasiswa</p>
+          </div>
+        </div>
+        <div class="flex gap-3 max-sm:w-full">
+          <button type="button" @click="showConfirmModal = true"
+            class="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:bg-emerald-600 hover:shadow-[0_4px_12px_rgba(16,185,129,0.4)] transition-all cursor-pointer border-none max-sm:flex-1 max-sm:justify-center">
+            <i class="fas fa-paper-plane"></i>
+            Kirim Undangan
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="flex gap-3 max-sm:w-full">
-      <button
-        class="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg bg-emerald-500 text-white text-xs sm:text-sm font-semibold shadow-[0_2px_8px_rgba(16,185,129,0.3)] hover:bg-emerald-600 hover:shadow-[0_4px_12px_rgba(16,185,129,0.4)] transition-all cursor-pointer border-none max-sm:flex-1 max-sm:justify-center">
-        <i class="fas fa-paper-plane"></i>
-        Kirim Undangan
-      </button>
+
+      <x-modal-confirm model="showConfirmModal" title="Konfirmasi Pengiriman" icon="fas fa-paper-plane" theme="blue"
+        confirmText="Ya, Kirim Sekarang" cancelText="Batal">
+        Apakah Anda yakin ingin mengirim undangan ujian ini? Undangan akan segera dikirimkan kepada seluruh Dosen
+        Pembimbing, Dosen Penguji, dan Mahasiswa yang bersangkutan.
+      </x-modal-confirm>
+    </form>
+
+    {{-- Success Modal --}}
+    <div x-show="showSuccessModal" style="display: none;" class="relative z-50">
+      <div x-show="showSuccessModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-black/50"></div>
+      <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
+          <div x-show="showSuccessModal" x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+            x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+            class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+            <div>
+              <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
+                <i class="fas fa-check text-xl text-emerald-600"></i>
+              </div>
+              <div class="mt-3 text-center sm:mt-5">
+                <h3 class="text-lg font-semibold leading-6 text-gray-900">Berhasil Dikirim!</h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">Undangan telah berhasil dikirim ke seluruh pihak yang bersangkutan.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="mt-5 sm:mt-6">
+              <a href="{{ route('admin.ujian.verifikasi', $jenis) }}"
+                class="inline-flex w-full justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600">
+                Oke, Kembali ke Daftar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 @endsection

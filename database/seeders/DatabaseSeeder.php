@@ -10,6 +10,7 @@ use App\Models\ProfileMahasiswa;
 use App\Models\Submission;
 use App\Models\SubmissionFile;
 use App\Models\TugasAkhir;
+use App\Models\DosenPenguji;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -132,6 +133,16 @@ class DatabaseSeeder extends Seeder
                 'uploaded_by' => 'mahasiswa',
                 'file_path' => 'submission-file/Nyoman_CV_2025.pdf',
             ]);
+
+            // Tambahkan dosen penguji untuk mhs1 dan mhs2
+            if (in_array($mahasiswa->user->username, ['mhs1', 'mhs2'])) {
+                $calonPenguji = $dosens->whereNotIn('id', [$pair[0]->id, $pair[1]->id])->take(3)->values();
+                if ($calonPenguji->count() >= 3) {
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[0]->id, 'jenis_penguji' => 'penguji_1']);
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[1]->id, 'jenis_penguji' => 'penguji_2']);
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[2]->id, 'jenis_penguji' => 'penguji_3']);
+                }
+            }
         }
     }
 }

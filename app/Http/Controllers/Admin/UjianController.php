@@ -26,7 +26,7 @@ class UjianController extends Controller
             }
         ])
             ->where('jenis_ujian', $jenis)
-            ->whereIn('status', ['menunggu_verifikasi', 'menunggu_undangan'])
+            ->whereIn('status', ['menunggu_verifikasi_syarat', 'menunggu_undangan'])
             ->get();
 
         return view('admin.ujian.list-mahasiswa', compact('ujians', 'jenis'));
@@ -72,7 +72,7 @@ class UjianController extends Controller
         }
 
         if ($adaTolak) {
-            $ujian->update(['status' => 'revisi']);
+            $ujian->update(['status' => 'revisi_syarat']);
 
             return redirect()
                 ->back()
@@ -136,38 +136,58 @@ class UjianController extends Controller
 
         $sekretarisSidang = ProfileDosen::find($request->sekretaris_sidang_id);
 
-        $data = $this->pdfService->buildData($ujian, [
-            'nomor' => $request->nomor_surat,
-            'hal' => $request->hal,
-            'tanggal_surat' => \Carbon\Carbon::parse($request->tanggal_surat)
-                ->locale('id')->isoFormat('D MMMM Y'),
-            'sekretaris' => $sekretarisSidang?->nama_lengkap ?? '-',
-            'penandatangan' => [
-                'nama' => $sekretarisJurusan?->nama_lengkap ?? '-',
-                'nip' => $sekretarisJurusan?->nip ?? '-',
-            ],
-        ]);
+        try {
+            //code...
 
-        $pdf = $this->pdfService->generate($data);
-        $fileName = 'undangan_seminar_'. $jenis . '_' . $ujian->tugasAkhir->mahasiswa->nim . '_' . $ujian->tugasAkhir->mahasiswa->nama_lengkap . '.pdf';
-        $filePath = 'undangan/' . $fileName;
-        Storage::disk('public')->put($filePath, $pdf->output());
 
-        UndanganUjian::updateOrCreate(
-            ['ujian_id' => $ujian->id],
-            [
-                'nomor_surat' => $request->nomor_surat,
+            $data = $this->pdfService->buildData($ujian, [
+                'nomor' => $request->nomor_surat,
                 'hal' => $request->hal,
-                'tanggal_surat' => $request->tanggal_surat,
-                'ketua_sidang_id' => $request->ketua_sidang_id,
-                'sekretaris_sidang_id' => $request->sekretaris_sidang_id,
-                'file_path' => $filePath,
-                'status' => 'draft',
-            ]
-        );
+                'tanggal_surat' => \Carbon\Carbon::parse($request->tanggal_surat)
+                    ->locale('id')->isoFormat('D MMMM Y'),
+                'sekretaris' => $sekretarisSidang?->nama_lengkap ?? '-',
+                'penandatangan' => [
+                    'nama' => $sekretarisJurusan?->nama_lengkap ?? '-',
+                    'nip' => $sekretarisJurusan?->nip ?? '-',
+                ],
+            ]);
+
+            $pdf = $this->pdfService->generate($data);
+            $fileName = 'undangan_seminar_' . $jenis . '_' . $ujian->tugasAkhir->mahasiswa->nim . '_' . $ujian->tugasAkhir->mahasiswa->nama_lengkap . '.pdf';
+            $filePath = 'undangan/' . $fileName;
+            Storage::disk('public')->put($filePath, $pdf->output());
+
+            UndanganUjian::updateOrCreate(
+                ['ujian_id' => $ujian->id],
+                [
+                    'nomor_surat' => $request->nomor_surat,
+                    'hal' => $request->hal,
+                    'tanggal_surat' => $request->tanggal_surat,
+                    'ketua_sidang_id' => $request->ketua_sidang_id,
+                    'sekretaris_sidang_id' => $request->sekretaris_sidang_id,
+                    'file_path' => $filePath,
+                    'status' => 'draft',
+                ]
+            );
+
+            return redirect()
+                ->route('admin.ujian.undangan', [$jenis, $id])
+                ->with('success', 'Undangan berhasil di-generate');
+
+        } catch (\Throwable $th) {
+            return back()->with('error', $th->getMessage());
+        }
+    }
+
+    public function kirimUndangan($jenis, $id)
+    {
+        $ujian = Ujian::with('undanganUjian')->where('jenis_ujian', $jenis)->findOrFail($id);
+
+        $ujian->undanganUjian->update(['status' => 'terkirim']);
+        $ujian->update(['status' => 'menunggu_hasil']);
 
         return redirect()
-            ->route('admin.ujian.undangan', [$jenis, $id])
-            ->with('success', 'Undangan berhasil di-generate');
+            ->back()
+            ->with('show_success_modal', true);
     }
 }

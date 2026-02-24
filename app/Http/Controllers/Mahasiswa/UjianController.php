@@ -26,10 +26,10 @@ class UjianController extends Controller
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
         return match ($ujian->status) {
-            'draft', 'revisi' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
-            'menunggu_verifikasi' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
-            'menunggu_undangan'   => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
-            // 'menunggu_hasil'      => redirect()->route('mahasiswa.hasil', ['jenis' => $jenis]),
+            'draft', 'revisi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
+            'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
+            'menunggu_undangan' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
+            'menunggu_hasil' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             // 'selesai'             => redirect()->route('mahasiswa.selesai', ['jenis' => $jenis]),
             default => abort(500, 'Status ujian tidak valid')
         };
@@ -44,7 +44,7 @@ class UjianController extends Controller
         $daftarSyarat = collect(config("ujian.{$jenis}"));
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
-        $isRevisi = $ujian->status === 'revisi';
+        $isRevisi = $ujian->status === 'revisi_syarat';
         $rejectedDokumen = collect();
 
         if ($isRevisi) {
@@ -91,8 +91,8 @@ class UjianController extends Controller
                 return back()->with('success', 'Berhasil upload berkas dan jadwal. Namun berkas syarat belum lengkap.')->withInput();
             }
 
-            // Update status ke menunggu_verifikasi jika semua lengkap
-            $ujian->update(['status' => 'menunggu_verifikasi']);
+            // Update status ke menunggu_verifikasi_syarat jika semua lengkap
+            $ujian->update(['status' => 'menunggu_verifikasi_syarat']);
 
             // Redirect ke index (sementara akan abort 500 sampai route menunggu dibuat)
             return back()->with('success', 'Berhasil mengajukan ujian. Menunggu verifikasi dari admin.');
@@ -102,8 +102,13 @@ class UjianController extends Controller
         }
     }
 
-    public function showUndangan($jenis)
+    public function showUndangan(Request $request, $jenis)
     {
-        return view('mahasiswa.ujian.undangan', compact('jenis'));
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        return view('mahasiswa.ujian.undangan', compact('jenis', 'ujian'));
     }
 }
