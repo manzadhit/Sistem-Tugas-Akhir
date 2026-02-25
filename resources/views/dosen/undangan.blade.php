@@ -19,11 +19,50 @@
     </div>
   </div>
 
-  {{-- Filter Section: .filter-section --}}
-  <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
-    {{-- .filter-grid: grid, auto-fit cols --}}
+  {{-- Stats --}}
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-3 lg:gap-6 mb-6">
+    <div
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-envelope-open-text"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Total Undangan</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">{{ $undangan->total() }}</div>
+      </div>
+    </div>
+    <div
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-green-100 text-green-600 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-user-check"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Sebagai Pembimbing</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">
+          {{ $undangan->getCollection()->filter(fn($u) => str_starts_with($u->peran, 'Pembimbing'))->count() }}
+        </div>
+      </div>
+    </div>
+    <div
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-user-shield"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Sebagai Penguji</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">
+          {{ $undangan->getCollection()->filter(fn($u) => str_starts_with($u->peran, 'Penguji'))->count() }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {{-- Filter Section --}}
+  <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-      {{-- .filter-group --}}
       <div class="flex flex-col gap-2">
         <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
         <input type="text"
@@ -49,7 +88,6 @@
           <option value="penguji">Penguji</option>
         </select>
       </div>
-      {{-- .btn.btn-primary --}}
       <button
         class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer">
         <i class="fas fa-filter"></i>
@@ -58,8 +96,8 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 gap-4 sm:gap-6">
-
+  {{-- Undangan List --}}
+  <div class="space-y-4 sm:space-y-6">
     @forelse ($undangan as $item)
       @php
         $ujian = $item->ujian;
@@ -80,7 +118,7 @@
 
         {{-- Card Header: Judul + Badge --}}
         <div class="flex items-start justify-between mb-3 sm:mb-4 gap-2 flex-wrap">
-          <div class="text-base sm:text-[1.05rem] font-bold text-gray-900 leading-snug">
+          <div class="text-sm sm:text-[1.05rem] font-bold text-gray-900 leading-snug min-w-0">
             Ujian Seminar {{ ucfirst($ujian->jenis_ujian) }} - {{ $mhs->nama_lengkap }}
           </div>
           <span
@@ -100,7 +138,7 @@
           <span class="leading-snug">{{ $ta->judul }}</span>
         </div>
 
-        {{-- Jadwal Section: 1 kolom di mobile, 2 kolom di sm+ --}}
+        {{-- Jadwal Section --}}
         <div class="border-t border-gray-100 pt-3 sm:pt-4 mt-3 sm:mt-4 grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2">
           @if ($jadwal)
             <div class="flex items-center gap-2 text-xs sm:text-[0.85rem] text-gray-600">
@@ -160,6 +198,5 @@
     <div class="mt-2">
       {{ $undangan->links('pagination::tailwind') }}
     </div>
-
   </div>
 @endsection

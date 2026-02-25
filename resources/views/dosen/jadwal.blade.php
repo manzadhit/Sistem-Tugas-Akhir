@@ -18,6 +18,33 @@
     </div>
   </div>
 
+  <div class="grid grid-cols-2 gap-3 lg:gap-6 mb-6">
+    <div
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-calendar-alt"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Total Jadwal</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">{{ $jadwals->total() }}</div>
+      </div>
+    </div>
+    <div
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-orange-100 text-orange-500 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-clock"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Akan Datang</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">
+          {{ $jadwals->getCollection()->filter(fn($j) => $j->tanggal_ujian->isFuture() || $j->tanggal_ujian->isToday())->count() }}
+        </div>
+      </div>
+    </div>
+  </div>
+
   {{-- Filter Section: .filter-section --}}
   <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
     {{-- .filter-grid: grid, auto-fit cols --}}
@@ -66,6 +93,10 @@
         $mhs = $ta->mahasiswa;
         $isHariIni = $item->tanggal_ujian->isToday();
         $isLewat = $item->tanggal_ujian->isPast() && !$isHariIni;
+        $isBesok = $item->tanggal_ujian->isTomorrow();
+        $sisaHari = (int) now()
+            ->startOfDay()
+            ->diffInDays($item->tanggal_ujian->startOfDay(), false);
 
         $jenisLabel = match ($ujian->jenis_ujian) {
             'proposal' => 'Ujian Seminar Proposal',
@@ -74,10 +105,28 @@
             default => 'Ujian Seminar ' . ucfirst($ujian->jenis_ujian),
         };
 
-        // .role-badge: penguji=yellow, pembimbing=green
         $roleClass = str_starts_with($item->peran, 'Pembimbing')
             ? 'bg-green-100 text-green-800'
             : 'bg-yellow-100 text-yellow-800';
+
+        // Badge countdown
+        if ($isHariIni) {
+            $countdownText = 'Hari Ini';
+            $countdownClass = 'bg-green-100 text-green-700 border border-green-200';
+            $countdownIcon = 'fas fa-circle text-green-500 text-[0.5rem] animate-pulse';
+        } elseif ($isBesok) {
+            $countdownText = 'Besok';
+            $countdownClass = 'bg-blue-100 text-blue-700 border border-blue-200';
+            $countdownIcon = 'fas fa-clock';
+        } elseif ($isLewat) {
+            $countdownText = 'Selesai';
+            $countdownClass = 'bg-gray-100 text-gray-400 border border-gray-200';
+            $countdownIcon = 'fas fa-check-circle';
+        } else {
+            $countdownText = $sisaHari . ' hari lagi';
+            $countdownClass = 'bg-orange-50 text-orange-600 border border-orange-200';
+            $countdownIcon = 'fas fa-hourglass-half';
+        }
       @endphp
 
       {{-- .schedule-card + .today (border-l-4 blue jika hari ini) --}}
@@ -103,17 +152,23 @@
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-start justify-between gap-2 mb-1">
               <div class="min-w-0">
-                {{-- .schedule-title --}}
                 <h3 class="text-base sm:text-lg font-semibold text-gray-900">{{ $jenisLabel }}</h3>
-                {{-- .schedule-student --}}
                 <p class="text-sm sm:text-[0.95rem] text-gray-600">
                   {{ $mhs->nama_lengkap }} ({{ $mhs->nim }})
                 </p>
               </div>
-              {{-- .role-badge --}}
-              <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold shrink-0 {{ $roleClass }}">
-                {{ $item->peran }}
-              </span>
+              <div class="flex items-center gap-2 shrink-0 flex-wrap justify-end">
+                {{-- Badge countdown --}}
+                <span
+                  class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold {{ $countdownClass }}">
+                  <i class="{{ $countdownIcon }} text-[0.6rem]"></i>
+                  {{ $countdownText }}
+                </span>
+                {{-- Badge peran --}}
+                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $roleClass }}">
+                  {{ $item->peran }}
+                </span>
+              </div>
             </div>
 
             {{-- .schedule-meta --}}
@@ -129,12 +184,6 @@
                 <i class="fas fa-map-marker-alt text-gray-400"></i>
                 <span>{{ $item->ruangan }}</span>
               </div>
-              @if ($isHariIni)
-                <div class="flex items-center gap-1.5 text-green-600 font-semibold">
-                  <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                  Hari Ini
-                </div>
-              @endif
             </div>
 
             {{-- Judul TA --}}
