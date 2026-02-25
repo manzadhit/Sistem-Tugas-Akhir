@@ -21,7 +21,12 @@
           'label' => 'Undangan',
           'active' => request()->routeIs('dosen.undangan.index'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-clipboard-list', 'label' => 'Jadwal Ujian'],
+      [
+          'href' => route('dosen.jadwal.index'),
+          'icon' => 'fas fa-clipboard-list',
+          'label' => 'Jadwal Ujian',
+          'active' => request()->routeIs('dosen.jadwal.index'),
+      ],
       ['href' => '#', 'icon' => 'fas fa-edit', 'label' => 'Input Nilai'],
   
       ['section' => 'Publikasi'],

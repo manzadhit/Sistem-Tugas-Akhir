@@ -19,6 +19,45 @@
     </div>
   </div>
 
+  {{-- Filter Section: .filter-section --}}
+  <div class="bg-white rounded-xl p-6 shadow-sm mb-6">
+    {{-- .filter-grid: grid, auto-fit cols --}}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+      {{-- .filter-group --}}
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
+        <input type="text"
+          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
+          placeholder="Nama atau NIM..." />
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Jenis Ujian</label>
+        <select
+          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
+          <option value="">Semua Jenis</option>
+          <option value="proposal">Ujian Proposal</option>
+          <option value="hasil">Ujian Hasil</option>
+          <option value="skripsi">Ujian Skripsi</option>
+        </select>
+      </div>
+      <div class="flex flex-col gap-2">
+        <label class="text-sm font-medium text-gray-700">Peran</label>
+        <select
+          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
+          <option value="">Semua Peran</option>
+          <option value="pembimbing">Pembimbing</option>
+          <option value="penguji">Penguji</option>
+        </select>
+      </div>
+      {{-- .btn.btn-primary --}}
+      <button
+        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer">
+        <i class="fas fa-filter"></i>
+        Terapkan Filter
+      </button>
+    </div>
+  </div>
+
   <div class="grid grid-cols-1 gap-4 sm:gap-6">
 
     @forelse ($undangan as $item)
@@ -42,7 +81,7 @@
         {{-- Card Header: Judul + Badge --}}
         <div class="flex items-start justify-between mb-3 sm:mb-4 gap-2 flex-wrap">
           <div class="text-base sm:text-[1.05rem] font-bold text-gray-900 leading-snug">
-            Ujian {{ ucfirst($ujian->jenis_ujian) }} - {{ $mhs->nama_lengkap }}
+            Ujian Seminar {{ ucfirst($ujian->jenis_ujian) }} - {{ $mhs->nama_lengkap }}
           </div>
           <span
             class="inline-flex items-center gap-1.5 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-xs font-semibold shrink-0 {{ $badgeClass }}">
