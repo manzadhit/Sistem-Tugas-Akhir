@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Dosen\MahasiswaBimbingan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dosen\MahasiswaBimbingan;
+use App\Http\Controllers\Dosen\UndanganController;
 
 Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->group(function () {
   Route::get("/dashboard", function () {
@@ -13,4 +14,6 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
   Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbingan::class, 'getDetail'])->name('bimbingan.detail');
 
   Route::put('/bimbingan/{submission}/review', [MahasiswaBimbingan::class, 'review'])->name('bimbingan.review');
+
+  Route::get('/undangan', [UndanganController::class, 'index'])->name('undangan.index');
 });
