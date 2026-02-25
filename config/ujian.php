@@ -59,13 +59,13 @@ return [
     // ]
   ],
   'hasil' => [
-    ['name' => 'laporan_hasil',       'label' => 'Laporan Hasil Penelitian'],
-    ['name' => 'jurnal',              'label' => 'Jurnal'],
+    ['name' => 'laporan_hasil', 'label' => 'Laporan Hasil Penelitian'],
+    ['name' => 'jurnal', 'label' => 'Jurnal'],
     // ...
   ],
   'skripsi' => [
-    ['name' => 'naskah_skripsi',      'label' => 'Naskah Skripsi'],
-    ['name' => 'turnitin',            'label' => 'Hasil Turnitin'],
+    ['name' => 'naskah_skripsi', 'label' => 'Naskah Skripsi'],
+    ['name' => 'turnitin', 'label' => 'Hasil Turnitin'],
     // ...
   ],
 ];

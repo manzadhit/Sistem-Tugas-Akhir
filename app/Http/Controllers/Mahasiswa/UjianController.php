@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\SubmitPengajuanUjianRequest;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
+use App\Http\Requests\Mahasiswa\SubmitHasilUjianRequest;
 
 class UjianController extends Controller
 {
@@ -50,6 +51,7 @@ class UjianController extends Controller
         if ($isRevisi) {
             $rejectedDokumen = $ujian->dokumenUjian()
                 ->where('status', 'tolak')
+                ->where('kategori', 'syarat')
                 ->get()
                 ->keyBy('jenis_dokumen');
 
@@ -110,5 +112,63 @@ class UjianController extends Controller
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
         return view('mahasiswa.ujian.undangan', compact('jenis', 'ujian'));
+    }
+
+    public function showHasilUjian(Request $request, $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        $daftarSyarat = collect(config("pasca_ujian.{$jenis}"));
+
+        $isRevisi = $ujian->status === 'revisi_hasil';
+        $rejectedDokumen = collect();
+
+        if ($isRevisi) {
+            $rejectedDokumen = $ujian->dokumenUjian()
+                ->where('status', 'tolak')
+                ->where('kategori', 'hasil')
+                ->get()
+                ->keyBy('jenis_dokumen');
+
+            $daftarSyarat = $daftarSyarat->filter(function ($syarat) use ($rejectedDokumen) {
+                return $rejectedDokumen->has($syarat['name']);
+            })->values();
+        }
+
+        return view('mahasiswa.ujian.upload-hasil-ujian', compact('jenis', 'ujian', 'daftarSyarat', 'isRevisi', 'rejectedDokumen'));
+    }
+
+    public function submitHasilUjian(SubmitHasilUjianRequest $request)
+    {
+        $jenis = $request->route('jenis');
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        $files = $request->file('files', []);
+
+        try {
+            // Upload Dokumen
+            $this->ujianService->uploadDokumen($ujian, $files, 'hasil', $mahasiswa->nim);
+
+
+            // Mengecek kelengkapan jika kurang
+            if (!$this->ujianService->isDokumenLengkap($ujian, $jenis, 'hasil', 'pasca_ujian')) {
+                return back()->with('success', 'Berhasil upload berkas dan jadwal. Namun berkas hasil ujian belum lengkap.')->withInput();
+            }
+
+            // Update status ke menunggu_verifikasi_syarat jika semua lengkap
+            $ujian->update(['status' => 'menunggu_verifikasi_hasil']);
+
+            // Redirect ke index (sementara akan abort 500 sampai route menunggu dibuat)
+            return back()->with('success', 'Berhasil mengajukan hasil ujian. Menunggu verifikasi dari admin.');
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'Gagal memproses pengajuan hasil ujian: ' . $th->getMessage())->withInput();
+        }
     }
 }

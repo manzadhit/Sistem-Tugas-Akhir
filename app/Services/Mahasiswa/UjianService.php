@@ -23,8 +23,8 @@ class UjianService
     DB::transaction(function () use ($ujian, $files, $kategoriFile, $mahasiswaNim) {
       foreach ($files as $jenisDokumen => $file) {
         $extension = $file->getClientOriginalExtension();
-        $filename  = "{$jenisDokumen}" . ".{$extension}";
-        $path      = $file->storeAs("dokumen-ujian/{$mahasiswaNim}/{$ujian->jenis_ujian}/{$kategoriFile}", $filename, 'public');
+        $filename = "{$jenisDokumen}" . ".{$extension}";
+        $path = $file->storeAs("dokumen-ujian/{$mahasiswaNim}/{$ujian->jenis_ujian}/{$kategoriFile}", $filename, 'public');
 
         if (!$path) {
           throw new \RuntimeException("Gagal menyimpan file: {$filename}");
@@ -32,14 +32,14 @@ class UjianService
 
         DokumenUjian::updateOrCreate(
           [
-            'ujian_id'      => $ujian->id,
+            'ujian_id' => $ujian->id,
             'jenis_dokumen' => $jenisDokumen,
-            'kategori'      => $kategoriFile,
+            'kategori' => $kategoriFile,
           ],
           [
             'file_path' => $path,
-            'status'    => 'pending',
-            'catatan'   => null,
+            'status' => 'pending',
+            'catatan' => null,
           ]
         );
       }
@@ -52,26 +52,26 @@ class UjianService
       ['ujian_id' => $ujian->id],
       [
         'tanggal_ujian' => $dataJadwal['tanggal_ujian'],
-        'jam_mulai'     => $dataJadwal['jam_mulai'],
-        'jam_selesai'   => $dataJadwal['jam_selesai'],
-        'ruangan'       => $dataJadwal['ruangan'],
+        'jam_mulai' => $dataJadwal['jam_mulai'],
+        'jam_selesai' => $dataJadwal['jam_selesai'],
+        'ruangan' => $dataJadwal['ruangan'],
       ]
     );
   }
 
-  public function isDokumenLengkap(Ujian $ujian, string $jenis, string $kategori = 'syarat'): bool
+  public function isDokumenLengkap(Ujian $ujian, string $jenis, string $kategori = 'syarat', string $configPrefix = 'ujian'): bool
   {
-      $syaratConfig = config("ujian.{$jenis}");
-      if (!$syaratConfig) {
-          return false;
-      }
+    $syaratConfig = config("{$configPrefix}.{$jenis}");
+    if (!$syaratConfig) {
+      return false;
+    }
 
-      $jumlahSyarat = count($syaratConfig);
-      
-      $dokumenUploaded = DokumenUjian::where('ujian_id', $ujian->id)
-          ->where('kategori', $kategori)
-          ->count();
+    $jumlahSyarat = count($syaratConfig);
 
-      return $dokumenUploaded >= $jumlahSyarat;
+    $dokumenUploaded = DokumenUjian::where('ujian_id', $ujian->id)
+      ->where('kategori', $kategori)
+      ->count();
+
+    return $dokumenUploaded >= $jumlahSyarat;
   }
 }
