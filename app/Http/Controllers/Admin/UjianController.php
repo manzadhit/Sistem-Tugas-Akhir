@@ -29,7 +29,7 @@ class UjianController extends Controller
             ->whereIn('status', ['menunggu_verifikasi_syarat', 'menunggu_undangan'])
             ->get();
 
-        return view('admin.ujian.list-mahasiswa', compact('ujians', 'jenis'));
+        return view('admin.syarat-ujian.list-mahasiswa', compact('ujians', 'jenis'));
     }
 
     public function detailVerifikasi($jenis, $id)
@@ -44,7 +44,7 @@ class UjianController extends Controller
             ->where('id', $id)
             ->first();
 
-        return view('admin.ujian.detail-verifikasi', compact('ujian', 'jenis'));
+        return view('admin.syarat-ujian.detail-verifikasi', compact('ujian', 'jenis'));
     }
 
     public function prosesVerifikasi(Request $request, $jenis, $id)
@@ -61,6 +61,7 @@ class UjianController extends Controller
         foreach ($request->input('dokumen', []) as $dokumenId => $data) {
             DokumenUjian::where('id', $dokumenId)
                 ->where('ujian_id', $ujian->id)
+                ->where('kategori', 'syarat')
                 ->update([
                     'status' => $data['status'],
                     'catatan' => $data['catatan'] ?? null,
@@ -109,7 +110,7 @@ class UjianController extends Controller
             $q->where('role', 'sekjur');
         })->first();
 
-        return view('admin.ujian.undangan', compact('ujian', 'jenis', 'ketuaJurusan', 'sekretarisJurusan', 'ketuaSidang'));
+        return view('admin.syarat-ujian.undangan', compact('ujian', 'jenis', 'ketuaJurusan', 'sekretarisJurusan', 'ketuaSidang'));
     }
 
     public function storeUndangan(Request $request, $jenis, $id)
@@ -137,9 +138,6 @@ class UjianController extends Controller
         $sekretarisSidang = ProfileDosen::find($request->sekretaris_sidang_id);
 
         try {
-            //code...
-
-
             $data = $this->pdfService->buildData($ujian, [
                 'nomor' => $request->nomor_surat,
                 'hal' => $request->hal,
@@ -189,5 +187,76 @@ class UjianController extends Controller
         return redirect()
             ->back()
             ->with('show_success_modal', true);
+    }
+
+    public function indexHasilUjian($jenis)
+    {
+        $ujians = Ujian::with([
+            'tugasAkhir.mahasiswa',
+            'dokumenUjian' => function ($q) {
+                $q->where('kategori', 'hasil')->where('status', 'pending');
+            }
+        ])
+            ->where('jenis_ujian', $jenis)
+            ->whereIn('status', ['menunggu_verifikasi_hasil'])
+            ->get();
+
+        return view('admin.pasca-ujian.list-mahasiswa', compact('ujians', 'jenis'));
+    }
+
+    public function detailHasilUjian($jenis, $id)
+    {
+        $ujian = Ujian::with([
+            'tugasAkhir.mahasiswa.dosenPembimbing.dosen',
+            'tugasAkhir.mahasiswa.dosenPenguji.dosen',
+            'dokumenUjian' => fn($q) => $q->where('kategori', 'hasil'),
+            'jadwalUjian',
+        ])
+            ->where('jenis_ujian', $jenis)
+            ->where('id', $id)
+            ->first();
+
+        return view('admin.pasca-ujian.detail-verifikasi', compact('ujian', 'jenis'));
+    }
+
+    public function prosesHasilUjian(Request $request, $jenis, $id)
+    {
+        $request->validate([
+            'dokumen.*.status' => 'required|in:acc,tolak',
+            'dokumen.*.catatan' => 'nullable|string|max:500',
+        ]);
+
+        $ujian = Ujian::where('jenis_ujian', $jenis)->findOrFail($id);
+
+        $adaTolak = false;
+
+        foreach ($request->input('dokumen', []) as $dokumenId => $data) {
+            DokumenUjian::where('id', $dokumenId)
+                ->where('ujian_id', $ujian->id)
+                ->where('kategori', 'hasil')
+                ->update([
+                    'status' => $data['status'],
+                    'catatan' => $data['catatan'] ?? null,
+                ]);
+
+            if ($data['status'] === 'tolak') {
+                $adaTolak = true;
+            }
+        }
+
+        if ($adaTolak) {
+            $ujian->update(['status' => 'revisi_hasil']);
+
+            return redirect()
+                ->back()
+                ->with('warning', 'Beberapa berkas hasil ujian ditolak. Pengajuan dikembalikan ke mahasiswa untuk direvisi.');
+        }
+
+        $ujian->update(['status' => 'selesai']);
+
+        return redirect()
+            ->back()
+            ->with('show_success_modal', true)
+            ->with('success', 'Semua berkas hasil ujian di-ACC. Ujian dinyatakan selesai.');
     }
 }

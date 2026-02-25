@@ -22,7 +22,12 @@
       ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],
   
       ['section' => 'Verifikasi Hasil'],
-      ['href' => '#', 'icon' => 'fas fa-file-signature', 'label' => 'Proposal'],
+      [
+          'href' => route('admin.ujian.hasil-ujian.index', 'proposal'),
+          'icon' => 'fas fa-file-signature',
+          'label' => 'Proposal',
+          'active' => request()->is('admin/ujian/proposal/hasil-ujian', 'admin/ujian/proposal/*/hasil-ujian')
+      ],
       ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Hasil'],
       ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],
   ]" />

@@ -18,4 +18,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::post('/ujian/{jenis}/{id}/undangan', [UjianController::class, 'storeUndangan'])->name('ujian.undangan.store');
 
   Route::post('ujian/{jenis}/{id}/undangan/kirim', [UjianController::class, 'kirimUndangan'])->name('ujian.undangan.kirim');
+
+  // Verifikasi Hasil
+  Route::get('/ujian/{jenis}/hasil-ujian', [UjianController::class, 'indexHasilUjian'])->name('ujian.hasil-ujian.index');
+  Route::get('/ujian/{jenis}/{id}/hasil-ujian', [UjianController::class, 'detailHasilUjian'])->name('ujian.hasil-ujian.detail');
+  Route::post('/ujian/{jenis}/{id}/hasil-ujian', [UjianController::class, 'prosesHasilUjian'])->name('ujian.hasil-ujian.proses');
 });
