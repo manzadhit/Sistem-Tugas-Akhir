@@ -31,7 +31,7 @@ class UjianController extends Controller
             'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_undangan' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'menunggu_hasil' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
-            // 'selesai'             => redirect()->route('mahasiswa.selesai', ['jenis' => $jenis]),
+            'selesai' => redirect()->route('mahasiswa.ujian.selesai', ['jenis' => $jenis]),
             default => abort(500, 'Status ujian tidak valid')
         };
     }
@@ -170,5 +170,19 @@ class UjianController extends Controller
         } catch (\Throwable $th) {
             return back()->with('error', 'Gagal memproses pengajuan hasil ujian: ' . $th->getMessage())->withInput();
         }
+    }
+
+    public function selesai(Request $request, $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        if ($ujian->status == "selesai") {
+            return view('mahasiswa.ujian.selesai', compact('jenis', 'ujian'));
+        }
+
+        return back()->with('error', 'Ujian belum selesai.');
     }
 }
