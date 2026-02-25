@@ -20,57 +20,7 @@
   </div>
 
   {{-- Progress Bar --}}
-  <div class="p-6 mb-8 bg-white shadow-sm rounded-xl">
-    <div class="relative flex justify-between">
-      {{-- Garis penghubung --}}
-      <div class="absolute top-5 left-[10%] right-[10%] h-[3px] bg-emerald-500 z-0"></div>
-
-      <!-- Step 1 (completed) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-sm">
-          <i class="fas fa-file-upload"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-600 text-center">Upload Syarat</span>
-      </div>
-
-      <!-- Step 2 (completed) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-sm">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-600 text-center">Jadwal</span>
-      </div>
-
-      <!-- Step 3 (completed) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-sm">
-          <i class="fas fa-envelope-open-text"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-600 text-center">Undangan</span>
-      </div>
-
-      <!-- Step 4 (completed) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-sm">
-          <i class="fas fa-upload"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-600 text-center">Upload Hasil</span>
-      </div>
-
-      <!-- Step 5 (active/done) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-600 text-white ring-4 ring-emerald-600/20 shadow-sm">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-bold text-emerald-700 text-center">Selesai</span>
-      </div>
-    </div>
-  </div>
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 4])
 
   {{-- Konten Utama Selesai --}}
   <div class="bg-white shadow-sm rounded-xl overflow-hidden p-8 text-center border-t-4 border-emerald-500">

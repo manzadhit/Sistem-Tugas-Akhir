@@ -16,53 +16,7 @@
   </div>
 
   <!-- Progress Bar -->
-  <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
-    <div class="relative flex justify-between">
-      <!-- line -->
-      <div class="absolute top-5 left-[10%] right-[10%] h-[3px] bg-gray-200 z-0"></div>
-
-      <!-- Step 1 -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white">
-          <i class="fas fa-file-upload"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-500 text-center">Upload Syarat</span>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white">
-          <i class="fas fa-calendar-check"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-emerald-500 text-center">Jadwal</span>
-      </div>
-
-      <!-- Step 3 (active) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-blue-600 text-white ring-4 ring-blue-600/20">
-          <i class="fas fa-envelope-open-text"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-semibold text-blue-600 text-center">Undangan</span>
-      </div>
-
-      <!-- Step 4 (pending) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400">
-          <i class="fas fa-upload"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">Upload Hasil</span>
-      </div>
-
-      <!-- Step 5 (pending) -->
-      <div class="relative z-10 flex-1 flex flex-col items-center">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400">
-          <i class="fas fa-check-circle"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">Selesai</span>
-      </div>
-    </div>
-  </div>
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 2])
 
   <!-- Status Undangan -->
   @if (optional($ujian->undanganUjian)->status === 'terkirim')

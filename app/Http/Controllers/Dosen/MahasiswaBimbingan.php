@@ -31,7 +31,7 @@ class MahasiswaBimbingan extends Controller
     {
         $submission->loadMissing([
             'tugasAkhir.mahasiswa',
-            'submissionFiles'
+            'submissionFiles' => fn($query) => $query->where('uploaded_by', 'mahasiswa')
         ]);
 
         return view('dosen.detail-bimbingan', compact('submission'));
