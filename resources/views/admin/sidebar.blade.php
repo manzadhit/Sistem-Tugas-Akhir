@@ -7,7 +7,12 @@
       ],
   
       ['section' => 'Kelola Data'],
-      ['href' => '#', 'icon' => 'fas fa-user-graduate', 'label' => 'Kelola Mahasiswa'],
+      [
+          'href' => route('admin.mahasiswa.index'),
+          'icon' => 'fas fa-user-graduate',
+          'label' => 'Kelola Mahasiswa',
+          'active' => request()->is('admin/mahasiswa*'),
+      ],
       ['href' => '#', 'icon' => 'fas fa-chalkboard-teacher', 'label' => 'Kelola Dosen'],
       ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Kelola Publikasi Dosen'],
   
@@ -26,7 +31,7 @@
           'href' => route('admin.ujian.hasil-ujian.index', 'proposal'),
           'icon' => 'fas fa-file-signature',
           'label' => 'Proposal',
-          'active' => request()->is('admin/ujian/proposal/hasil-ujian', 'admin/ujian/proposal/*/hasil-ujian')
+          'active' => request()->is('admin/ujian/proposal/hasil-ujian', 'admin/ujian/proposal/*/hasil-ujian'),
       ],
       ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Hasil'],
       ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],

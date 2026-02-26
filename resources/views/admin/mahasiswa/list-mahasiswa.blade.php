@@ -7,6 +7,12 @@
 @endsection
 
 @section('content')
+
+  <!-- Flash Messages -->
+  <x-alert type="success" />
+  <x-alert type="error" />
+  <x-alert type="warning" />
+  
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Kelola Mahasiswa</h1>
@@ -14,11 +20,11 @@
         Kelola data mahasiswa Teknik Informatika
       </p>
     </div>
-    <button
+    <a href="{{ route('admin.mahasiswa.create') }}"
       class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
       <i class="fas fa-plus"></i>
       Tambah Mahasiswa
-    </button>
+    </a>
   </div>
 
   <!-- Stats Summary -->
@@ -152,11 +158,12 @@
                     title="Edit">
                     <i class="fas fa-edit"></i>
                   </a>
-                  <a href="#"
+                  <button type="button"
+                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $mhs->id }}, nama: '{{ addslashes($mhs->nama_lengkap) }}', nim: '{{ $mhs->nim }}' } }))"
                     class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
                     title="Hapus">
                     <i class="fas fa-trash"></i>
-                  </a>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -172,4 +179,49 @@
   <div class="mt-4">
     {{ $daftarMahasiswa->links() }}
   </div>
+
+  {{-- Modal Konfirmasi Hapus (shared) --}}
+  <div x-data="{ open: false, id: null, nama: '', nim: '' }"
+    x-on:open-delete-modal.window="open = true; id = $event.detail.id; nama = $event.detail.nama; nim = $event.detail.nim"
+    x-show="open" x-transition.opacity
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" style="display: none;">
+
+    <div x-show="open" x-transition:enter="transition ease-out duration-200"
+      x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+      @click.outside="open = false" class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm mx-4">
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center shrink-0">
+          <i class="fas fa-triangle-exclamation text-red-600"></i>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-gray-900">Hapus Mahasiswa</h3>
+          <p class="text-xs text-gray-500">Tindakan ini tidak dapat dibatalkan</p>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-600 mb-5">
+        Yakin ingin menghapus akun mahasiswa
+        <span class="font-semibold text-gray-900" x-text="nama"></span>
+        (NIM: <span class="font-semibold" x-text="nim"></span>)?
+        Seluruh data terkait juga akan ikut terhapus.
+      </p>
+
+      <div class="flex gap-3">
+        <button @click="open = false" type="button"
+          class="flex-1 px-4 py-2.5 rounded-lg text-sm font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
+          Batal
+        </button>
+        <form method="POST" :action="`/admin/mahasiswa/${id}`" class="flex-1">
+          @csrf
+          @method('DELETE')
+          <button type="submit"
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold bg-red-600 text-white hover:bg-red-700 transition-all">
+            <i class="fas fa-trash text-xs"></i> Ya, Hapus
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
 @endsection

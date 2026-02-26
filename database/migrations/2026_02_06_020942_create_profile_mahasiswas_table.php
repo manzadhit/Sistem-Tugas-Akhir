@@ -22,7 +22,7 @@ return new class extends Migration
             $table->decimal('ipk', 3, 2);
             $table->string('no_telp')->nullable();
             $table->string('foto')->nullable();
-            $table->enum('status_akademik', ['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout']);
+            $table->enum('status_akademik', ['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout']);     
             $table->timestamps();
         });
     }

@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Requests\Admin;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class StoreMahasiswaRequest extends FormRequest
+{
+  public function authorize(): bool
+  {
+    return $this->user()?->role === 'admin';
+  }
+
+  public function rules(): array
+  {
+    return [
+      'nama_lengkap' => ['required', 'string', 'max:255'],
+      'nim' => ['required', 'string', 'unique:profile_mahasiswa,nim', 'unique:users,username'],
+      'angkatan' => ['required', 'digits:4', 'integer', 'min:2000', 'max:' . date('Y')],
+      'jurusan' => ['required', 'string', 'max:255'],
+      'program_studi' => ['required', 'string', 'max:255'],
+      'ipk' => ['required', 'numeric', 'min:0', 'max:4'],
+      'no_telp' => ['nullable', 'string', 'max:20'],
+      'status_akademik' => ['required', 'in:aktif,cuti,nonaktif,lulus,dropout'],
+    ];
+  }
+
+  public function messages(): array
+  {
+    return [
+      'nim.unique' => 'NIM sudah terdaftar.',
+    ];
+  }
+}
