@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PdfController;
-use App\Http\Controllers\Admin\UjianController;
+use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\MahasiswaController;
+use App\Http\Controllers\Admin\UjianController;
+use App\Http\Controllers\PdfController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
   Route::get("/dashboard", function () {
@@ -33,4 +34,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
   Route::put('/mahasiswa/{id}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
   Route::delete('/mahasiswa/{id}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
+
+  // Manajemen Dosen (resource)
+  Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
+  Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
+  Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
+  Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
+  Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
+  Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
+  Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
 });

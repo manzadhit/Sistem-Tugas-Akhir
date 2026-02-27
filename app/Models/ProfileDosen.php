@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class ProfileDosen extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'profile_dosen';
 
     protected $fillable = [
@@ -20,11 +20,12 @@ class ProfileDosen extends Model
         'program_studi',
         'keahlian',
         'jabatan_fungsional',
+        'status',
         'foto',
         'no_telp'
     ];
 
-    public function user() 
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

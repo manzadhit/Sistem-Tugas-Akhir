@@ -13,7 +13,12 @@
           'label' => 'Kelola Mahasiswa',
           'active' => request()->is('admin/mahasiswa*'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-chalkboard-teacher', 'label' => 'Kelola Dosen'],
+      [
+          'href' => route('admin.dosen.index'),
+          'icon' => 'fas fa-chalkboard-teacher',
+          'label' => 'Kelola Dosen',
+          'active' => request()->is('admin/dosen*'),
+      ],
       ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Kelola Publikasi Dosen'],
   
       ['section' => 'Verifikasi Syarat'],
