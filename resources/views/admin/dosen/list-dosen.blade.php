@@ -101,7 +101,8 @@
       </form>
     </div>
 
-    <div class="overflow-x-auto">
+    {{-- ░░ TABEL — tampil di sm ke atas ░░ --}}
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full border-collapse">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
@@ -109,75 +110,62 @@
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Dosen</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jabatan
               Fungsional</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Keahlian</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jumlah Publikasi
-            </th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
           @forelse ($daftarDosen as $dosen)
+            @php
+              $jabatanCfg = [
+                  'Asisten Ahli' => 'bg-sky-100 text-sky-700',
+                  'Lektor' => 'bg-violet-100 text-violet-700',
+                  'Lektor Kepala' => 'bg-indigo-100 text-indigo-700',
+                  'Guru Besar' => 'bg-amber-100 text-amber-700',
+              ];
+              $jabCls = $jabatanCfg[$dosen->jabatan_fungsional] ?? 'bg-gray-100 text-gray-600';
+              $statusCfg = [
+                  'aktif' => 'bg-emerald-100 text-emerald-700',
+                  'cuti' => 'bg-amber-100 text-amber-700',
+                  'nonaktif' => 'bg-gray-100 text-gray-600',
+                  'pensiun' => 'bg-red-100 text-red-600',
+              ];
+              $cls = $statusCfg[$dosen->status] ?? 'bg-gray-100 text-gray-600';
+            @endphp
             <tr class="hover:bg-gray-50 transition-colors">
-              <td class="px-5 py-4 text-sm text-gray-700">
+              <td class="px-5 py-4 text-sm text-gray-500">
                 {{ ($daftarDosen->currentPage() - 1) * $daftarDosen->perPage() + $loop->iteration }}
               </td>
-
-              {{-- Dosen --}}
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm shrink-0">
+                    class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm shrink-0">
                     {{ strtoupper($dosen->nama_lengkap[0]) }}
                   </div>
                   <div>
-                    <div class="font-medium text-gray-900">{{ $dosen->nama_lengkap }}</div>
+                    <div class="font-medium text-gray-900 text-sm">{{ $dosen->nama_lengkap }}</div>
                     <div class="text-xs text-gray-500">NIDN {{ $dosen->nidn }}</div>
                   </div>
                 </div>
               </td>
-
-              {{-- Jabatan Fungsional --}}
               <td class="px-5 py-4">
-                @php
-                  $jabatanCfg = [
-                      'Asisten Ahli' => 'bg-sky-100 text-sky-700',
-                      'Lektor' => 'bg-violet-100 text-violet-700',
-                      'Lektor Kepala' => 'bg-indigo-100 text-indigo-700',
-                      'Guru Besar' => 'bg-amber-100 text-amber-700',
-                  ];
-                  $jabCls = $jabatanCfg[$dosen->jabatan_fungsional] ?? 'bg-gray-100 text-gray-600';
-                @endphp
                 @if ($dosen->jabatan_fungsional)
                   <span
-                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $jabCls }}">
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $jabCls }}">
                     {{ $dosen->jabatan_fungsional }}
                   </span>
                 @else
                   <span class="text-gray-400 text-sm">—</span>
                 @endif
               </td>
-
-              {{-- Status Dosen --}}
+              <td class="px-5 py-4 text-sm text-gray-600 max-w-[180px] truncate">{{ $dosen->keahlian ?? '—' }}</td>
               <td class="px-5 py-4">
-                @php
-                  $statusCfg = [
-                      'aktif' => 'bg-emerald-100 text-emerald-700',
-                      'cuti' => 'bg-amber-100 text-amber-700',
-                      'nonaktif' => 'bg-gray-100 text-gray-600',
-                      'pensiun' => 'bg-red-100 text-red-600',
-                  ];
-                  $cls = $statusCfg[$dosen->status] ?? 'bg-gray-100 text-gray-600';
-                @endphp
                 <span
-                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold {{ $cls }}">
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $cls }}">
                   {{ ucfirst($dosen->status) }}
                 </span>
               </td>
-
-              {{-- Jumlah Publikasi --}}
-              <td class="px-5 py-4 text-sm text-gray-400 italic">—</td>
-
-              {{-- Aksi --}}
               <td class="px-5 py-4">
                 <div class="flex gap-2">
                   <a href="{{ route('admin.dosen.show', $dosen->id) }}"
@@ -209,6 +197,72 @@
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- ░░ CARD LIST — tampil di mobile saja ░░ --}}
+    <div class="block sm:hidden divide-y divide-gray-100">
+      @forelse ($daftarDosen as $dosen)
+        @php
+          $jabatanCfg = [
+              'Asisten Ahli' => 'bg-sky-100 text-sky-700',
+              'Lektor' => 'bg-violet-100 text-violet-700',
+              'Lektor Kepala' => 'bg-indigo-100 text-indigo-700',
+              'Guru Besar' => 'bg-amber-100 text-amber-700',
+          ];
+          $jabCls = $jabatanCfg[$dosen->jabatan_fungsional] ?? 'bg-gray-100 text-gray-600';
+          $statusCfg = [
+              'aktif' => 'bg-emerald-100 text-emerald-700',
+              'cuti' => 'bg-amber-100 text-amber-700',
+              'nonaktif' => 'bg-gray-100 text-gray-600',
+              'pensiun' => 'bg-red-100 text-red-600',
+          ];
+          $cls = $statusCfg[$dosen->status] ?? 'bg-gray-100 text-gray-600';
+        @endphp
+        <div class="px-4 py-3.5 flex items-center gap-3">
+          {{-- Avatar --}}
+          <div
+            class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm shrink-0">
+            {{ strtoupper($dosen->nama_lengkap[0]) }}
+          </div>
+          {{-- Info --}}
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-gray-900 text-sm truncate">{{ $dosen->nama_lengkap }}</div>
+            <div class="text-xs text-gray-500">NIDN {{ $dosen->nidn }}</div>
+            <div class="mt-1 flex flex-wrap gap-1.5">
+              @if ($dosen->jabatan_fungsional)
+                <span
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $jabCls }}">
+                  {{ $dosen->jabatan_fungsional }}
+                </span>
+              @endif
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $cls }}">
+                {{ ucfirst($dosen->status) }}
+              </span>
+            </div>
+          </div>
+          {{-- Aksi --}}
+          <div class="flex items-center gap-1.5 shrink-0">
+            <a href="{{ route('admin.dosen.show', $dosen->id) }}"
+              class="w-8 h-8 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors">
+              <i class="fas fa-eye text-xs"></i>
+            </a>
+            <a href="{{ route('admin.dosen.edit', $dosen->id) }}"
+              class="w-8 h-8 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center hover:bg-amber-200 transition-colors">
+              <i class="fas fa-edit text-xs"></i>
+            </a>
+            <button type="button"
+              onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $dosen->id }}, nama: '{{ addslashes($dosen->nama_lengkap) }}', nidn: '{{ $dosen->nidn }}' } }))"
+              class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors">
+              <i class="fas fa-trash text-xs"></i>
+            </button>
+          </div>
+        </div>
+      @empty
+        <div class="px-5 py-12 text-center">
+          <i class="fas fa-chalkboard-teacher text-3xl mb-3 block text-gray-200"></i>
+          <p class="text-sm text-gray-400">Tidak ada data dosen.</p>
+        </div>
+      @endforelse
     </div>
   </div>
 

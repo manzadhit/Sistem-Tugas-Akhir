@@ -12,7 +12,7 @@
   <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
-  
+
   <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
     <div>
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Kelola Mahasiswa</h1>
@@ -100,7 +100,8 @@
         </div>
       </form>
     </div>
-    <div class="overflow-x-auto">
+    {{-- ░░ TABEL — tampil di sm ke atas ░░ --}}
+    <div class="hidden sm:block overflow-x-auto">
       <table class="w-full border-collapse" id="studentTable">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
@@ -108,41 +109,40 @@
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Mahasiswa</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Angkatan</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">IPK</th>
-            <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Kontak</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Status</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Aksi</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
           @forelse ($daftarMahasiswa as $mhs)
+            @php
+              $statusMhsCls = match ($mhs->status_akademik) {
+                  'aktif' => 'bg-emerald-100 text-emerald-700',
+                  'cuti' => 'bg-amber-100 text-amber-700',
+                  'lulus' => 'bg-blue-100 text-blue-700',
+                  'nonaktif' => 'bg-gray-100 text-gray-700',
+                  default => 'bg-red-100 text-red-700',
+              };
+            @endphp
             <tr class="hover:bg-gray-50 transition-colors">
-              <td class="px-5 py-4 text-sm text-gray-700">{{ $loop->iteration }}</td>
+              <td class="px-5 py-4 text-sm text-gray-500">
+                {{ ($daftarMahasiswa->currentPage() - 1) * $daftarMahasiswa->perPage() + $loop->iteration }}</td>
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3">
                   <div
-                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm">
-                    {{ $mhs->nama_lengkap[0] }}</div>
+                    class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm shrink-0">
+                    {{ strtoupper($mhs->nama_lengkap[0]) }}</div>
                   <div>
-                    <div class="font-medium text-gray-900">{{ $mhs->nama_lengkap }}</div>
+                    <div class="font-medium text-gray-900 text-sm">{{ $mhs->nama_lengkap }}</div>
                     <div class="text-xs text-gray-500">{{ $mhs->nim }}</div>
                   </div>
                 </div>
               </td>
               <td class="px-5 py-4 text-sm text-gray-700">{{ $mhs->angkatan }}</td>
-              <td class="px-5 py-4 text-sm font-medium text-gray-900">{{ $mhs->ipk }}</td>
-              <td class="px-5 py-4 text-sm text-gray-700">{{ $mhs->no_telp }}</td>
+              <td class="px-5 py-4 text-sm font-semibold text-gray-900">{{ $mhs->ipk }}</td>
               <td class="px-5 py-4">
                 <span
-                  class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold
-                  {{ $mhs->status_akademik === 'aktif'
-                      ? 'bg-emerald-100 text-emerald-700'
-                      : ($mhs->status_akademik === 'cuti'
-                          ? 'bg-amber-100 text-amber-700'
-                          : ($mhs->status_akademik === 'lulus'
-                              ? 'bg-blue-100 text-blue-700'
-                              : ($mhs->status_akademik === 'nonaktif'
-                                  ? 'bg-gray-100 text-gray-700'
-                                  : 'bg-red-100 text-red-700'))) }}">
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
                   {{ ucfirst($mhs->status_akademik) }}
                 </span>
               </td>
@@ -151,29 +151,86 @@
                   <a href="{{ route('admin.mahasiswa.show', $mhs->id) }}"
                     class="w-8 h-8 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors"
                     title="Lihat Detail">
-                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-eye text-xs"></i>
                   </a>
                   <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}"
                     class="w-8 h-8 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center hover:bg-amber-200 transition-colors"
                     title="Edit">
-                    <i class="fas fa-edit"></i>
+                    <i class="fas fa-edit text-xs"></i>
                   </a>
                   <button type="button"
                     onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $mhs->id }}, nama: '{{ addslashes($mhs->nama_lengkap) }}', nim: '{{ $mhs->nim }}' } }))"
                     class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
                     title="Hapus">
-                    <i class="fas fa-trash"></i>
+                    <i class="fas fa-trash text-xs"></i>
                   </button>
                 </div>
               </td>
             </tr>
           @empty
             <tr>
-              <td colspan="7" class="px-5 py-4 text-center text-gray-500">Tidak ada data mahasiswa.</td>
+              <td colspan="6" class="px-5 py-12 text-center text-gray-400">
+                <i class="fas fa-users text-3xl mb-3 block opacity-30"></i>
+                Tidak ada data mahasiswa.
+              </td>
             </tr>
           @endforelse
         </tbody>
       </table>
+    </div>
+
+    {{-- ░░ CARD LIST — tampil di mobile saja ░░ --}}
+    <div class="block sm:hidden divide-y divide-gray-100">
+      @forelse ($daftarMahasiswa as $mhs)
+        @php
+          $statusMhsCls = match ($mhs->status_akademik) {
+              'aktif' => 'bg-emerald-100 text-emerald-700',
+              'cuti' => 'bg-amber-100 text-amber-700',
+              'lulus' => 'bg-blue-100 text-blue-700',
+              'nonaktif' => 'bg-gray-100 text-gray-700',
+              default => 'bg-red-100 text-red-700',
+          };
+        @endphp
+        <div class="px-4 py-3.5 flex items-center gap-3">
+          {{-- Avatar --}}
+          <div
+            class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm shrink-0">
+            {{ strtoupper($mhs->nama_lengkap[0]) }}
+          </div>
+          {{-- Info --}}
+          <div class="flex-1 min-w-0">
+            <div class="font-medium text-gray-900 text-sm truncate">{{ $mhs->nama_lengkap }}</div>
+            <div class="text-xs text-gray-500">{{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }} · IPK
+              {{ $mhs->ipk }}</div>
+            <div class="mt-1">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
+                {{ ucfirst($mhs->status_akademik) }}
+              </span>
+            </div>
+          </div>
+          {{-- Aksi --}}
+          <div class="flex items-center gap-1.5 shrink-0">
+            <a href="{{ route('admin.mahasiswa.show', $mhs->id) }}"
+              class="w-8 h-8 rounded-md bg-blue-100 text-blue-600 flex items-center justify-center hover:bg-blue-200 transition-colors">
+              <i class="fas fa-eye text-xs"></i>
+            </a>
+            <a href="{{ route('admin.mahasiswa.edit', $mhs->id) }}"
+              class="w-8 h-8 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center hover:bg-amber-200 transition-colors">
+              <i class="fas fa-edit text-xs"></i>
+            </a>
+            <button type="button"
+              onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $mhs->id }}, nama: '{{ addslashes($mhs->nama_lengkap) }}', nim: '{{ $mhs->nim }}' } }))"
+              class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors">
+              <i class="fas fa-trash text-xs"></i>
+            </button>
+          </div>
+        </div>
+      @empty
+        <div class="px-5 py-12 text-center">
+          <i class="fas fa-users text-3xl mb-3 block text-gray-200"></i>
+          <p class="text-sm text-gray-400">Tidak ada data mahasiswa.</p>
+        </div>
+      @endforelse
     </div>
   </div>
   <div class="mt-4">
