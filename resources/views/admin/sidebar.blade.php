@@ -19,7 +19,12 @@
           'label' => 'Kelola Dosen',
           'active' => request()->is('admin/dosen*'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Kelola Publikasi Dosen'],
+      [
+          'href' => route('admin.publikasi.index'),
+          'icon' => 'fas fa-book',
+          'label' => 'Kelola Publikasi Dosen',
+          'active' => request()->is('admin/publikasi*'),
+      ],
   
       ['section' => 'Verifikasi Syarat'],
       [

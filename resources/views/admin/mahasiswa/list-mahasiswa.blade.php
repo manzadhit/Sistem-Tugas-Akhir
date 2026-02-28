@@ -101,7 +101,7 @@
       </form>
     </div>
     {{-- ░░ TABEL — tampil di sm ke atas ░░ --}}
-    <div class="hidden sm:block overflow-x-auto">
+    <div class="hidden lg:block overflow-x-auto">
       <table class="w-full border-collapse" id="studentTable">
         <thead>
           <tr class="bg-gray-50 border-b border-gray-200">
@@ -180,7 +180,7 @@
     </div>
 
     {{-- ░░ CARD LIST — tampil di mobile saja ░░ --}}
-    <div class="block sm:hidden divide-y divide-gray-100">
+    <div class="block lg:hidden divide-y divide-gray-100">
       @forelse ($daftarMahasiswa as $mhs)
         @php
           $statusMhsCls = match ($mhs->status_akademik) {

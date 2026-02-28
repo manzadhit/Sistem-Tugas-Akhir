@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\UjianController;
-use App\Http\Controllers\PdfController;
+use App\Http\Controllers\Admin\PublikasiController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -43,4 +43,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
   Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
   Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
+
+  Route::get('/publikasi', [PublikasiController::class, 'index'])->name('publikasi.index');
+  Route::get('/publikasi/create', [PublikasiController::class, 'create'])->name('publikasi.create');
+  Route::post('/publikasi', [PublikasiController::class, 'store'])->name('publikasi.store');
+  Route::get('/publikasi/{id}', [PublikasiController::class, 'show'])->name('publikasi.show');
+  Route::get('/publikasi/{id}/edit', [PublikasiController::class, 'edit'])->name('publikasi.edit');
+  Route::put('/publikasi/{id}', [PublikasiController::class, 'update'])->name('publikasi.update');
+  Route::delete('/publikasi/{id}', [PublikasiController::class, 'destroy'])->name('publikasi.destroy');
 });
