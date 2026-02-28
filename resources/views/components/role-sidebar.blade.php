@@ -14,7 +14,7 @@
     class="fixed left-0 top-[73px] z-40 h-[calc(100vh-73px)] w-[16rem] overflow-y-auto bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)] transition-transform duration-200 ease-in-out md:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
     <div class="p-6">
-      <div class="mb-6 flex items-center justify-between">
+      <div class="mb-2 flex items-center justify-between">
         <h2 class="text-xl font-bold text-gray-900">{{ $title }}</h2>
         <button type="button" class="rounded p-1.5 text-gray-400 hover:text-gray-600 md:hidden"
           @click="sidebarOpen = false">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDosenRequest;
 use App\Http\Requests\Admin\UpdateDosenRequest;
 use App\Models\ProfileDosen;
+use App\Models\PublikasiDosen;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class DosenController extends Controller
 
         $daftarDosen = ProfileDosen::query()
             ->with('pembimbingMahasiswa')
+            ->withCount('publikasi')
             ->when($search, fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")
                 ->orWhere('nidn', 'like', "%{$search}%"))
             ->when($jabatan, fn($q) => $q->where('jabatan_fungsional', $jabatan))
@@ -31,7 +33,7 @@ class DosenController extends Controller
         $stats = [
             'total' => ProfileDosen::count(),
             'aktif' => ProfileDosen::where('status', 'aktif')->count(),
-            // 'publikasi' => 0, // TODO: tambah nanti
+            'total_publikasi' => PublikasiDosen::count(),
         ];
 
         return view('admin.dosen.list-dosen', compact('daftarDosen', 'stats'));

@@ -44,14 +44,13 @@
         <div class="text-2xl font-bold text-gray-900">{{ $stats['aktif'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4 opacity-60">
+    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
       <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xl">
         <i class="fas fa-book-open"></i>
       </div>
       <div>
         <div class="text-sm text-gray-500 mb-1">Total Publikasi</div>
-        <div class="text-2xl font-bold text-gray-400">—</div>
-        <div class="text-xs text-gray-400">Segera hadir</div>
+        <div class="text-2xl font-bold text-gray-900">{{ $stats['total_publikasi'] }}</div>
       </div>
     </div>
   </div>
@@ -112,6 +111,7 @@
               Fungsional</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Keahlian</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Publikasi</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
           </tr>
         </thead>
@@ -166,6 +166,11 @@
                   {{ ucfirst($dosen->status) }}
                 </span>
               </td>
+              <td class="px-5 py-4 text-sm">
+                <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold ">
+                  {{ $dosen->publikasi_count }}
+                </span>
+              </td>
               <td class="px-5 py-4">
                 <div class="flex gap-2">
                   <a href="{{ route('admin.dosen.show', $dosen->id) }}"
@@ -189,7 +194,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="px-5 py-12 text-center text-gray-400">
+              <td colspan="7" class="px-5 py-12 text-center text-gray-400">
                 <i class="fas fa-chalkboard-teacher text-3xl mb-3 block opacity-30"></i>
                 Tidak ada data dosen.
               </td>
@@ -237,6 +242,10 @@
               @endif
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $cls }}">
                 {{ ucfirst($dosen->status) }}
+              </span>
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                <i class="fas fa-book-open text-[10px]"></i>
+                {{ $dosen->publikasi_count }} publikasi
               </span>
             </div>
           </div>

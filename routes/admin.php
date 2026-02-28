@@ -1,30 +1,32 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\MahasiswaController;
-use App\Http\Controllers\Admin\UjianController;
+use App\Http\Controllers\Admin\VerifikasiSyaratController;
+use App\Http\Controllers\Admin\VerifikasiHasilController;
 use App\Http\Controllers\Admin\PublikasiController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-  Route::get("/dashboard", function () {
-    return view("admin.dashboard");
-  })->name("dashboard");
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-  Route::get('/ujian/{jenis}', [UjianController::class, 'index'])->name('ujian.verifikasi');
+  // Verifikasi Syarat Ujian
+  Route::prefix('ujian/verifikasi-syarat')->name('ujian.syarat.')->group(function () {
+    Route::get('/', [VerifikasiSyaratController::class, 'index'])->name('index');
+    Route::get('/{id}', [VerifikasiSyaratController::class, 'detail'])->name('detail');
+    Route::post('/{id}', [VerifikasiSyaratController::class, 'proses'])->name('proses');
+    Route::get('/{id}/undangan', [VerifikasiSyaratController::class, 'showUndangan'])->name('undangan');
+    Route::post('/{id}/undangan', [VerifikasiSyaratController::class, 'storeUndangan'])->name('undangan.store');
+    Route::post('/{id}/undangan/kirim', [VerifikasiSyaratController::class, 'kirimUndangan'])->name('undangan.kirim');
+  });
 
-  Route::get('/ujian/{jenis}/{id}/verifikasi', [UjianController::class, 'detailVerifikasi'])->name('ujian.verifikasi.detail');
-  Route::post('/ujian/{jenis}/{id}/verifikasi', [UjianController::class, 'prosesVerifikasi'])->name('ujian.verifikasi.proses');
-
-  Route::get('/ujian/{jenis}/{id}/undangan', [UjianController::class, 'showUndangan'])->name('ujian.undangan');
-  Route::post('/ujian/{jenis}/{id}/undangan', [UjianController::class, 'storeUndangan'])->name('ujian.undangan.store');
-
-  Route::post('ujian/{jenis}/{id}/undangan/kirim', [UjianController::class, 'kirimUndangan'])->name('ujian.undangan.kirim');
-
-  // Verifikasi Hasil
-  Route::get('/ujian/{jenis}/hasil-ujian', [UjianController::class, 'indexHasilUjian'])->name('ujian.hasil-ujian.index');
-  Route::get('/ujian/{jenis}/{id}/hasil-ujian', [UjianController::class, 'detailHasilUjian'])->name('ujian.hasil-ujian.detail');
-  Route::post('/ujian/{jenis}/{id}/hasil-ujian', [UjianController::class, 'prosesHasilUjian'])->name('ujian.hasil-ujian.proses');
+  // Verifikasi Hasil Ujian
+  Route::prefix('ujian/verifikasi-hasil')->name('ujian.hasil.')->group(function () {
+    Route::get('/', [VerifikasiHasilController::class, 'index'])->name('index');
+    Route::get('/{id}', [VerifikasiHasilController::class, 'detail'])->name('detail');
+    Route::post('/{id}', [VerifikasiHasilController::class, 'proses'])->name('proses');
+  });
 
   // Manajemen Mahasiswa (resource)
   Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
@@ -44,6 +46,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
   Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
 
+  // Manajemen Publikasi
   Route::get('/publikasi', [PublikasiController::class, 'index'])->name('publikasi.index');
   Route::get('/publikasi/create', [PublikasiController::class, 'create'])->name('publikasi.create');
   Route::post('/publikasi', [PublikasiController::class, 'store'])->name('publikasi.store');

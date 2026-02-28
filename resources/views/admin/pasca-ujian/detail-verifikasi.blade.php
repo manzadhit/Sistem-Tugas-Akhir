@@ -12,7 +12,7 @@
   <div class="flex items-start justify-between gap-4 mb-8">
     <div>
       <nav class="flex items-center gap-1.5 mb-2 text-sm text-gray-500">
-        <a href="{{ route('admin.ujian.hasil-ujian.index', $jenis) }}" class="transition hover:text-blue-600">Daftar
+        <a href="{{ route('admin.ujian.hasil.index') }}" class="transition hover:text-blue-600">Daftar
           Pengajuan</a>
         <i class="fas fa-chevron-right text-[10px] text-gray-400"></i>
         <span class="font-medium text-gray-900">Verifikasi Berkas</span>
@@ -50,7 +50,7 @@
         </div>
         <div class="col-span-2 sm:col-span-1">
           <div class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">Jenis Ujian</div>
-          <div class="text-sm font-medium text-gray-900">Ujian {{ ucfirst($jenis) }}</div>
+          <div class="text-sm font-medium text-gray-900">Ujian {{ ucfirst($ujian->jenis_ujian) }}</div>
         </div>
 
         {{-- Pembimbing & Penguji sejajar --}}
@@ -93,7 +93,7 @@
       <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
         <h2 class="text-base font-semibold text-gray-900">Jadwal Ujian</h2>
         <span
-          class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full whitespace-nowrap">{{ ucfirst($jenis) }}</span>
+          class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full whitespace-nowrap">{{ ucfirst($ujian->jenis_ujian) }}</span>
       </div>
       @if ($ujian->jadwalUjian)
         <div class="flex flex-col gap-4 p-6">
@@ -127,8 +127,7 @@
 
   {{-- Berkas Syarat --}}
   <div x-data="{ showModal: false, showSuccessModal: {{ session('show_success_modal') ? 'true' : 'false' }} }">
-    <form id="verifikasiForm" method="POST"
-      action="{{ route('admin.ujian.hasil-ujian.proses', [$jenis, $ujian->id]) }}">
+    <form id="verifikasiForm" method="POST" action="{{ route('admin.ujian.hasil.proses', $ujian->id) }}">
       @csrf
       <section class="mb-6 overflow-hidden bg-white shadow-sm rounded-xl">
         <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
@@ -257,7 +256,7 @@
               </div>
             </div>
             <div class="mt-5 sm:mt-6">
-              <a href="{{ route('admin.ujian.hasil-ujian.index', $jenis) }}"
+              <a href="{{ route('admin.ujian.hasil.index') }}"
                 class="inline-flex w-full justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600">
                 Oke, Kembali ke Daftar
               </a>

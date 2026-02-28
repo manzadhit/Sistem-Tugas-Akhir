@@ -26,23 +26,17 @@
           'active' => request()->is('admin/publikasi*'),
       ],
   
-      ['section' => 'Verifikasi Syarat'],
+      ['section' => 'Ujian'],
       [
-          'href' => route('admin.ujian.verifikasi', 'proposal'),
+          'href' => route('admin.ujian.syarat.index'),
           'icon' => 'fas fa-file-signature',
-          'label' => 'Proposal',
-          'active' => request()->is('admin/ujian/proposal*'),
+          'label' => 'Verifikasi Syarat Ujian',
+          'active' => request()->is('admin/ujian/verifikasi-syarat*'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Hasil'],
-      ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],
-  
-      ['section' => 'Verifikasi Hasil'],
       [
-          'href' => route('admin.ujian.hasil-ujian.index', 'proposal'),
-          'icon' => 'fas fa-file-signature',
-          'label' => 'Proposal',
-          'active' => request()->is('admin/ujian/proposal/hasil-ujian', 'admin/ujian/proposal/*/hasil-ujian'),
+          'href' => route('admin.ujian.hasil.index'),
+          'icon' => 'fas fa-clipboard-check',
+          'label' => 'Verifikasi Hasil Ujian',
+          'active' => request()->is('admin/ujian/verifikasi-hasil*'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Hasil'],
-      ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Skripsi'],
   ]" />

@@ -23,18 +23,31 @@
         <h2 class="mb-2 text-xl font-semibold text-gray-900">Daftar Pengajuan Hasil Ujian</h2>
         <p class="text-sm text-gray-500">Mahasiswa yang mengajukan verifikasi berkas pasca ujian</p>
       </div>
-      <div class="flex items-center gap-3">
+      <form action="{{ route('admin.ujian.hasil.index') }}" method="GET" id="filterForm"
+        class="flex flex-wrap items-center gap-3">
         <div class="relative">
-          <i class="absolute text-gray-400 transform -translate-y-1/2 fas fa-search left-3 top-1/2"></i>
-          <input type="text" placeholder="Cari mahasiswa/judul..."
-            class="w-[250px] py-2 pl-10 pr-4 text-sm transition border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
+          <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <input type="text" placeholder="Cari mahasiswa/NIM..." name="search" value="{{ request('search') }}"
+            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full md:w-56 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-colors">
         </div>
-        <button
-          class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 transition bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:border-gray-400">
-          <i class="fas fa-filter"></i>
-          Filter
-        </button>
-      </div>
+        <div class="relative">
+          <select name="jenis" onchange="this.form.submit()"
+            class="appearance-none pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:border-blue-600">
+            <option value="">Semua Jenis</option>
+            <option value="proposal" {{ request('jenis') === 'proposal' ? 'selected' : '' }}>Proposal</option>
+            <option value="hasil" {{ request('jenis') === 'hasil' ? 'selected' : '' }}>Hasil</option>
+            <option value="skripsi" {{ request('jenis') === 'skripsi' ? 'selected' : '' }}>Skripsi</option>
+          </select>
+          <i
+            class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+        </div>
+        @if (request()->hasAny(['search', 'jenis']))
+          <a href="{{ route('admin.ujian.hasil.index') }}"
+            class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <i class="fas fa-times"></i>
+          </a>
+        @endif
+      </form>
     </div>
 
     {{-- Table Wrapper --}}
@@ -59,7 +72,8 @@
         <tbody class="divide-y divide-gray-100">
           @forelse ($ujians as $item)
             <tr class="transition hover:bg-gray-50">
-              <td class="px-6 py-4 text-sm text-gray-700 align-middle">{{ $loop->iteration }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700 align-middle">
+                {{ ($ujians->currentPage() - 1) * $ujians->perPage() + $loop->iteration }}</td>
               <td class="px-6 py-4 text-sm text-gray-700 align-middle">
                 <div class="flex flex-col gap-1">
                   <span class="font-semibold text-gray-900">{{ $item->tugasAkhir->mahasiswa->nama_lengkap }}</span>
@@ -82,14 +96,14 @@
               </td>
               <td class="px-6 py-4 text-sm text-gray-700 align-middle">
                 <a class="inline-flex items-center justify-center px-5 py-2 text-xs font-medium text-white transition rounded-lg whitespace-nowrap bg-gradient-to-br from-blue-500 to-blue-600 hover:-translate-y-px hover:shadow-md hover:shadow-blue-500/30"
-                  href="{{ route('admin.ujian.hasil-ujian.detail', ['jenis' => $item->jenis_ujian, 'id' => $item->id]) }}">Verifikasi</a>
+                  href="{{ route('admin.ujian.hasil.detail', $item->id) }}">Verifikasi</a>
               </td>
             </tr>
           @empty
             <tr>
               <td colspan="7" class="px-6 py-10 text-sm text-center text-gray-400">
                 <i class="mb-2 text-2xl fas fa-inbox block"></i>
-                Belum ada pengajuan hasil ujian {{ $jenis }} yang menunggu verifikasi.
+                Belum ada pengajuan hasil ujian yang menunggu verifikasi.
               </td>
             </tr>
           @endforelse
@@ -97,24 +111,17 @@
       </table>
     </div>
 
-    {{-- Pagination --}}
-    <div class="flex items-center justify-between p-6 border-t border-gray-200">
-      <div class="text-sm text-gray-500">
-        Menampilkan 1-4 dari 4 mahasiswa
-      </div>
-      <div class="flex gap-2">
-        <button
-          class="px-3 py-2 text-sm text-gray-500 transition bg-white border border-gray-300 rounded-md cursor-not-allowed opacity-50"
-          disabled>
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="px-3 py-2 text-sm text-white transition bg-blue-600 border border-blue-600 rounded-md">1</button>
-        <button
-          class="px-3 py-2 text-sm text-gray-500 transition bg-white border border-gray-300 rounded-md cursor-not-allowed opacity-50"
-          disabled>
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
-    </div>
+  </div>
+  {{-- Pagination --}}
+  <div class="p-6 border-t border-gray-200">
+    {{ $ujians->links() }}
   </div>
 @endsection
+
+@push('scripts')
+  <script>
+    document.querySelector('input[name="search"]')?.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') this.closest('form').submit();
+    });
+  </script>
+@endpush

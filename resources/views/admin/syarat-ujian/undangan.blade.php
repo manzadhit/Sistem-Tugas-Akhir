@@ -87,7 +87,7 @@
         </div>
         <div class="col-span-2 sm:col-span-1">
           <div class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">Jenis Ujian</div>
-          <div class="text-sm font-medium text-gray-900">Ujian {{ ucfirst($jenis) }}</div>
+          <div class="text-sm font-medium text-gray-900">Ujian {{ ucfirst($ujian->jenis_ujian) }}</div>
         </div>
 
         {{-- Pembimbing & Penguji sejajar --}}
@@ -134,7 +134,7 @@
       <div class="flex items-center justify-between gap-4 px-6 py-4 border-b border-gray-200">
         <h2 class="text-base font-semibold text-gray-900">Jadwal Ujian</h2>
         <span
-          class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full whitespace-nowrap">{{ ucfirst($jenis) }}</span>
+          class="inline-block px-3 py-1 text-xs font-semibold text-blue-800 bg-blue-100 rounded-full whitespace-nowrap">{{ ucfirst($ujian->jenis_ujian) }}</span>
       </div>
       @if ($ujian->jadwalUjian)
         <div class="flex flex-col gap-4 p-6">
@@ -171,7 +171,7 @@
   {{-- Section Stack --}}
   <div class="flex flex-col gap-4">
     {{-- Detail Surat Card --}}
-    <form method="POST" action="{{ route('admin.ujian.undangan.store', [$jenis, $ujian->id]) }}">
+    <form method="POST" action="{{ route('admin.ujian.syarat.undangan.store', $ujian->id) }}">
       @csrf
       <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
@@ -206,7 +206,7 @@
             <input name="hal"
               class="px-3 py-2.5 border {{ $errors->has('hal') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all"
               type="text" required placeholder="Masukkan Perihal Surat"
-              value="{{ old('hal', $ujian->undanganUjian->hal ?? 'Undangan Seminar ' . ucfirst($jenis)) }}" />
+              value="{{ old('hal', $ujian->undanganUjian->hal ?? 'Undangan Seminar ' . ucfirst($ujian->jenis_ujian)) }}" />
             @error('hal')
               <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
             @enderror
@@ -295,7 +295,7 @@
 
   {{-- Action Footer --}}
   <div x-data="{ showConfirmModal: false, showSuccessModal: {{ session('show_success_modal') ? 'true' : 'false' }} }">
-    <form method="POST" action="{{ route('admin.ujian.undangan.kirim', [$jenis, $ujian->id]) }}">
+    <form method="POST" action="{{ route('admin.ujian.syarat.undangan.kirim', $ujian->id) }}">
       @csrf
       <div
         class="flex items-center justify-between p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 mt-6 max-sm:flex-col max-sm:gap-4 max-sm:text-center">
@@ -343,7 +343,7 @@
               </div>
             </div>
             <div class="mt-5 sm:mt-6">
-              <a href="{{ route('admin.ujian.verifikasi', $jenis) }}"
+              <a href="{{ route('admin.ujian.syarat.index') }}"
                 class="inline-flex w-full justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600">
                 Oke, Kembali ke Daftar
               </a>
