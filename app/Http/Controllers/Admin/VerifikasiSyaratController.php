@@ -17,6 +17,25 @@ class VerifikasiSyaratController extends Controller
 
   public function index(Request $request)
   {
+    $statsQuery = Ujian::query();
+
+    if ($request->filled('jenis')) {
+      $statsQuery->where('jenis_ujian', $request->jenis);
+    }
+
+    $totalPengajuan = (clone $statsQuery)
+      ->whereIn('status', ['menunggu_verifikasi_syarat', 'menunggu_undangan'])
+      ->count();
+
+    $totalTerverifikasi = (clone $statsQuery)
+      ->whereIn('status', [
+        'menunggu_hasil',
+        'revisi_hasil',
+        'menunggu_verifikasi_hasil',
+        'selesai',
+      ])
+      ->count();
+
     $query = Ujian::with([
       'tugasAkhir.mahasiswa',
       'dokumenUjian' => function ($q) {
@@ -39,7 +58,7 @@ class VerifikasiSyaratController extends Controller
 
     $ujians = $query->paginate(10)->withQueryString();
 
-    return view('admin.syarat-ujian.list-mahasiswa', compact('ujians'));
+    return view('admin.syarat-ujian.list-mahasiswa', compact('ujians', 'totalPengajuan', 'totalTerverifikasi'));
   }
 
   public function detail($id)

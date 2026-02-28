@@ -11,6 +11,20 @@ class VerifikasiHasilController extends Controller
 {
   public function index(Request $request)
   {
+    $statsQuery = Ujian::query();
+
+    if ($request->filled('jenis')) {
+      $statsQuery->where('jenis_ujian', $request->jenis);
+    }
+
+    $totalPengajuan = (clone $statsQuery)
+      ->where('status', 'menunggu_verifikasi_hasil')
+      ->count();
+
+    $totalTerverifikasi = (clone $statsQuery)
+      ->where('status', 'selesai')
+      ->count();
+
     $query = Ujian::with([
       'tugasAkhir.mahasiswa',
       'dokumenUjian' => function ($q) {
@@ -33,7 +47,7 @@ class VerifikasiHasilController extends Controller
 
     $ujians = $query->paginate(10)->withQueryString();
 
-    return view('admin.pasca-ujian.list-mahasiswa', compact('ujians'));
+    return view('admin.pasca-ujian.list-mahasiswa', compact('ujians', 'totalPengajuan', 'totalTerverifikasi'));
   }
 
   public function detail($id)
