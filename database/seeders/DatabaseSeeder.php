@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\DosenPembimbing;
+use App\Models\PublikasiDosen;
 use App\Models\User;
 use App\Models\ProfileDosen;
 use Illuminate\Database\Seeder;
@@ -78,6 +79,15 @@ class DatabaseSeeder extends Seeder
                     'nama_lengkap' => "Dosen {$i}",
                 ])
             );
+        }
+
+        // ─── Publikasi per Dosen ───
+        $semuaDosen = ProfileDosen::all();
+        foreach ($semuaDosen as $dosen) {
+            $jumlah = fake()->numberBetween(2, 5);
+            PublikasiDosen::factory()
+                ->count($jumlah)
+                ->create(['dosen_id' => $dosen->id]);
         }
 
         // ─── Mahasiswa (mahasiswa1 – mahasiswa10) ───

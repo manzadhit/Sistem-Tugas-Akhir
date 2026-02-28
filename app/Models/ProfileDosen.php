@@ -39,4 +39,9 @@ class ProfileDosen extends Model
     {
         return $this->hasMany(DosenPenguji::class, 'dosen_id');
     }
+
+    public function publikasi()
+    {
+        return $this->hasMany(PublikasiDosen::class, 'dosen_id');
+    }
 }
