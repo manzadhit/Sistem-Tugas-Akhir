@@ -30,5 +30,10 @@
       ['href' => '#', 'icon' => 'fas fa-edit', 'label' => 'Input Nilai'],
   
       ['section' => 'Publikasi'],
-      ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Publikasi Saya'],
+      [
+          'href' => route('dosen.publikasi.index'),
+          'icon' => 'fas fa-book',
+          'label' => 'Publikasi Saya',
+          'active' => request()->routeIs('dosen.publikasi.index'),
+      ],
   ]" />

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Dosen\PublikasiController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dosen\JadwalController;
 use App\Http\Controllers\Dosen\MahasiswaBimbingan;
@@ -19,4 +20,14 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
   Route::get('/undangan', [UndanganController::class, 'index'])->name('undangan.index');
 
   Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+
+  Route::prefix('publikasi')->name('publikasi.')->controller(PublikasiController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{publikasi}', 'show')->name('show');
+    Route::get('/{publikasi}/edit', 'edit')->name('edit');
+    Route::put('/{publikasi}', 'update')->name('update');
+    Route::delete('/{publikasi}', 'destroy')->name('destroy');
+  });
 });
