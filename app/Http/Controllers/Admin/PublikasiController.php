@@ -14,12 +14,14 @@ class PublikasiController extends Controller
         $search   = $request->get('search');
         $kategori = $request->get('kategori');
         $tahun    = $request->get('tahun');
+        $dosenId  = $request->get('dosen_id');
 
         $daftarPublikasi = PublikasiDosen::with('dosen')
             ->when($search, fn($q) => $q->where('judul', 'like', "%{$search}%")
                 ->orWhereHas('dosen', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")))
             ->when($kategori, fn($q) => $q->where('jenis_publikasi', $kategori))
             ->when($tahun, fn($q) => $q->where('tahun', $tahun))
+            ->when($dosenId, fn($q) => $q->where('dosen_id', $dosenId))
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -31,7 +33,9 @@ class PublikasiController extends Controller
             'haki'   => PublikasiDosen::where('jenis_publikasi', 'haki')->count(),
         ];
 
-        return view('admin.publikasi.list-publikasi', compact('daftarPublikasi', 'stats'));
+        $daftarDosen = ProfileDosen::orderBy('nama_lengkap')->get();
+
+        return view('admin.publikasi.list-publikasi', compact('daftarPublikasi', 'stats', 'daftarDosen'));
     }
 
     public function create()

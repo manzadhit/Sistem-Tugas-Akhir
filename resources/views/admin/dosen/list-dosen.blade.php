@@ -13,44 +13,47 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-5 md:mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Kelola Dosen</h1>
-      <p class="text-gray-500">Kelola data dosen Informatika</p>
+      <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-0.5 md:mb-2">Kelola Dosen</h1>
+      <p class="text-gray-500 text-sm">Kelola data dosen Informatika</p>
     </div>
     <a href="{{ route('admin.dosen.create') }}"
-      class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
-      <i class="fas fa-plus"></i> Tambah Dosen
+      class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shrink-0">
+      <i class="fas fa-plus text-xs"></i> Tambah Dosen
     </a>
   </div>
 
   <!-- Stats Summary -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+  <div class="grid grid-cols-3 gap-3 md:gap-6 mb-5 md:mb-8">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-chalkboard-teacher"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Total Dosen</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Total Dosen</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-user-tie"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Dosen Aktif</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['aktif'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Dosen Aktif</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['aktif'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-book-open"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Total Publikasi</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['total_publikasi'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Total Publikasi</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['total_publikasi'] }}</div>
       </div>
     </div>
   </div>
@@ -243,7 +246,8 @@
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $cls }}">
                 {{ ucfirst($dosen->status) }}
               </span>
-              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+              <span
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
                 <i class="fas fa-book-open text-[10px]"></i>
                 {{ $dosen->publikasi_count }} publikasi
               </span>

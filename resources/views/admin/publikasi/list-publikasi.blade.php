@@ -14,54 +14,58 @@
   <x-alert type="warning" />
 
   <!-- Page Header -->
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-5 md:mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Kelola Publikasi Dosen</h1>
-      <p class="text-gray-500">Kelola data publikasi dosen Teknik Informatika</p>
+      <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-0.5 md:mb-2">Kelola Publikasi Dosen</h1>
+      <p class="text-gray-500 text-sm">Kelola data publikasi dosen Teknik Informatika</p>
     </div>
     <a href="{{ route('admin.publikasi.create') }}"
-      class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
-      <i class="fas fa-plus"></i>
+      class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shrink-0">
+      <i class="fas fa-plus text-xs"></i>
       Tambah Publikasi
     </a>
   </div>
 
   <!-- Stats Summary -->
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-5 md:mb-8">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-book"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Total Publikasi</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Total Publikasi</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-newspaper"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Jurnal</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['jurnal'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Jurnal</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['jurnal'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-book-open"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Buku</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['buku'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Buku</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['buku'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-amber-100 text-amber-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-certificate"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">HaKI</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['haki'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">HaKI</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['haki'] }}</div>
       </div>
     </div>
   </div>
@@ -71,30 +75,39 @@
     <div class="p-5 border-b border-gray-200 flex flex-wrap items-center justify-between gap-4">
       <h3 class="text-lg font-semibold text-gray-900">Daftar Publikasi</h3>
       <form action="{{ route('admin.publikasi.index') }}" method="GET" id="filterForm"
-        class="flex flex-wrap items-center gap-3">
+        class="flex flex-wrap items-center gap-2">
         <div class="relative">
-          <i class="fas fa-search absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+          <i class="fas fa-search absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
           <input type="text" placeholder="Cari judul atau dosen..." name="search" value="{{ request('search') }}"
-            class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-full md:w-60 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-colors" />
+            class="pl-8 pr-3 py-1.5 border border-gray-300 rounded-lg text-xs w-full md:w-48 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10 transition-colors" />
         </div>
         <select name="kategori" onchange="this.form.submit()"
-          class="appearance-none pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:border-blue-600">
+          class="appearance-none pl-3 pr-7 py-1.5 border border-gray-300 rounded-lg text-xs bg-white cursor-pointer focus:outline-none focus:border-blue-600">
           <option value="">Semua Kategori</option>
           <option value="jurnal" {{ request('kategori') === 'jurnal' ? 'selected' : '' }}>Jurnal</option>
           <option value="buku" {{ request('kategori') === 'buku' ? 'selected' : '' }}>Buku</option>
           <option value="haki" {{ request('kategori') === 'haki' ? 'selected' : '' }}>HaKI</option>
         </select>
         <select name="tahun" onchange="this.form.submit()"
-          class="appearance-none pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:border-blue-600">
+          class="appearance-none pl-3 pr-7 py-1.5 border border-gray-300 rounded-lg text-xs bg-white cursor-pointer focus:outline-none focus:border-blue-600">
           <option value="">Semua Tahun</option>
           @foreach (range(date('Y'), 2000) as $yr)
             <option value="{{ $yr }}" {{ request('tahun') == $yr ? 'selected' : '' }}>{{ $yr }}
             </option>
           @endforeach
         </select>
-        @if (request()->hasAny(['search', 'kategori', 'tahun']))
+        <select name="dosen_id" onchange="this.form.submit()"
+          class="appearance-none pl-3 pr-7 py-1.5 border border-gray-300 rounded-lg text-xs bg-white cursor-pointer focus:outline-none focus:border-blue-600">
+          <option value="">Semua Dosen</option>
+          @foreach ($daftarDosen as $dosen)
+            <option value="{{ $dosen->id }}" {{ request('dosen_id') == $dosen->id ? 'selected' : '' }}>
+              {{ $dosen->nama_lengkap }}
+            </option>
+          @endforeach
+        </select>
+        @if (request()->hasAny(['search', 'kategori', 'tahun', 'dosen_id']))
           <a href="{{ route('admin.publikasi.index') }}"
-            class="px-3 py-2 text-sm text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            class="px-2.5 py-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
             <i class="fas fa-times"></i>
           </a>
         @endif

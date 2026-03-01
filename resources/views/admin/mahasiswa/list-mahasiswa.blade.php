@@ -13,47 +13,50 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
-  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4 mb-5 md:mb-8">
     <div>
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Kelola Mahasiswa</h1>
-      <p class="text-gray-500">
+      <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-0.5 md:mb-2">Kelola Mahasiswa</h1>
+      <p class="text-gray-500 text-sm">
         Kelola data mahasiswa Teknik Informatika
       </p>
     </div>
     <a href="{{ route('admin.mahasiswa.create') }}"
-      class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
-      <i class="fas fa-plus"></i>
+      class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shrink-0">
+      <i class="fas fa-plus text-xs"></i>
       Tambah Mahasiswa
     </a>
   </div>
 
   <!-- Stats Summary -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl">
+  <div class="grid grid-cols-3 gap-3 md:gap-6 mb-5 md:mb-8">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-users"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Total Mahasiswa</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Total Mahasiswa</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['total'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-user-check"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Mahasiswa Aktif</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['aktif'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Mahasiswa Aktif</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['aktif'] }}</div>
       </div>
     </div>
-    <div class="bg-white p-6 rounded-xl shadow-sm flex items-center gap-4">
-      <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-xl">
+    <div class="bg-white p-3 md:p-6 rounded-xl shadow-sm flex items-center gap-2 md:gap-4">
+      <div
+        class="w-8 h-8 md:w-12 md:h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-sm md:text-xl shrink-0">
         <i class="fas fa-graduation-cap"></i>
       </div>
       <div>
-        <div class="text-sm text-gray-500 mb-1">Mahasiswa Lulus</div>
-        <div class="text-2xl font-bold text-gray-900">{{ $stats['lulus'] }}</div>
+        <div class="text-xs md:text-sm text-gray-500 mb-0.5 md:mb-1">Mahasiswa Lulus</div>
+        <div class="text-base md:text-2xl font-bold text-gray-900">{{ $stats['lulus'] }}</div>
       </div>
     </div>
   </div>
