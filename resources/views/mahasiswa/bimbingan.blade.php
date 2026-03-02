@@ -33,15 +33,20 @@
     </div>
   @endif
 
+  <!-- Status Alerts per Pembimbing -->
+  @foreach ($latestPerPembimbing as $latest)
+    <x-status-alert :status="$latest->status" :pembimbing-label="$latest->dosenPembimbing->getJenisPembimbing()" />
+  @endforeach
+
   <!-- Progress Bar -->
   <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
     <div class="flex justify-between relative">
       <!-- Progress Line -->
       <div
-        class="absolute top-5 left-[10%] right-[10%] h-0.5 {{ $proposalSelesai ? 'bg-emerald-400' : 'bg-gray-200' }} z-0">
+        class="absolute top-5 left-[25%] right-[25%] h-0.5 {{ $proposalSelesai ? 'bg-emerald-400' : 'bg-gray-200' }} z-0">
       </div>
 
-      <!-- Step 1 -->
+      <!-- Step 1: Bimbingan -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
@@ -52,19 +57,7 @@
           class="text-[10px] sm:text-xs font-semibold text-center {{ $proposalSelesai ? 'text-emerald-600' : 'text-blue-600' }}">Bimbingan</span>
       </div>
 
-      <!-- Step 2 -->
-      <div class="flex flex-col items-center relative z-10 flex-1">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
-          {{ $proposalSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
-          <i class="{{ $proposalSelesai ? 'fas fa-check' : 'fas fa-check-double' }}"></i>
-        </div>
-        <span
-          class="text-[10px] sm:text-xs font-medium text-center {{ $proposalSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">ACC
-          Pembimbing</span>
-      </div>
-
-      <!-- Step 3 -->
+      <!-- Step 2: Minta Penguji (selalu abu di halaman ini) -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
@@ -82,11 +75,6 @@
   <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
-
-  <!-- Status Alerts per Pembimbing -->
-  @foreach ($latestPerPembimbing as $latest)
-    <x-status-alert :status="$latest->status" :pembimbing-label="$latest->dosenPembimbing->getJenisPembimbing()" />
-  @endforeach
 
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission') }}" method="POST" enctype="multipart/form-data"
@@ -197,7 +185,8 @@
           <div>
             <p class="text-sm font-semibold text-emerald-800">Tahap Proposal Selesai</p>
             <p class="text-xs text-emerald-700">Riwayat bimbingan proposal ini hanya dapat dilihat. Lanjutkan ke tahap
-              <span class="font-bold">{{ ucfirst($tugasAkhir->tahapan) }}</span>.</p>
+              <span class="font-bold">{{ ucfirst($tugasAkhir->tahapan) }}</span>.
+            </p>
           </div>
         </div>
       @endif
@@ -268,12 +257,7 @@
                       {{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
                   </div>
                 </div>
-                <div class="flex w-full items-center justify-between gap-2 sm:gap-3 lg:w-auto lg:justify-end">
-                  <span
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 md:px-6 md:py-3 rounded-lg text-xs md:text-md font-medium {{ $status['action_class'] }}">
-                    <i class="{{ $status['action_icon'] }}"></i>
-                    {{ $status['action_text'] }}
-                  </span>
+                <div class="flex w-full items-center justify-end gap-2 sm:gap-3 lg:w-auto">
                   <i class="fas fa-chevron-down text-sm sm:text-base text-gray-400 transition-transform"
                     id="chevron-{{ $historyId }}"></i>
                 </div>
@@ -320,6 +304,16 @@
           </div>
         @endforelse
       </div>
+
+      @if ($hasTwoAccPembimbing && !$proposalSelesai)
+        <div class="mt-4 flex justify-end">
+          <a href="{{ route('mahasiswa.bimbingan.mintaPenguji') }}"
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-800 transition-all">
+            <i class="fas fa-user-check"></i>
+            Minta Penguji
+          </a>
+        </div>
+      @endif
     </div>
   </div>
 

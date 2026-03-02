@@ -20,25 +20,21 @@
   <!-- Progress -->
   <div class="mb-8 rounded-xl bg-white p-6 shadow-sm">
     <div class="relative flex justify-between">
-      <div class="absolute left-[10%] right-[10%] top-5 h-[3px] bg-gray-200"></div>
+      <div class="absolute left-[25%] right-[25%] top-5 h-0.5 bg-emerald-400"></div>
 
-      <div class="relative z-10 flex flex-1 flex-col items-center">
-        <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
-          <i class="fas fa-comments text-base"></i>
-        </div>
-        <span class="text-center text-[10px] sm:text-xs font-medium text-emerald-500">Bimbingan</span>
-      </div>
-
-      <div class="relative z-10 flex flex-1 flex-col items-center">
-        <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white">
-          <i class="fas fa-check-double text-base"></i>
-        </div>
-        <span class="text-center text-[10px] sm:text-xs font-medium text-emerald-500">ACC Pembimbing</span>
-      </div>
-
+      {{-- Step 1: Bimbingan (selesai) --}}
       <div class="relative z-10 flex flex-1 flex-col items-center">
         <div
-          class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white ring-4 ring-blue-100">
+          class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
+          <i class="fas fa-check text-base"></i>
+        </div>
+        <span class="text-center text-[10px] sm:text-xs font-semibold text-emerald-600">Bimbingan</span>
+      </div>
+
+      {{-- Step 2: Minta Penguji (aktif) --}}
+      <div class="relative z-10 flex flex-1 flex-col items-center">
+        <div
+          class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]">
           <i class="fas fa-user-check text-base"></i>
         </div>
         <span class="text-center text-[10px] sm:text-xs font-semibold text-blue-600">Minta Penguji</span>
@@ -150,7 +146,12 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
+      <div class="flex justify-between gap-3 pt-4 border-t border-gray-200 mt-6">
+        <a href="{{ route('mahasiswa.bimbingan.index') }}"
+          class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium transition-all border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">
+          <i class="fas fa-arrow-left"></i>
+          Kembali
+        </a>
         <button type="submit"
           class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium cursor-pointer transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed">
           <i class="fas fa-paper-plane"></i>
