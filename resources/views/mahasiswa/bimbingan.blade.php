@@ -7,47 +7,73 @@
 @endsection
 
 @section('content')
+  @php $proposalSelesai = $tugasAkhir->tahapan !== 'proposal'; @endphp
+
   <!-- Page Banner -->
-  <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-blue-600 to-blue-800">
-    <div class="absolute inset-0 flex items-center justify-center flex-col text-white text-center p-4">
-      <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">Bimbingan Proposal</h1>
-      <p class="text-xs sm:text-sm md:text-base opacity-90">
-        Upload dan kelola laporan bimbingan proposal Anda
-      </p>
+  @if ($proposalSelesai)
+    <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-emerald-500 to-emerald-700">
+      <div class="absolute inset-0 flex items-center justify-center flex-col text-white text-center p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <i class="fas fa-check-circle text-2xl"></i>
+          <h1 class="text-xl sm:text-2xl md:text-3xl font-bold">Bimbingan Proposal Selesai</h1>
+        </div>
+        <p class="text-xs sm:text-sm md:text-base opacity-90">
+          Anda telah menyelesaikan tahap proposal dan lanjut ke tahap {{ ucfirst($tugasAkhir->tahapan) }}
+        </p>
+      </div>
     </div>
-  </div>
+  @else
+    <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-blue-600 to-blue-800">
+      <div class="absolute inset-0 flex items-center justify-center flex-col text-white text-center p-4">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-2">Bimbingan Proposal</h1>
+        <p class="text-xs sm:text-sm md:text-base opacity-90">
+          Upload dan kelola laporan bimbingan proposal Anda
+        </p>
+      </div>
+    </div>
+  @endif
 
   <!-- Progress Bar -->
   <div class="bg-white rounded-xl p-6 shadow-sm mb-8">
     <div class="flex justify-between relative">
       <!-- Progress Line -->
-      <div class="absolute top-5 left-[10%] right-[10%] h-0.5 bg-gray-200 z-0"></div>
-
-      <!-- Step 1 - Active -->
-      <div class="flex flex-col items-center relative z-10 flex-1">
-        <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)] transition-all duration-300">
-          <i class="fas fa-comments"></i>
-        </div>
-        <span class="text-[10px] sm:text-xs font-semibold text-blue-600 text-center">Bimbingan</span>
+      <div
+        class="absolute top-5 left-[10%] right-[10%] h-0.5 {{ $proposalSelesai ? 'bg-emerald-400' : 'bg-gray-200' }} z-0">
       </div>
 
-      <!-- Step 2 - Pending -->
+      <!-- Step 1 -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400 transition-all duration-300">
-          <i class="fas fa-check-double"></i>
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
+          {{ $proposalSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]' }}">
+          <i class="{{ $proposalSelesai ? 'fas fa-check' : 'fas fa-comments' }}"></i>
         </div>
-        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">ACC Pembimbing</span>
+        <span
+          class="text-[10px] sm:text-xs font-semibold text-center {{ $proposalSelesai ? 'text-emerald-600' : 'text-blue-600' }}">Bimbingan</span>
       </div>
 
-      <!-- Step 3 - Pending -->
+      <!-- Step 2 -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
-          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-gray-200 text-gray-400 transition-all duration-300">
-          <i class="fas fa-user-check"></i>
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
+          {{ $proposalSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
+          <i class="{{ $proposalSelesai ? 'fas fa-check' : 'fas fa-check-double' }}"></i>
         </div>
-        <span class="text-[10px] sm:text-xs font-medium text-gray-500 text-center">Minta Penguji</span>
+        <span
+          class="text-[10px] sm:text-xs font-medium text-center {{ $proposalSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">ACC
+          Pembimbing</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="flex flex-col items-center relative z-10 flex-1">
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
+          {{ $proposalSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
+          <i class="{{ $proposalSelesai ? 'fas fa-check' : 'fas fa-user-check' }}"></i>
+        </div>
+        <span
+          class="text-[10px] sm:text-xs font-medium text-center {{ $proposalSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">Minta
+          Penguji</span>
       </div>
     </div>
   </div>
@@ -64,7 +90,7 @@
 
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission') }}" method="POST" enctype="multipart/form-data"
-    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing ? 'hidden' : '' }}">
+    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing || $proposalSelesai ? 'hidden' : '' }}">
     @csrf
 
     <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
@@ -165,6 +191,16 @@
   <!-- History Section -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
     <div class="p-4 sm:p-6">
+      @if ($proposalSelesai)
+        <div class="flex items-center gap-3 mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3">
+          <i class="fas fa-check-circle text-emerald-600 text-lg"></i>
+          <div>
+            <p class="text-sm font-semibold text-emerald-800">Tahap Proposal Selesai</p>
+            <p class="text-xs text-emerald-700">Riwayat bimbingan proposal ini hanya dapat dilihat. Lanjutkan ke tahap
+              <span class="font-bold">{{ ucfirst($tugasAkhir->tahapan) }}</span>.</p>
+          </div>
+        </div>
+      @endif
       <div class="bg-gray-50 rounded-xl p-4 sm:p-6">
         <h3 class="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
           <i class="fas fa-history text-blue-600"></i>

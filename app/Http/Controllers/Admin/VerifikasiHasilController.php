@@ -70,7 +70,7 @@ class VerifikasiHasilController extends Controller
       'dokumen.*.catatan' => 'nullable|string|max:500',
     ]);
 
-    $ujian = Ujian::findOrFail($id);
+    $ujian = Ujian::with('tugasAkhir')->findOrFail($id);
 
     $adaTolak = false;
 
@@ -97,6 +97,16 @@ class VerifikasiHasilController extends Controller
     }
 
     $ujian->update(['status' => 'selesai']);
+
+    $nextTahapan = match ($ujian->jenis_ujian) {
+      'proposal' => 'hasil',
+      'hasil'    => 'skripsi',
+      default    => null,
+    };
+
+    if ($nextTahapan) {
+      $ujian->tugasAkhir->update(['tahapan' => $nextTahapan]);
+    }
 
     return redirect()
       ->back()

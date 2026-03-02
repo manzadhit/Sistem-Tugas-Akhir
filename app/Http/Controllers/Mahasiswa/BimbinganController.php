@@ -19,7 +19,8 @@ class BimbinganController extends Controller
     {
         $mahasiswa = $request->user()->profileMahasiswa;
 
-        $tugasAkhirId = $mahasiswa->tugasAkhir->id;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+        $tugasAkhirId = $tugasAkhir->id;
 
         $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId);
         $latestSubmissionPerPembimbing = $allSubmission
@@ -43,7 +44,7 @@ class BimbinganController extends Controller
             ->where('status', 'acc')
             ->count() >= 2;
 
-        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing'));
+        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir'));
     }
 
     public function createSubmission(StoreSubmissionRequest $request)
