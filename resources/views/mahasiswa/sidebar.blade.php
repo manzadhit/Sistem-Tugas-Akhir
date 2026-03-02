@@ -8,13 +8,23 @@
   
       ['section' => 'Bimbingan'],
       [
-          'href' => route('mahasiswa.bimbingan.index'),
+          'href' => route('mahasiswa.bimbingan.index', ['jenis' => 'proposal']),
           'icon' => 'fas fa-file-signature',
           'label' => 'Bimbingan Proposal',
-          'active' => request()->routeIs('mahasiswa.bimbingan.index'),
+          'active' => request()->is('mahasiswa/bimbingan/proposal*'),
       ],
-      ['href' => '#', 'icon' => 'fas fa-chart-line', 'label' => 'Bimbingan Hasil'],
-      ['href' => '#', 'icon' => 'fas fa-book-open', 'label' => 'Bimbingan Skripsi'],
+      [
+          'href' => route('mahasiswa.bimbingan.index', ['jenis' => 'hasil']),
+          'icon' => 'fas fa-chart-line',
+          'label' => 'Bimbingan Hasil',
+          'active' => request()->is('mahasiswa/bimbingan/hasil*'),
+      ],
+      [
+          'href' => route('mahasiswa.bimbingan.index', ['jenis' => 'skripsi']),
+          'icon' => 'fas fa-book-open',
+          'label' => 'Bimbingan Skripsi',
+          'active' => request()->is('mahasiswa/bimbingan/skripsi*'),
+      ],
   
       ['section' => 'Ujian'],
       [

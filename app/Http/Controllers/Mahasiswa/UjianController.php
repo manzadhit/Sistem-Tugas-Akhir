@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Mahasiswa\SubmitHasilUjianRequest;
 use App\Http\Requests\Mahasiswa\SubmitPengajuanUjianRequest;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
-use App\Http\Requests\Mahasiswa\SubmitHasilUjianRequest;
 
 class UjianController extends Controller
 {

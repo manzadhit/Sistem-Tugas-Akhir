@@ -11,6 +11,7 @@ class Submission extends Model
     
     protected $fillable = [
         'tugas_akhir_id',
+        'tahapan',
         'dosen_pembimbing_id',
         'catatan',
         'status',

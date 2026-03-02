@@ -5,7 +5,6 @@ use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\KajurSubmissionController;
 use App\Http\Controllers\Mahasiswa\PermintaanPembimbingController;
 use App\Http\Controllers\Mahasiswa\UjianController;
-use App\Models\KajurSubmission;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
@@ -16,13 +15,18 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
   Route::middleware('has.pembimbing')->group(function () {
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
-    Route::get('/bimbingan', [BimbinganController::class, 'index'])->name('bimbingan.index');
+    Route::middleware('bimbingan.sequence')
+      ->prefix('bimbingan')
+      ->where(['jenis' => 'proposal|hasil|skripsi'])
+      ->group(function () {
+        Route::get('/{jenis}', [BimbinganController::class, 'index'])->name('bimbingan.index');
 
-    Route::post('/bimbingan/create-submission', [BimbinganController::class, 'createSubmission'])->name('bimbingan.createSubmission');
+        Route::post('/{jenis}/create-submission', [BimbinganController::class, 'createSubmission'])->name('bimbingan.createSubmission');
 
-    Route::get('/bimbingan/minta-penguji', [BimbinganController::class, 'mintaPenguji'])->name('bimbingan.mintaPenguji');
+        Route::get('/{jenis}/minta-penguji', [BimbinganController::class, 'mintaPenguji'])->name('bimbingan.mintaPenguji');
 
-    Route::post('/bimbingan/create-kajur-submission', [KajurSubmissionController::class, 'createKajurSubmission'])->name('bimbingan.createKajurSubmission');
+        Route::post('/{jenis}/create-kajur-submission', [KajurSubmissionController::class, 'createKajurSubmission'])->name('bimbingan.createKajurSubmission');
+      });
 
     Route::middleware('ujian.sequence')
       ->prefix('ujian')
@@ -37,7 +41,7 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
 
         Route::get('/{jenis}/hasil-ujian', [UjianController::class, 'showHasilUjian'])->name('ujian.hasil-ujian');
         Route::post('/{jenis}/hasil-ujian', [UjianController::class, 'submitHasilUjian'])->name('ujian.submitHasilUjian');
-        
+
         Route::get('/{jenis}/selesai', [UjianController::class, 'selesai'])->name('ujian.selesai');
       });
   });

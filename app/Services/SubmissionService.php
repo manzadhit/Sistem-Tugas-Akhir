@@ -12,29 +12,28 @@ use Illuminate\Support\Str;
 
 class SubmissionService
 {
-    public function createSubmission(ProfileMahasiswa $mahasiswa, int $dosenPembimbingId, ?string $catatan, array $files): Submission
+    public function createSubmission(ProfileMahasiswa $mahasiswa, int $dosenPembimbingId, ?string $catatan, array $files, string $tahapan = 'proposal'): Submission
     {
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->firstOrFail();
         
-        throw_if($this->pembimbingHasSubmissionOrAcc($tugasAkhir->id, $dosenPembimbingId), AuthorizationException::class, 'Submission untuk pembimbing ini masih menunggu review atau sudah ACC.');
+        throw_if($this->pembimbingHasSubmissionOrAcc($tugasAkhir->id, $dosenPembimbingId, $tahapan), AuthorizationException::class, 'Submission untuk pembimbing ini masih menunggu review atau sudah ACC.');
 
-        return DB::transaction(function () use ($tugasAkhir, $dosenPembimbingId, $catatan, $files) {
-            // Create submission
+        return DB::transaction(function () use ($tugasAkhir, $dosenPembimbingId, $catatan, $files, $tahapan) {
             $submission = Submission::create([
-                'tugas_akhir_id' => $tugasAkhir->id,
-                'dosen_pembimbing_id' => $dosenPembimbingId,
-                'catatan' => $catatan
+                'tugas_akhir_id'     => $tugasAkhir->id,
+                'tahapan'            => $tahapan,
+                'dosen_pembimbing_id'=> $dosenPembimbingId,
+                'catatan'            => $catatan,
             ]);
 
-            // Upload files
             foreach ($files as $file) {
                 $filename = $file->getClientOriginalName();
                 $path = $file->storeAs('submission-files', $filename, 'public');
 
                 SubmissionFile::create([
                     'submission_id' => $submission->id,
-                    'uploaded_by' => 'mahasiswa',
-                    'file_path' => $path,
+                    'uploaded_by'   => 'mahasiswa',
+                    'file_path'     => $path,
                 ]);
             }
 
@@ -42,21 +41,22 @@ class SubmissionService
         });
     }
 
-    public function pembimbingHasSubmissionOrAcc(int $tugasAkhirId, int $pembimbingId)
+    public function pembimbingHasSubmissionOrAcc(int $tugasAkhirId, int $pembimbingId, string $tahapan = 'proposal')
     {
-        $hasSubmissionOrAcc = Submission::where('tugas_akhir_id', $tugasAkhirId)
+        return Submission::where('tugas_akhir_id', $tugasAkhirId)
             ->where('dosen_pembimbing_id', $pembimbingId)
+            ->where('tahapan', $tahapan)
             ->whereIn('status', ['pending', 'acc'])
             ->exists();
-
-        return $hasSubmissionOrAcc;
     }
 
-    public function getHistorySubmission(int $tugasAkhirId)
+    public function getHistorySubmission(int $tugasAkhirId, string $tahapan = 'proposal')
     {
         return Submission::with(['submissionFiles', 'dosenPembimbing.dosen'])
             ->where('tugas_akhir_id', $tugasAkhirId)
+            ->where('tahapan', $tahapan)
             ->latest()
             ->get();
     }
+    
 }

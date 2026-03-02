@@ -15,14 +15,17 @@ class BimbinganController extends Controller
         protected SubmissionService $submissionService
     ) {}
 
-    public function index(Request $request)
+    public function index(Request $request, string $jenis)
     {
         $mahasiswa = $request->user()->profileMahasiswa;
 
         $tugasAkhir = $mahasiswa->tugasAkhir;
         $tugasAkhirId = $tugasAkhir->id;
 
-        $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId);
+        $urutan = ['proposal' => 1, 'hasil' => 2, 'skripsi' => 3];
+        $tahapanSelesai = ($urutan[$tugasAkhir->tahapan] ?? 1) > ($urutan[$jenis] ?? 1);
+
+        $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId, $jenis);
         $latestSubmissionPerPembimbing = $allSubmission
             ->groupBy('dosen_pembimbing_id')
             ->map->first();
@@ -44,10 +47,10 @@ class BimbinganController extends Controller
             ->where('status', 'acc')
             ->count() >= 2;
 
-        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir'));
+        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'tahapanSelesai'));
     }
 
-    public function createSubmission(StoreSubmissionRequest $request)
+    public function createSubmission(StoreSubmissionRequest $request, string $jenis)
     {
         $mahasiswa = $request->user()?->profileMahasiswa;
         abort_if(!$mahasiswa, 403, 'Profil mahasiswa tidak ditemukan.');
@@ -57,7 +60,8 @@ class BimbinganController extends Controller
                 mahasiswa: $mahasiswa,
                 dosenPembimbingId: $request->input('pembimbing'),
                 catatan: $request->input('catatan'),
-                files: $request->file('file_submission')
+                files: $request->file('file_submission'),
+                tahapan: $jenis,
             );
 
             return back()->with('success', 'Submission berhasil dikirim');
@@ -66,10 +70,10 @@ class BimbinganController extends Controller
         }
     }
 
-    public function mintaPenguji()
+    public function mintaPenguji(Request $request, string $jenis)
     {
         $kajur = User::with('profileDosen')->where('role', 'kajur')->first();
 
-        return view('mahasiswa.minta-penguji', compact('kajur'));
+        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis'));
     }
 }

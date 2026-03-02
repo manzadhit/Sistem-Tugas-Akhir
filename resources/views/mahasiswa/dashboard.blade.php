@@ -68,7 +68,9 @@
           </h3>
           @php
             $bimbinganRoute = match ($tugasAkhir->tahapan) {
-                'proposal' => route('mahasiswa.bimbingan.index'),
+                'proposal' => route('mahasiswa.bimbingan.index', ['jenis' => 'proposal']),
+                'hasil' => route('mahasiswa.bimbingan.index', ['jenis' => 'hasil']),
+                'skripsi' => route('mahasiswa.bimbingan.index', ['jenis' => 'skripsi']),
                 default => '#',
             };
           @endphp

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhir')->cascadeOnDelete();
+            $table->enum('tahapan', ['proposal', 'hasil', 'skripsi'])->default('proposal');
             $table->foreignId('dosen_pembimbing_id')->constrained('dosen_pembimbing')->cascadeOnDelete();
             $table->text('catatan')->nullable();
             $table->enum('status', ['pending', 'acc', 'revisi', 'reject'])->default('pending');

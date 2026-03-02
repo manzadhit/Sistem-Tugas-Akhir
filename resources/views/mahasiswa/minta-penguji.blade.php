@@ -67,8 +67,8 @@
       <h3 class="text-lg font-semibold text-gray-900">Upload Laporan TA</h3>
     </div>
 
-    <form action="{{ route('mahasiswa.bimbingan.createKajurSubmission') }}" method="POST" enctype="multipart/form-data"
-      class="space-y-5 p-6">
+    <form action="{{ route('mahasiswa.bimbingan.createKajurSubmission', ['jenis' => $jenis]) }}" method="POST"
+      enctype="multipart/form-data" class="space-y-5 p-6">
       @csrf
 
       <!-- Dikirim ke -->
@@ -147,7 +147,7 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-between gap-3 pt-4 border-t border-gray-200 mt-6">
-        <a href="{{ route('mahasiswa.bimbingan.index') }}"
+        <a href="{{ route('mahasiswa.bimbingan.index', ['jenis' => $jenis]) }}"
           class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium transition-all border border-gray-300 bg-white text-gray-700 hover:bg-gray-100">
           <i class="fas fa-arrow-left"></i>
           Kembali

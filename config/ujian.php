@@ -59,13 +59,35 @@ return [
     // ]
   ],
   'hasil' => [
-    ['name' => 'laporan_hasil', 'label' => 'Laporan Hasil Penelitian'],
-    ['name' => 'jurnal', 'label' => 'Jurnal'],
-    // ...
+    [
+      'name' => 'pengajuan_judul',
+      'id' => 'pengajuan-judul-name',
+      'label' => 'Pengajuan Judul dan Penunjukan Pembimbing',
+      'desc' => 'Upload berkas pengajuan judul dan penunjukan pembimbing',
+      'placeholder' => 'Pilih file pengajuan judul',
+    ],
+    [
+      'name' => 'toefl',
+      'id' => 'toefl-name',
+      'label' => 'TOEFL Sementara atau TOEFL Akhir',
+      'desc' => 'Upload bukti TOEFL sementara atau TOEFL akhir',
+      'placeholder' => 'Pilih file TOEFL',
+    ],
   ],
   'skripsi' => [
-    ['name' => 'naskah_skripsi', 'label' => 'Naskah Skripsi'],
-    ['name' => 'turnitin', 'label' => 'Hasil Turnitin'],
-    // ...
+    [
+      'name' => 'pengajuan_judul',
+      'id' => 'pengajuan-judul-name',
+      'label' => 'Pengajuan Judul dan Penunjukan Pembimbing',
+      'desc' => 'Upload berkas pengajuan judul dan penunjukan pembimbing',
+      'placeholder' => 'Pilih file pengajuan judul',
+    ],
+    [
+      'name' => 'toefl',
+      'id' => 'toefl-name',
+      'label' => 'TOEFL Sementara atau TOEFL Akhir',
+      'desc' => 'Upload bukti TOEFL sementara atau TOEFL akhir',
+      'placeholder' => 'Pilih file TOEFL',
+    ],
   ],
 ];
