@@ -66,10 +66,43 @@
           <h3 class="flex items-center gap-2 font-semibold text-slate-900">
             <i class="fas fa-history text-blue-600"></i> Riwayat Bimbingan
           </h3>
-          <a href="#" class="text-sm text-blue-600 hover:underline">Lihat Semua →</a>
+          @php
+            $bimbinganRoute = match ($tugasAkhir->tahapan) {
+                'proposal' => route('mahasiswa.bimbingan.index'),
+                default => '#',
+            };
+          @endphp
+          <a href="{{ $bimbinganRoute }}" class="text-sm text-blue-600 hover:underline">Lihat Semua →</a>
         </div>
-        <div class="p-6">
-          <p class="text-sm text-slate-500 text-center py-4">Belum ada riwayat bimbingan.</p>
+        <div class="divide-y divide-slate-100">
+          @forelse($riwayatBimbingan as $submission)
+            <div class="px-6 py-4 flex items-start justify-between gap-4">
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-slate-800 truncate">
+                  {{ $submission->dosenPembimbing->dosen->nama_lengkap ?? '-' }}
+                </p>
+                @if ($submission->catatan)
+                  <p class="text-xs text-slate-500 mt-0.5 line-clamp-1">{{ $submission->catatan }}</p>
+                @endif
+                <p class="text-xs text-slate-400 mt-1">{{ $submission->created_at->translatedFormat('d M Y') }}</p>
+              </div>
+              <span @class([
+                  'shrink-0 rounded-full px-2.5 py-0.5 text-xs font-semibold',
+                  'bg-yellow-50 text-yellow-700' => $submission->status === 'pending',
+                  'bg-emerald-50 text-emerald-700' => $submission->status === 'acc',
+                  'bg-red-50 text-red-700' => $submission->status === 'revision',
+              ])>
+                {{ match ($submission->status) {
+                    'pending' => 'Menunggu',
+                    'acc' => 'ACC',
+                    'revision' => 'Revisi',
+                    default => ucfirst($submission->status),
+                } }}
+              </span>
+            </div>
+          @empty
+            <p class="text-sm text-slate-500 text-center py-6">Belum ada riwayat bimbingan.</p>
+          @endforelse
         </div>
       </div>
     </div>
