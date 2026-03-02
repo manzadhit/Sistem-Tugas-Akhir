@@ -21,6 +21,8 @@ Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasi
       ->group(function () {
         Route::get('/{jenis}', [BimbinganController::class, 'index'])->name('bimbingan.index');
 
+        Route::get('/{jenis}/bimbingan', [BimbinganController::class, 'bimbingan'])->name('bimbingan.bimbingan');
+
         Route::post('/{jenis}/create-submission', [BimbinganController::class, 'createSubmission'])->name('bimbingan.createSubmission');
 
         Route::get('/{jenis}/minta-penguji', [BimbinganController::class, 'mintaPenguji'])->name('bimbingan.mintaPenguji');

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
 use App\Models\DosenPembimbing;
+use App\Models\DosenPenguji;
+use App\Models\KajurSubmission;
 use App\Models\User;
 use App\Services\SubmissionService;
 use Illuminate\Http\Request;
@@ -16,6 +18,27 @@ class BimbinganController extends Controller
     ) {}
 
     public function index(Request $request, string $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+
+        $latestSubmissionPerPembimbing = $this->submissionService
+            ->getHistorySubmission($tugasAkhir->id, $jenis)
+            ->groupBy('dosen_pembimbing_id')
+            ->map->first();
+
+        $hasTwoAccPembimbing = $latestSubmissionPerPembimbing
+            ->where('status', 'acc')
+            ->count() >= 2;
+
+        if ($hasTwoAccPembimbing) {
+            return redirect()->route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]);
+        }
+
+        return redirect()->route('mahasiswa.bimbingan.bimbingan', ['jenis' => $jenis]);
+    }
+
+    public function bimbingan(Request $request, string $jenis)
     {
         $mahasiswa = $request->user()->profileMahasiswa;
 
@@ -72,8 +95,21 @@ class BimbinganController extends Controller
 
     public function mintaPenguji(Request $request, string $jenis)
     {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+
         $kajur = User::with('profileDosen')->where('role', 'kajur')->first();
 
-        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis'));
+        $kajurSubmission = KajurSubmission::with('kajurSubmissionFiles')
+            ->where('tugas_akhir_id', $tugasAkhir->id)
+            ->latest()
+            ->first();
+
+        $dosenPenguji = DosenPenguji::with('dosen.user')
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->orderBy('jenis_penguji')
+            ->get();
+
+        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'dosenPenguji'));
     }
 }
