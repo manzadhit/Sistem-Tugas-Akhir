@@ -78,6 +78,7 @@
 
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission') }}" method="POST" enctype="multipart/form-data"
+    x-data="fileUpload()"
     class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing || $proposalSelesai ? 'hidden' : '' }}">
     @csrf
 
@@ -90,9 +91,9 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Kirim ke Pembimbing <span class="text-red-600">*</span>
         </label>
-        <select name="pembimbing"
+        <select name="pembimbing" x-model="selectedPembimbing"
           class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400">
-          <option value="">-- Pilih Pembimbing --</option>
+          <option value="" disabled selected>-- Pilih Pembimbing --</option>
           @foreach ($pembimbing as $p)
             <option value="{{ $p->id }}" {{ $p->hasSubmission || $p->isAcc ? 'disabled' : '' }}>
               Pembimbing {{ $loop->iteration }} - {{ $p->dosen->nama_lengkap }}
@@ -106,7 +107,7 @@
         </select>
       </div>
 
-      <div x-data="fileUpload()">
+      <div>
         <!-- Upload Area -->
         <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
           @drop.prevent="handleDrop($event)" :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
@@ -167,8 +168,8 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
-        <button type="submit"
-          class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium cursor-pointer transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed">
+        <button type="submit" :disabled="files.length === 0 || !selectedPembimbing"
+          class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:pointer-events-none">
           <i class="fas fa-paper-plane"></i>
           Upload & Kirim
         </button>
@@ -198,34 +199,10 @@
 
         @php
           $statusConfig = [
-              'pending' => [
-                  'label' => 'Menunggu Review',
-                  'badge_class' => 'bg-amber-50 text-amber-600',
-                  'action_text' => 'Menunggu',
-                  'action_class' => 'bg-amber-500 text-white',
-                  'action_icon' => 'fas fa-hourglass-half',
-              ],
-              'revisi' => [
-                  'label' => 'Revisi',
-                  'badge_class' => 'bg-amber-50 text-amber-800',
-                  'action_text' => 'Perlu Revisi',
-                  'action_class' => 'bg-amber-600 text-white',
-                  'action_icon' => 'fas fa-pen',
-              ],
-              'acc' => [
-                  'label' => 'ACC',
-                  'badge_class' => 'bg-emerald-50 text-emerald-700',
-                  'action_text' => 'Disetujui',
-                  'action_class' => 'bg-emerald-600 text-white',
-                  'action_icon' => 'fas fa-check',
-              ],
-              'reject' => [
-                  'label' => 'Ditolak',
-                  'badge_class' => 'bg-red-50 text-red-700',
-                  'action_text' => 'Ditolak',
-                  'action_class' => 'bg-red-600 text-white',
-                  'action_icon' => 'fas fa-times',
-              ],
+              'pending' => ['label' => 'Menunggu Review', 'badge_class' => 'bg-amber-50 text-amber-600'],
+              'revisi' => ['label' => 'Revisi', 'badge_class' => 'bg-amber-50 text-amber-800'],
+              'acc' => ['label' => 'ACC', 'badge_class' => 'bg-emerald-50 text-emerald-700'],
+              'reject' => ['label' => 'Ditolak', 'badge_class' => 'bg-red-50 text-red-700'],
           ];
         @endphp
 
@@ -323,6 +300,7 @@
       return {
         files: [],
         dragging: false,
+        selectedPembimbing: '',
 
         handleFiles(fileList) {
           const maxSize = 10 * 1024 * 1024; // 10MB
