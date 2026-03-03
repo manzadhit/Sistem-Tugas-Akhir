@@ -11,7 +11,7 @@
           'href' => route('dosen.bimbingan.index'),
           'icon' => 'fas fa-users',
           'label' => 'Mahasiswa Bimbingan',
-          'active' => request()->routeIs(['dosen.bimbingan.index', 'dosen.bimbingan.detail']),
+          'active' => request()->is('dosen/bimbingan*'),
       ],
   
       ['section' => 'Pengujian'],
