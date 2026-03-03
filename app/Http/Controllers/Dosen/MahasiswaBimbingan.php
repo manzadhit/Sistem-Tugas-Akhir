@@ -21,8 +21,10 @@ class MahasiswaBimbingan extends Controller
 
         $totalMahasiswaBimbingan = $mahasiswaBimbingan->count();
 
-        $pendingSubmissions = $this->bimbinganService->getPendingSubmissionByDosen($dosenId);
+        $search = $request->input('search');
+        $tahap  = $request->input('tahap');
 
+        $pendingSubmissions = $this->bimbinganService->getPendingSubmissionByDosen($dosenId, $search, $tahap);
 
         return view('dosen.bimbingan', compact('mahasiswaBimbingan', 'totalMahasiswaBimbingan', 'pendingSubmissions'));
     }

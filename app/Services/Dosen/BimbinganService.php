@@ -9,13 +9,22 @@ use Illuminate\Support\Facades\DB;
 
 class BimbinganService
 {
-  public function getPendingSubmissionByDosen(int $dosenId)
+  public function getPendingSubmissionByDosen(int $dosenId, ?string $search = null, ?string $tahap = null)
   {
     return Submission::with(['tugasAkhir.mahasiswa', 'dosenPembimbing'])
       ->where('status', 'pending')
       ->whereHas('dosenPembimbing', function ($q) use ($dosenId) {
         $q->where('dosen_id', $dosenId)
           ->where('status_aktif', true);
+      })
+      ->when($search, function ($q) use ($search) {
+        $q->whereHas('tugasAkhir.mahasiswa', function ($q) use ($search) {
+          $q->where('nama_lengkap', 'like', "%{$search}%")
+            ->orWhere('nim', 'like', "%{$search}%");
+        });
+      })
+      ->when($tahap, function ($q) use ($tahap) {
+        $q->whereHas('tugasAkhir', fn($q) => $q->where('tahapan', $tahap));
       })
       ->oldest()
       ->paginate(10)

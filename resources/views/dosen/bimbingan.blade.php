@@ -46,24 +46,36 @@
 
   <!-- Filter Section -->
   <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-end">
-      <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
-        <input type="text"
-          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
-          placeholder="Nama atau NIM..." />
+    <form method="GET" action="{{ route('dosen.bimbingan.index') }}" id="filterForm">
+      <div class="flex flex-wrap gap-3 items-end">
+        <div class="flex flex-col gap-2 flex-1 min-w-40">
+          <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
+          <input type="text" name="search" value="{{ request('search') }}"
+            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
+            placeholder="Nama atau NIM..."
+            onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('filterForm').submit()}" />
+        </div>
+        <div class="flex flex-col gap-2 flex-1 min-w-36">
+          <label class="text-sm font-medium text-gray-700">Tahap</label>
+          <select name="tahap" onchange="document.getElementById('filterForm').submit()"
+            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
+            <option value="">Semua Tahap</option>
+            <option value="proposal" @selected(request('tahap') === 'proposal')>Proposal</option>
+            <option value="hasil" @selected(request('tahap') === 'hasil')>Hasil</option>
+            <option value="skripsi" @selected(request('tahap') === 'skripsi')>Skripsi</option>
+          </select>
+        </div>
+        @if (request()->hasAny(['search', 'tahap']))
+          <div class="flex flex-col justify-end" style="padding-bottom: 1px">
+            <a href="{{ route('dosen.bimbingan.index') }}"
+              class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+              title="Reset filter">
+              <i class="fas fa-times"></i>
+            </a>
+          </div>
+        @endif
       </div>
-      <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-700">Tahap</label>
-        <select
-          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
-          <option value="">Semua Tahap</option>
-          <option value="proposal">Proposal</option>
-          <option value="hasil">Hasil</option>
-          <option value="skripsi">Skripsi</option>
-        </select>
-      </div>
-    </div>
+    </form>
   </div>
 
   <!-- Mobile & Tablet Cards -->

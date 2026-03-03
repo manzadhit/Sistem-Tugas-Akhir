@@ -29,9 +29,9 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
-  <div class="{{ $isPending ? 'grid grid-cols-1 lg:grid-cols-3 gap-6' : 'grid grid-cols-1 gap-6 max-w-5xl' }}">
-    <!-- Left Column - Student Info & Files -->
-    <div class="{{ $isPending ? 'lg:col-span-2' : 'w-full' }} space-y-6">
+  <div class="grid grid-cols-1 gap-6 max-w-5xl">
+    <!-- Student Info & Files -->
+    <div class="w-full space-y-6">
       <!-- Student Info Card -->
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="border-b border-gray-200 px-6 py-4">
@@ -103,12 +103,9 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Right Column - Review Form -->
-    @if ($isPending)
-      <div class="lg:col-span-1">
-        <div class="bg-white rounded-xl shadow-sm overflow-hidden sticky top-6">
+      <!-- Review Form -->
+      @if ($isPending)
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden pb-4">
           <div class="border-b border-gray-200 px-6 py-4">
             <h3 class="font-semibold text-gray-900">Form Review</h3>
           </div>
@@ -181,7 +178,7 @@
               <!-- Status Selection -->
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Status Review</label>
-                <div class="grid grid-cols-1 gap-2">
+                <div class="grid grid-cols-3 gap-2">
                   <label
                     class="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors has-[:checked]:border-green-500 has-[:checked]:bg-green-50">
                     <input type="radio" name="status" value="acc"
@@ -222,18 +219,18 @@
               </div>
 
               <!-- Submit Button -->
-              <div class="pt-2">
+              <div class="pt-2 flex justify-end">
                 <button type="submit"
-                  class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
+                  class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
                   <i class="fas fa-paper-plane mr-2"></i>Kirim Review
                 </button>
               </div>
             </form>
           </div>
         </div>
-      </div>
-    @endif
+      @endif
 
+    </div>
   </div>
 
   <script>
