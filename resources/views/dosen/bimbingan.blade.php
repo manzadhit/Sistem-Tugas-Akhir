@@ -20,7 +20,7 @@
 
   <!-- Stats -->
   <div class="grid grid-cols-2 gap-3 lg:gap-6 mb-6 lg:mb-8">
-    <div
+    <a href="{{ route('dosen.bimbingan.mahasiswa') }}"
       class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div
         class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg lg:text-2xl shrink-0">
@@ -30,7 +30,7 @@
         <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Total Mahasiswa</div>
         <div class="text-xl lg:text-3xl font-bold text-gray-900">{{ $totalMahasiswaBimbingan }}</div>
       </div>
-    </div>
+    </a>
     <div
       class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div

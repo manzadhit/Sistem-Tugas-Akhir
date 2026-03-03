@@ -13,6 +13,10 @@ Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->grou
 
   Route::get('/bimbingan', [MahasiswaBimbingan::class, 'index'])->name('bimbingan.index');
 
+  Route::get('/bimbingan/mahasiswa', [MahasiswaBimbingan::class, 'mahasiswaList'])->name('bimbingan.mahasiswa');
+
+  Route::get('/bimbingan/mahasiswa/{dosenPembimbing}/riwayat', [MahasiswaBimbingan::class, 'riwayatBimbingan'])->name('bimbingan.riwayat');
+
   Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbingan::class, 'getDetail'])->name('bimbingan.detail');
 
   Route::put('/bimbingan/{submission}/review', [MahasiswaBimbingan::class, 'review'])->name('bimbingan.review');

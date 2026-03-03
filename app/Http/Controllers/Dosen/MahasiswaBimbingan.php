@@ -29,6 +29,26 @@ class MahasiswaBimbingan extends Controller
         return view('dosen.bimbingan', compact('mahasiswaBimbingan', 'totalMahasiswaBimbingan', 'pendingSubmissions'));
     }
 
+    public function mahasiswaList(Request $request)
+    {
+        $dosenId = $request->user()?->profileDosen->id;
+        $search  = $request->input('search');
+
+        $mahasiswaBimbingan = $this->bimbinganService->getAllMahasiswaBimbingan($dosenId, $search);
+
+        return view('dosen.mahasiswa-bimbingan', compact('mahasiswaBimbingan'));
+    }
+
+    public function riwayatBimbingan(DosenPembimbing $dosenPembimbing)
+    {
+        $dosenPembimbing->loadMissing([
+            'mahasiswa.tugasAkhir',
+            'submissions' => fn($q) => $q->latest(),
+        ]);
+
+        return view('dosen.riwayat-bimbingan', compact('dosenPembimbing'));
+    }
+
     public function getDetail(Submission $submission)
     {
         $submission->loadMissing([

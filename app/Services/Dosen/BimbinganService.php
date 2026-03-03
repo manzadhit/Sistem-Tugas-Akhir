@@ -3,6 +3,7 @@
 namespace App\Services\Dosen;
 
 use App\Models\Submission;
+use App\Models\DosenPembimbing;
 use App\Models\SubmissionFile;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,21 @@ class BimbinganService
       })
       ->oldest()
       ->paginate(10)
+      ->withQueryString();
+  }
+
+  public function getAllMahasiswaBimbingan(int $dosenId, ?string $search = null)
+  {
+    return DosenPembimbing::with(['mahasiswa.tugasAkhir'])
+      ->where('dosen_id', $dosenId)
+      ->where('status_aktif', true)
+      ->when($search, function ($q) use ($search) {
+        $q->whereHas('mahasiswa', function ($q) use ($search) {
+          $q->where('nama_lengkap', 'like', "%{$search}%")
+            ->orWhere('nim', 'like', "%{$search}%");
+        });
+      })
+      ->paginate(15)
       ->withQueryString();
   }
 
