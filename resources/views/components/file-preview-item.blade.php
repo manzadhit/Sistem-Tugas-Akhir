@@ -18,9 +18,9 @@
   };
 
   // URL handling
-  $storageUrl = $path ? asset('storage/' . $path) : '#';
+  $storageUrl = $path ? Storage::url($path) : '#';
   $viewUrl = $viewUrl ?: $storageUrl;
-  $downloadUrl = $downloadUrl ?: $storageUrl;
+  $downloadUrl = $downloadUrl ?: ($path ? route('storage.download', ['path' => $path]) : '#');
 @endphp
 
 <div

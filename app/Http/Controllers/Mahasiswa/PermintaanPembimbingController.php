@@ -40,18 +40,22 @@ class PermintaanPembimbingController extends Controller
         $validated = $request->validated();
 
         $existing = PermintaanPembimbing::where('mahasiswa_id', $mahasiswa->id)->first();
-        if ($existing?->bukti_acc_path && Storage::disk('public')->exists($existing->bukti_acc_path)) {
-            Storage::disk('public')->delete($existing->bukti_acc_path);
+        if ($existing?->bukti_acc_path && Storage::exists($existing->bukti_acc_path)) {
+            Storage::delete($existing->bukti_acc_path);
         }
 
         $file = $request->file('bukti_acc');
         $filename = "{$mahasiswa->nim}_bukti_acc_judul.{$file->extension()}";
-        $path = $file->storeAs('bukti-acc', $filename, 'public');
+        $path = $file->storeAs('bukti-acc', $filename);
 
         PermintaanPembimbing::updateOrCreate(
             ['mahasiswa_id' => $mahasiswa->id],
-            ['judul_ta' => $validated['judul_ta'], 'bukti_acc_path' => $path, 'status' =>
-            'pending']
+            [
+                'judul_ta' => $validated['judul_ta'],
+                'bukti_acc_path' => $path,
+                'status' =>
+                    'pending'
+            ]
         );
 
         return redirect()

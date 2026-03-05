@@ -22,29 +22,29 @@ class ProfileController extends Controller
 
     public function update(ProfileMahasiswaRequest $request): RedirectResponse
     {
-        $user    = $request->user();
+        $user = $request->user();
         $profile = $user->profileMahasiswa;
 
         // Update foto jika ada
         $fotoPath = $profile->foto;
         if ($request->hasFile('foto')) {
             // Hapus foto lama jika ada
-            if ($fotoPath && Storage::disk('public')->exists($fotoPath)) {
-                Storage::disk('public')->delete($fotoPath);
+            if ($fotoPath && Storage::exists($fotoPath)) {
+                Storage::delete($fotoPath);
             }
-            $fotoPath = $request->file('foto')->store('photos', 'public');
+            $fotoPath = $request->file('foto')->store('photos');
         }
 
         // Update profile mahasiswa
         $profile->update([
-            'nama_lengkap'  => $request->nama_lengkap,
-            'nim'           => $request->nim,
-            'jurusan'       => $request->jurusan,
+            'nama_lengkap' => $request->nama_lengkap,
+            'nim' => $request->nim,
+            'jurusan' => $request->jurusan,
             'program_studi' => $request->program_studi,
-            'angkatan'      => $request->angkatan,
-            'ipk'           => $request->ipk,
-            'no_telp'       => $request->no_telp,
-            'foto'          => $fotoPath,
+            'angkatan' => $request->angkatan,
+            'ipk' => $request->ipk,
+            'no_telp' => $request->no_telp,
+            'foto' => $fotoPath,
         ]);
 
         // Update email

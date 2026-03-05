@@ -13,7 +13,9 @@ use Illuminate\Support\Facades\Storage;
 
 class VerifikasiSyaratController extends Controller
 {
-  public function __construct(private UndanganPdfService $pdfService) {}
+  public function __construct(private UndanganPdfService $pdfService)
+  {
+  }
 
   public function index(Request $request)
   {
@@ -174,7 +176,7 @@ class VerifikasiSyaratController extends Controller
       $pdf = $this->pdfService->generate($data);
       $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $ujian->tugasAkhir->mahasiswa->nim . '_' . $ujian->tugasAkhir->mahasiswa->nama_lengkap . '.pdf';
       $filePath = 'undangan/' . $fileName;
-      Storage::disk('public')->put($filePath, $pdf->output());
+      Storage::put($filePath, $pdf->output());
 
       UndanganUjian::updateOrCreate(
         ['ujian_id' => $ujian->id],

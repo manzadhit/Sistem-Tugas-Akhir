@@ -178,12 +178,12 @@
             <span class="truncate">{{ basename($item->file_path) }}</span>
           </div>
           <div class="flex gap-2 shrink-0">
-            <a href="{{ asset('storage/' . $item->file_path) }}"
+            <a href="{{ Storage::url($item->file_path) }}"
               class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-[0.8rem] font-semibold border border-blue-200 text-blue-600 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200">
               <i class="fas fa-eye"></i>
               <span>Lihat</span>
             </a>
-            <a href="{{ asset('storage/' . $item->file_path) }}" download
+            <a href="{{ Storage::url($item->file_path) }}" download
               class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-[0.8rem] font-semibold border border-blue-200 text-blue-600 bg-white hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-200">
               <i class="fas fa-download"></i>
               <span>Unduh</span>

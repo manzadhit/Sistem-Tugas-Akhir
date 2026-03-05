@@ -14,7 +14,7 @@ class ProfileController extends Controller
 {
     public function edit(Request $request): View
     {
-        $user    = $request->user();
+        $user = $request->user();
         $profile = $user->profileDosen;
 
         return view('dosen.profile', compact('user', 'profile'));
@@ -22,28 +22,28 @@ class ProfileController extends Controller
 
     public function update(ProfileDosenRequest $request): RedirectResponse
     {
-        $user    = $request->user();
+        $user = $request->user();
         $profile = $user->profileDosen;
 
         // Update foto jika ada
         $fotoPath = $profile->foto;
         if ($request->hasFile('foto')) {
-            if ($fotoPath && Storage::disk('public')->exists($fotoPath)) {
-                Storage::disk('public')->delete($fotoPath);
+            if ($fotoPath && Storage::exists($fotoPath)) {
+                Storage::delete($fotoPath);
             }
-            $fotoPath = $request->file('foto')->store('photos', 'public');
+            $fotoPath = $request->file('foto')->store('photos');
         }
 
         // Update profile dosen
         $profile->update([
-            'nama_lengkap'       => $request->nama_lengkap,
-            'nidn'               => $request->nidn,
-            'jurusan'            => $request->jurusan,
-            'program_studi'      => $request->program_studi,
-            'keahlian'           => $request->keahlian,
+            'nama_lengkap' => $request->nama_lengkap,
+            'nidn' => $request->nidn,
+            'jurusan' => $request->jurusan,
+            'program_studi' => $request->program_studi,
+            'keahlian' => $request->keahlian,
             'jabatan_fungsional' => $request->jabatan_fungsional,
-            'no_telp'            => $request->no_telp,
-            'foto'               => $fotoPath,
+            'no_telp' => $request->no_telp,
+            'foto' => $fotoPath,
         ]);
 
         // Update email

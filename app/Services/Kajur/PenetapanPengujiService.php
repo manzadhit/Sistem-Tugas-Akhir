@@ -20,7 +20,7 @@ class PenetapanPengujiService
       if ($files) {
         foreach ($files as $file) {
           $filename = $file->getClientOriginalName();
-          $path = $file->storeAs('kajur-submission-file', $filename, 'public');
+          $path = $file->storeAs('kajur-submission-file', $filename);
 
           KajurSubmissionFile::create([
             'kajur_submission_id' => $kajurSubmission->id,
@@ -37,11 +37,11 @@ class PenetapanPengujiService
   public function tetapkanPenguji(int $mahasiswaId, array $dosen_ids)
   {
     return DB::transaction(function () use ($mahasiswaId, $dosen_ids) {
-      foreach($dosen_ids as $index => $id) {
+      foreach ($dosen_ids as $index => $id) {
         DosenPenguji::create([
           'mahasiswa_id' => $mahasiswaId,
           'dosen_id' => $id,
-          'jenis_penguji' => 'penguji_'.$index + 1,
+          'jenis_penguji' => 'penguji_' . $index + 1,
         ]);
       }
     });

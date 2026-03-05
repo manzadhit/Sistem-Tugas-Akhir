@@ -34,12 +34,12 @@ class PembimbingController extends Controller
 
         $buktiPath = $permintaan->bukti_acc_path;
 
-        if (!Storage::disk('public')->exists($buktiPath)) {
+        if (!Storage::exists($buktiPath)) {
             abort(404, 'File tidak ditemukan.');
         }
 
         return response()->download(
-            Storage::disk('public')->path($buktiPath)
+            Storage::path($buktiPath)
         );
     }
 
@@ -49,12 +49,12 @@ class PembimbingController extends Controller
 
         $buktiPath = $permintaan->bukti_acc_path;
 
-        if (!Storage::disk('public')->exists($buktiPath)) {
+        if (!Storage::exists($buktiPath)) {
             abort(404, 'File tidak ditemukan.');
         }
 
         return response()->file(
-            Storage::disk('public')->path($buktiPath)
+            Storage::path($buktiPath)
         );
     }
 
@@ -64,7 +64,7 @@ class PembimbingController extends Controller
 
         $buktiPath = $permintaan->bukti_acc_path;
 
-        if (!Storage::disk('public')->exists($buktiPath)) {
+        if (!Storage::exists($buktiPath)) {
             abort(404, 'File tidak ditemukan.');
         }
 
@@ -92,12 +92,12 @@ class PembimbingController extends Controller
         $mahasiswaId = $permintaan->mahasiswa_id;
         $dosenIds = $request->input('dosen_ids');
 
-        foreach($dosenIds as $index => $dosenId) {
+        foreach ($dosenIds as $index => $dosenId) {
             DosenPembimbing::create(
                 [
                     'dosen_id' => $dosenId,
                     'mahasiswa_id' => $mahasiswaId,
-                    'jenis_pembimbing' => 'pembimbing_'.$index + 1,
+                    'jenis_pembimbing' => 'pembimbing_' . $index + 1,
                     'tanggal_mulai' => now()
                 ]
             );

@@ -24,7 +24,7 @@ class UjianService
       foreach ($files as $jenisDokumen => $file) {
         $extension = $file->getClientOriginalExtension();
         $filename = "{$jenisDokumen}" . ".{$extension}";
-        $path = $file->storeAs("dokumen-ujian/{$mahasiswaNim}/{$ujian->jenis_ujian}/{$kategoriFile}", $filename, 'public');
+        $path = $file->storeAs("dokumen-ujian/{$mahasiswaNim}/{$ujian->jenis_ujian}/{$kategoriFile}", $filename);
 
         if (!$path) {
           throw new \RuntimeException("Gagal menyimpan file: {$filename}");

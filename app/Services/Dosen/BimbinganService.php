@@ -58,7 +58,7 @@ class BimbinganService
       /** @var UploadedFile $file */
       foreach ($files as $file) {
         $filename = $file->getClientOriginalName();
-        $path = $file->storeAs('submission-file', $filename, 'public');
+        $path = $file->storeAs('submission-file', $filename);
 
         SubmissionFile::create([
           'submission_id' => $submission->id,
