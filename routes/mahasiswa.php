@@ -4,10 +4,15 @@ use App\Http\Controllers\Mahasiswa\BimbinganController;
 use App\Http\Controllers\Mahasiswa\DashboardController;
 use App\Http\Controllers\Mahasiswa\KajurSubmissionController;
 use App\Http\Controllers\Mahasiswa\PermintaanPembimbingController;
+use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileController;
 use App\Http\Controllers\Mahasiswa\UjianController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:mahasiswa'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+  // Profile
+  Route::get('/profile', [MahasiswaProfileController::class, 'edit'])->name('profile.edit');
+  Route::put('/profile', [MahasiswaProfileController::class, 'update'])->name('profile.update');
+
   // Permintaan Pembimbing
   Route::get('/permintaan-pembimbing', [PermintaanPembimbingController::class, 'create'])->name('permintaan-pembimbing.create');
   Route::post('/permintaan-pembimbing', [PermintaanPembimbingController::class, 'store'])->name('permintaan-pembimbing.store');

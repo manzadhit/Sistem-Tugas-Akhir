@@ -36,4 +36,12 @@
           'label' => 'Publikasi Saya',
           'active' => request()->routeIs('dosen.publikasi.index'),
       ],
+  
+      ['section' => 'Akun'],
+      [
+          'href' => route('dosen.profile.edit'),
+          'icon' => 'fas fa-user-circle',
+          'label' => 'Profil Saya',
+          'active' => request()->routeIs('dosen.profile.*'),
+      ],
   ]" />

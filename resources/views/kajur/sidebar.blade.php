@@ -17,4 +17,11 @@
         'label' => 'Permintaan Penguji',
         'active' => request()->routeIs('kajur.permintaan-penguji.index', 'kajur.penetapan-penguji'),
     ],
+    ['section' => 'Akun'],
+    [
+        'href' => route('kajur.profile.edit'),
+        'icon' => 'fas fa-user-circle',
+        'label' => 'Profil Saya',
+        'active' => request()->routeIs('kajur.profile.*'),
+    ],
 ]" />

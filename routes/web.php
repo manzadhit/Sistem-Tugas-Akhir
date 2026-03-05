@@ -1,16 +1,13 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 
 
 Route::middleware("auth")->get('/', function () {
     $user = Auth::user();
 
-    if(!$user) {
+    if (!$user) {
         return redirect()->route("login");
     }
 
@@ -29,14 +26,8 @@ Route::middleware('auth')->get("/dashboard", function () {
     };
 })->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
-require __DIR__.'/mahasiswa.php';
-require __DIR__.'/dosen.php';
-require __DIR__.'/admin.php';
-require __DIR__.'/kajur.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/mahasiswa.php';
+require __DIR__ . '/dosen.php';
+require __DIR__ . '/admin.php';
+require __DIR__ . '/kajur.php';

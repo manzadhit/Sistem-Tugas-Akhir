@@ -3,10 +3,14 @@
 use App\Http\Controllers\Kajur\DashboardController;
 use App\Http\Controllers\Kajur\PembimbingController;
 use App\Http\Controllers\Kajur\PengujiController;
+use App\Http\Controllers\Kajur\ProfileController as KajurProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:kajur'])->prefix('kajur')->name('kajur.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
+
+  Route::get('/profile', [KajurProfileController::class, 'edit'])->name('profile.edit');
+  Route::put('/profile', [KajurProfileController::class, 'update'])->name('profile.update');
 
   Route::get("/permintaan-pembimbing", [PembimbingController::class, 'index'])->name('permintaan-pembimbing');
 

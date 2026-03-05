@@ -48,4 +48,10 @@
   
       ['section' => 'Lainnya'],
       ['href' => '#', 'icon' => 'fas fa-book', 'label' => 'Panduan'],
+      [
+          'href' => route('mahasiswa.profile.edit'),
+          'icon' => 'fas fa-user-circle',
+          'label' => 'Profil Saya',
+          'active' => request()->routeIs('mahasiswa.profile.*'),
+      ],
   ]" />
