@@ -8,7 +8,7 @@ use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
 use App\Http\Controllers\Dosen\UndanganController;
 use App\Http\Controllers\Dosen\DashboardController;
 
-Route::middleware(['auth', 'role:dosen'])->prefix('dosen')->name('dosen.')->group(function () {
+Route::middleware(['auth', 'role:dosen,kajur'])->prefix('dosen')->name('dosen.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
   Route::get('/profile', [DosenProfileController::class, 'edit'])->name('profile.edit');

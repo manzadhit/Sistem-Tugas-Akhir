@@ -17,6 +17,36 @@
         'label' => 'Permintaan Penguji',
         'active' => request()->routeIs('kajur.permintaan-penguji.index', 'kajur.penetapan-penguji'),
     ],
+    ['section' => 'Pembimbingan'],
+    [
+        'href' => route('dosen.bimbingan.index'),
+        'icon' => 'fas fa-users',
+        'label' => 'Mahasiswa Bimbingan',
+        'active' => request()->is('dosen/bimbingan*'),
+    ],
+
+    ['section' => 'Pengujian'],
+    [
+        'href' => route('dosen.undangan.index'),
+        'icon' => 'fas fa-envelope-open-text',
+        'label' => 'Undangan',
+        'active' => request()->routeIs('dosen.undangan.index'),
+    ],
+    [
+        'href' => route('dosen.jadwal.index'),
+        'icon' => 'fas fa-clipboard-list',
+        'label' => 'Jadwal Ujian',
+        'active' => request()->routeIs('dosen.jadwal.index'),
+    ],
+    ['href' => '#', 'icon' => 'fas fa-edit', 'label' => 'Input Nilai'],
+
+    ['section' => 'Publikasi'],
+    [
+        'href' => route('dosen.publikasi.index'),
+        'icon' => 'fas fa-book',
+        'label' => 'Publikasi Saya',
+        'active' => request()->routeIs('dosen.publikasi.index'),
+    ],
     ['section' => 'Akun'],
     [
         'href' => route('kajur.profile.edit'),

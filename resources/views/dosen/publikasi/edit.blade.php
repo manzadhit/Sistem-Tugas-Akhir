@@ -3,7 +3,11 @@
 @section('title', 'Edit Publikasi - ' . Str::limit($publikasi->judul, 50))
 
 @section('sidebar')
-  @include('dosen.sidebar')
+  @if (auth()->user()->role === 'kajur')
+    @include('kajur.sidebar')
+  @else
+    @include('dosen.sidebar')
+  @endif
 @endsection
 
 @section('content')
