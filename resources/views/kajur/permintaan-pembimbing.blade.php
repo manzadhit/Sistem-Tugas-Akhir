@@ -8,9 +8,10 @@
 
 @section('content')
   {{-- Banner --}}
-  <div class="relative h-48 overflow-hidden rounded-xl bg-gradient-to-br from-blue-800 to-blue-500 mb-8">
+  <div class="relative h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-800 to-blue-500 mb-8">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
-      <h1 class="text-3xl font-bold">Permintaan Dosen Pembimbing</h1>
+      <h1 class="text-2xl font-bold mb-1">Permintaan Dosen Pembimbing</h1>
+      <p class="text-sm opacity-80">Tinjau pengajuan mahasiswa dan lanjutkan proses penetapan dosen pembimbing.</p>
     </div>
   </div>
 
@@ -22,18 +23,23 @@
         <h2 class="text-lg font-semibold text-slate-800">Daftar Mahasiswa</h2>
         <p class="mt-1 text-sm text-slate-500">Mahasiswa yang mengajukan permintaan dosen pembimbing tugas akhir</p>
       </div>
-      <div class="flex items-center gap-3">
+      <form action="{{ route('kajur.permintaan-pembimbing') }}" method="GET" class="flex items-center gap-3">
         <div class="relative">
           <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
-          <input type="text" placeholder="Cari mahasiswa..."
+          <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama atau NIM mahasiswa..."
             class="rounded-lg border border-slate-200 py-2 pl-9 pr-4 text-sm text-slate-600 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
         </div>
-        <button
-          class="inline-flex items-center gap-2 rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50">
-          <i class="fas fa-filter text-xs"></i>
-          Filter
+        <button type="submit"
+          class="inline-flex items-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+          Cari
         </button>
-      </div>
+        @if (!empty($search))
+          <a href="{{ route('kajur.permintaan-pembimbing') }}"
+            class="inline-flex items-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+            Reset
+          </a>
+        @endif
+      </form>
     </div>
 
     <!-- Table Content -->
@@ -55,9 +61,9 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
-          @foreach ($permintaanPembimbing as $index => $permintaan)
+          @forelse ($permintaanPembimbing as $index => $permintaan)
             <tr class="hover:bg-slate-50">
-              <td class="whitespace-nowrap px-5 py-4 text-slate-600">{{ $index + 1 }}</td>
+              <td class="whitespace-nowrap px-5 py-4 text-slate-600">{{ $permintaanPembimbing->firstItem() + $index }}</td>
               <td class="px-5 py-4">
                 <div class="flex flex-col">
                   <span class="font-medium text-slate-800">{{ $permintaan->mahasiswa->nama_lengkap }}</span>
@@ -80,26 +86,28 @@
                   class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition">Tetapkan</a>
               </td>
             </tr>
-          @endforeach
+          @empty
+            <tr>
+              <td colspan="6" class="px-5 py-10 text-center">
+                <div class="flex flex-col items-center gap-2 text-slate-500">
+                  <i class="fas fa-inbox text-3xl text-slate-300"></i>
+                  <p class="text-sm font-medium text-slate-600">
+                    {{ !empty($search) ? 'Mahasiswa tidak ditemukan.' : 'Belum ada permintaan pembimbing.' }}
+                  </p>
+                  <p class="text-sm text-slate-400">
+                    {{ !empty($search) ? 'Coba gunakan kata kunci nama atau NIM yang lain.' : 'Permintaan yang masuk akan tampil di tabel ini.' }}
+                  </p>
+                </div>
+              </td>
+            </tr>
+          @endforelse
         </tbody>
       </table>
     </div>
 
     <!-- Pagination -->
     <div class="flex flex-col items-center justify-between gap-3 border-t border-slate-200 px-5 py-4 sm:flex-row">
-      <p class="text-sm text-slate-500">Menampilkan 1-8 dari 8 mahasiswa</p>
-      <div class="flex items-center gap-1">
-        <button disabled
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 disabled:opacity-50">
-          <i class="fas fa-chevron-left text-xs"></i>
-        </button>
-        <button
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 text-sm font-medium text-white">1</button>
-        <button disabled
-          class="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-slate-200 text-slate-400 disabled:opacity-50">
-          <i class="fas fa-chevron-right text-xs"></i>
-        </button>
-      </div>
+      {{ $permintaanPembimbing->links() }}
     </div>
   </div>
 @endsection

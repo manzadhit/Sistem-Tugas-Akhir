@@ -12,11 +12,23 @@ use Illuminate\Support\Facades\Storage;
 
 class PembimbingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $permintaanPembimbing = PermintaanPembimbing::with('mahasiswa')->where('status', 'pending')->get();
+        $search = trim((string) $request->query('search'));
 
-        return view('kajur.permintaan-pembimbing', compact('permintaanPembimbing'));
+        $permintaanPembimbing = PermintaanPembimbing::with('mahasiswa')
+            ->where('status', 'pending')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->whereHas('mahasiswa', function ($mahasiswaQuery) use ($search) {
+                    $mahasiswaQuery->where('nama_lengkap', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(8)
+            ->withQueryString();
+
+        return view('kajur.permintaan-pembimbing', compact('permintaanPembimbing', 'search'));
     }
 
     public function show($permintaan)

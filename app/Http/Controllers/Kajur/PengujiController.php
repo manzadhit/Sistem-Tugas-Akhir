@@ -5,21 +5,33 @@ namespace App\Http\Controllers\Kajur;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Kajur\TetapkanPengujiRequest;
 use App\Http\Requests\Kajur\VerifyLaporanRequest;
-use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\ProfileDosen;
 use App\Services\Kajur\PenetapanPengujiService;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class PengujiController extends Controller
 {
     public function __construct(protected PenetapanPengujiService $penetapanPengujiService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $permintaanPenguji = KajurSubmission::with('tugasAkhir.mahasiswa.dosenPembimbing.dosen')->whereIn('status', ['pending', 'acc'])->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')->oldest()->get();
+        $search = trim((string) $request->query('search'));
 
-        return view('kajur.permintaan-penguji', compact('permintaanPenguji'));
+        $permintaanPenguji = KajurSubmission::with('tugasAkhir.mahasiswa.dosenPembimbing.dosen')
+            ->whereIn('status', ['pending', 'acc'])
+            ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
+            ->when($search !== '', function ($query) use ($search) {
+                $query->whereHas('tugasAkhir.mahasiswa', function ($mahasiswaQuery) use ($search) {
+                    $mahasiswaQuery->where('nama_lengkap', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%");
+                });
+            })
+            ->oldest()
+            ->paginate(8)
+            ->withQueryString();
+
+        return view('kajur.permintaan-penguji', compact('permintaanPenguji', 'search'));
     }
 
     public function show(KajurSubmission $permintaan)
