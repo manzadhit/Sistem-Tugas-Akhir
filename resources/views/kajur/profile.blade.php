@@ -72,7 +72,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap <span
                   class="text-red-500">*</span></label>
               <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profile->nama_lengkap) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('nama_lengkap') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('nama_lengkap'),
+                ])>
               @error('nama_lengkap')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -82,7 +85,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">NIDN <span
                   class="text-red-500">*</span></label>
               <input type="text" name="nidn" value="{{ old('nidn', $profile->nidn) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('nidn') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('nidn'),
+                ])>
               @error('nidn')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -92,7 +98,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Jurusan <span
                   class="text-red-500">*</span></label>
               <input type="text" name="jurusan" value="{{ old('jurusan', $profile->jurusan) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('jurusan') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('jurusan'),
+                ])>
               @error('jurusan')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -102,7 +111,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Program Studi <span
                   class="text-red-500">*</span></label>
               <input type="text" name="program_studi" value="{{ old('program_studi', $profile->program_studi) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('program_studi') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('program_studi'),
+                ])>
               @error('program_studi')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -112,7 +124,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Jabatan Fungsional</label>
               <input type="text" name="jabatan_fungsional"
                 value="{{ old('jabatan_fungsional', $profile->jabatan_fungsional) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('jabatan_fungsional') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('jabatan_fungsional'),
+                ])>
               @error('jabatan_fungsional')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -121,7 +136,10 @@
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
               <input type="text" name="no_telp" value="{{ old('no_telp', $profile->no_telp) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('no_telp') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('no_telp'),
+                ])>
               @error('no_telp')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -131,7 +149,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Keahlian</label>
               <input type="text" name="keahlian" value="{{ old('keahlian', $profile->keahlian) }}"
                 placeholder="Contoh: Machine Learning, Web Development"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('keahlian') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('keahlian'),
+                ])>
               @error('keahlian')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -151,7 +172,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Email <span
                   class="text-red-500">*</span></label>
               <input type="email" name="email" value="{{ old('email', $user->email) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('email') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('email'),
+                ])>
               @error('email')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -161,7 +185,10 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
               <input type="password" name="password" autocomplete="new-password"
                 placeholder="Kosongkan jika tidak diubah"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 @error('password') border-red-500 @enderror">
+                @class([
+                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                  'border-red-500' => $errors->has('password'),
+                ])>
               @error('password')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
