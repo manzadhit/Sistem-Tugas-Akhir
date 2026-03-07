@@ -146,9 +146,7 @@
             </div>
 
             <!-- File Preview -->
-            <x-file-preview-item :path="$permintaan->bukti_acc_path" :view-url="route('kajur.show-bukti', ['permintaan' => $permintaan->id])"
-              :download-url="route('kajur.download-bukti', ['permintaan' => $permintaan->id])" :uploaded-at="$permintaan->created_at"
-              class="rounded-lg mb-3" />
+            <x-file-preview-item :path="$permintaan->bukti_acc_path" :uploaded-at="$permintaan->created_at" class="rounded-lg mb-3" />
 
             {{-- Form verifikasi: hanya muncul saat pending --}}
             @if ($statusBukti === 'pending')

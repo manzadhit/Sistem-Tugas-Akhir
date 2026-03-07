@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Kajur;
 
+use App\Notifications\NewPembimbingRequest;
+use App\Notifications\PembimbingAssigned;
+use App\Notifications\PembimbingRequestReviewed;
 use App\Models\ProfileDosen;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
 use App\Models\PermintaanPembimbing;
 use App\Models\TugasAkhir;
-use Illuminate\Support\Facades\Storage;
 
 class PembimbingController extends Controller
 {
@@ -35,50 +37,19 @@ class PembimbingController extends Controller
     {
         $permintaan = PermintaanPembimbing::with('mahasiswa')->findOrFail($permintaan);
 
+        request()->user()->unreadNotifications()
+            ->where('type', NewPembimbingRequest::class)
+            ->where('data->permintaan_pembimbing_id', $permintaan->id)
+            ->update(['read_at' => now()]);
+
         $dosen = ProfileDosen::limit(2)->get();
 
         return view('kajur.penetapan-pembimbing', compact('permintaan', 'dosen'));
     }
 
-    public function downloadBukti($permintaan)
-    {
-        $permintaan = PermintaanPembimbing::findOrFail($permintaan);
-
-        $buktiPath = $permintaan->bukti_acc_path;
-
-        if (!Storage::exists($buktiPath)) {
-            abort(404, 'File tidak ditemukan.');
-        }
-
-        return response()->download(
-            Storage::path($buktiPath)
-        );
-    }
-
-    public function showBukti($permintaan)
-    {
-        $permintaan = PermintaanPembimbing::findOrFail($permintaan);
-
-        $buktiPath = $permintaan->bukti_acc_path;
-
-        if (!Storage::exists($buktiPath)) {
-            abort(404, 'File tidak ditemukan.');
-        }
-
-        return response()->file(
-            Storage::path($buktiPath)
-        );
-    }
-
     public function verifyBukti(Request $request, $permintaan)
     {
-        $permintaan = PermintaanPembimbing::findOrFail($permintaan);
-
-        $buktiPath = $permintaan->bukti_acc_path;
-
-        if (!Storage::exists($buktiPath)) {
-            abort(404, 'File tidak ditemukan.');
-        }
+        $permintaan = PermintaanPembimbing::with('mahasiswa.user')->findOrFail($permintaan);
 
         $data = $request->validate([
             'status' => 'required|in:disetujui,ditolak',
@@ -90,6 +61,8 @@ class PembimbingController extends Controller
         $permintaan->diproses_pada = now();
 
         $permintaan->save();
+
+        $permintaan->mahasiswa?->user?->notify(new PembimbingRequestReviewed($permintaan));
 
         return back()->with('success', 'Verifikasi bukti berhasil disimpan.');
     }
@@ -126,6 +99,10 @@ class PembimbingController extends Controller
             'judul' => $permintaan->judul_ta,
             'mahasiswa_id' => $permintaan->mahasiswa_id,
         ]);
+
+        $permintaan->loadMissing('mahasiswa.user');
+
+        $permintaan->mahasiswa?->user?->notify(new PembimbingAssigned($permintaan));
 
         return back()->with('success', 'Pembimbing berhasil ditetapkan');
     }

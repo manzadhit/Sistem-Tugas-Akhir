@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\PembimbingAssigned;
 use App\Models\DosenPembimbing;
 use App\Models\DosenPenguji;
 use App\Models\Submission;
@@ -18,6 +19,10 @@ class DashboardController extends Controller
         if (!$mahasiswa) {
             abort(403, 'Profile mahasiswa belum lengkap.');
         }
+
+        $request->user()->unreadNotifications()
+            ->where('type', PembimbingAssigned::class)
+            ->update(['read_at' => now()]);
 
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswa->id)->first();
 

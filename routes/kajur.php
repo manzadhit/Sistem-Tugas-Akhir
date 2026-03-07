@@ -15,8 +15,6 @@ Route::middleware(['auth', 'role:kajur'])->prefix('kajur')->name('kajur.')->grou
   Route::get("/permintaan-pembimbing", [PembimbingController::class, 'index'])->name('permintaan-pembimbing');
 
   Route::get('/permintaan-pembimbing/{permintaan}', [PembimbingController::class, 'show'])->name("penetapan-pembimbing");
-  Route::get('/permintaan-pembimbing/{permintaan}/show-bukti', [PembimbingController::class, 'showBukti'])->name('show-bukti');
-  Route::get('/permintaan-pembimbing/{permintaan}/download-bukti', [PembimbingController::class, 'downloadBukti'])->name('download-bukti');
   Route::put('/permintaan-pembimbing/{permintaan}/verify-bukti', [PembimbingController::class, 'verifyBukti'])->name('verify-bukti');
   Route::post('/permintaan-pembimbing/{permintaan}/tetapkan', [PembimbingController::class, 'tetapkanPembimbing'])->name('tetapkanPembimbing');
 

@@ -7,7 +7,6 @@ use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
 use App\Models\DosenPembimbing;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
-use App\Models\ProfileDosen;
 use App\Models\User;
 use App\Notifications\NewSubmission;
 use App\Notifications\SubmissionReviewed;

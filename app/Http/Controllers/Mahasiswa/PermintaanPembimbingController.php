@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StorePermintaanPembimbingRequest;
 use App\Models\PermintaanPembimbing;
+use App\Models\User;
+use App\Notifications\NewPembimbingRequest;
+use App\Notifications\PembimbingRequestReviewed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -17,6 +20,10 @@ class PermintaanPembimbingController extends Controller
         if (!$mahasiswa) {
             abort(403, 'Profile mahasiswa belum lengkap.');
         }
+
+        $request->user()->unreadNotifications()
+            ->where('type', PembimbingRequestReviewed::class)
+            ->update(['read_at' => now()]);
 
         if ($mahasiswa->dosenPembimbing()->exists()) {
             return redirect()->route('mahasiswa.dashboard');
@@ -48,7 +55,7 @@ class PermintaanPembimbingController extends Controller
         $filename = "{$mahasiswa->nim}_bukti_acc_judul.{$file->extension()}";
         $path = $file->storeAs('bukti-acc', $filename);
 
-        PermintaanPembimbing::updateOrCreate(
+        $permintaanPembimbing = PermintaanPembimbing::updateOrCreate(
             ['mahasiswa_id' => $mahasiswa->id],
             [
                 'judul_ta' => $validated['judul_ta'],
@@ -57,6 +64,13 @@ class PermintaanPembimbingController extends Controller
                     'pending'
             ]
         );
+
+        $permintaanPembimbing->loadMissing('mahasiswa');
+
+        User::where('role', 'kajur')
+            ->get()
+            ->each
+            ->notify(new NewPembimbingRequest($permintaanPembimbing));
 
         return redirect()
             ->route('mahasiswa.permintaan-pembimbing.create')
