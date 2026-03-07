@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('mahasiswa_id')->constrained('profile_mahasiswa')->cascadeOnDelete();
             $table->string('judul_ta');
             $table->string('bukti_acc_path');
-            $table->enum('status', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->enum('status', ['pending', 'selesai'])->default('pending');
             $table->enum('status_verifikasi_bukti', ['pending', 'disetujui', 'ditolak'])->default('pending');
             $table->text('catatan')->nullable();
             $table->timestamp('diproses_pada')->nullable();

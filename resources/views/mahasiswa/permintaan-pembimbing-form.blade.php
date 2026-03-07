@@ -9,6 +9,13 @@
     </div>
   @endif
 
+  @if ($permintaanPembimbing?->catatan)
+    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+      <p class="font-semibold">Pengajuan sebelumnya ditolak</p>
+      <p class="mt-1">{{ $permintaanPembimbing->catatan }}</p>
+    </div>
+  @endif
+
   <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-5">
     <div>
       <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
@@ -53,7 +60,7 @@
               class="w-full min-h-[128px] rounded-xl border border-slate-200 bg-white px-4 py-3
                      text-sm focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400"
               maxlength="500" placeholder="Contoh: Sistem Rekomendasi Pemilihan Dosen Pembimbing Berbasis Machine Learning"
-              x-model="judul_ta">{{ old('judul_ta') }}</textarea>
+              x-model="judul_ta">{{ old('judul_ta', $permintaanPembimbing?->judul_ta) }}</textarea>
 
             <div class="mt-2 text-right text-xs text-slate-500">
               <span x-text="judul_ta.length"></span>/500 karakter
@@ -91,7 +98,7 @@
   <script>
     function pengajuanForm() {
       return {
-        judul_ta: @js(old('judul_ta', '')),
+        judul_ta: @js(old('judul_ta', $permintaanPembimbing?->judul_ta ?? '')),
       }
     }
   </script>

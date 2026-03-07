@@ -29,8 +29,16 @@ class PermintaanPembimbingController extends Controller
             return redirect()->route('mahasiswa.dashboard');
         }
 
-        if ($mahasiswa->permintaanPembimbing()->exists()) {
-            return view('mahasiswa.permintaan-pembimbing');
+        $permintaanPembimbing = $mahasiswa->permintaanPembimbing;
+
+        if ($permintaanPembimbing) {
+            $isRejected = $permintaanPembimbing->status_verifikasi_bukti === 'ditolak';
+
+            if ($isRejected) {
+                return view('mahasiswa.permintaan-pembimbing-form', compact('permintaanPembimbing'));
+            }
+
+            return view('mahasiswa.permintaan-pembimbing', compact('permintaanPembimbing'));
         }
 
         return view('mahasiswa.permintaan-pembimbing-form');
@@ -60,8 +68,10 @@ class PermintaanPembimbingController extends Controller
             [
                 'judul_ta' => $validated['judul_ta'],
                 'bukti_acc_path' => $path,
-                'status' =>
-                    'pending'
+                'status' => 'pending',
+                'status_verifikasi_bukti' => 'pending',
+                'catatan' => null,
+                'diproses_pada' => null,
             ]
         );
 

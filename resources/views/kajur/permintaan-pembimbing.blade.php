@@ -78,8 +78,9 @@
               <td class="whitespace-nowrap px-5 py-4 text-slate-500">
                 {{ $permintaan->created_at->translatedFormat('d M Y') }}</td>
               <td class="px-5 py-4">
-                <span
-                  class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">{{ $permintaan->status }}</span>
+                <span class="inline-flex rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-800">
+                  {{ ucfirst($permintaan->status) }}
+                </span>
               </td> 
               <td class="px-5 py-4">
                 <a href="{{ route('kajur.penetapan-pembimbing', ['permintaan' => $permintaan->id]) }}"

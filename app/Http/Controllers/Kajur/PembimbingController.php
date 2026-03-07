@@ -89,7 +89,7 @@ class PembimbingController extends Controller
         }
 
         $permintaan->update([
-            'status' => 'disetujui',
+            'status' => 'selesai',
             'diproses_pada' => now(),
         ]);
 

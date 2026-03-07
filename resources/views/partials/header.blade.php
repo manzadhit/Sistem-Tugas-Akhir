@@ -16,6 +16,7 @@
   <div class="flex items-center gap-x-4">
     {{-- Notification Bell --}}
     @php
+      $notifications = auth()->user()->notifications()->latest()->limit(5)->get();
       $unreadNotifications = auth()->user()->unreadNotifications;
     @endphp
     <div class="relative" x-data="{ open: false }" @click.outside="open = false">
@@ -43,7 +44,7 @@
 
         {{-- Notification Items --}}
         <ul class="divide-y divide-slate-100">
-          @forelse ($unreadNotifications as $notif)
+          @forelse ($notifications as $notif)
             <li>
               <a href="{{ $notif->data['action_url'] ?? '#' }}"
                 class="flex items-start gap-3 px-4 py-3 transition hover:bg-slate-50">
@@ -58,7 +59,11 @@
                   <p class="mt-1 text-xs text-slate-400"><i
                       class="far fa-clock mr-1"></i>{{ $notif->created_at->diffForHumans() }}</p>
                 </div>
-                <i class="fas fa-chevron-right mt-2 flex-shrink-0 text-[11px] text-slate-400"></i>
+                @if (is_null($notif->read_at))
+                  <span class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-blue-500"></span>
+                @else
+                  <i class="fas fa-chevron-right mt-2 flex-shrink-0 text-[11px] text-slate-400"></i>
+                @endif
               </a>
             </li>
           @empty
@@ -67,7 +72,7 @@
                 class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
                 <i class="fa-regular fa-bell-slash text-lg"></i>
               </div>
-              <p class="text-sm font-medium text-slate-700">Belum ada notifikasi baru</p>
+              <p class="text-sm font-medium text-slate-700">Belum ada notifikasi</p>
               <p class="mt-1 text-xs leading-relaxed text-slate-500">Semua pembaruan akan muncul di sini saat tersedia.
               </p>
             </li>
