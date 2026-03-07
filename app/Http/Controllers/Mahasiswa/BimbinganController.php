@@ -10,6 +10,7 @@ use App\Models\KajurSubmission;
 use App\Models\ProfileDosen;
 use App\Models\User;
 use App\Notifications\NewSubmission;
+use App\Notifications\SubmissionReviewed;
 use App\Services\SubmissionService;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,12 @@ class BimbinganController extends Controller
         $hasTwoAccPembimbing = $latestSubmissionPerPembimbing
             ->where('status', 'acc')
             ->count() >= 2;
+
+        // Mark notif SubmissionReviewed terkait jenis ini sebagai read
+        $request->user()->unreadNotifications()
+            ->where('type', SubmissionReviewed::class)
+            ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.bimbingan', ['jenis' => $jenis]))
+            ->update(['read_at' => now()]);
 
         return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'tahapanSelesai'));
     }

@@ -5,6 +5,7 @@ namespace App\Services\Dosen;
 use App\Models\Submission;
 use App\Models\DosenPembimbing;
 use App\Models\SubmissionFile;
+use App\Notifications\SubmissionReviewed;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
@@ -49,7 +50,7 @@ class BimbinganService
 
   public function reviewSubmission(Submission $submission, array $payload, array $files = [])
   {
-    return DB::transaction(function () use ($submission, $payload, $files) {
+    $reviewed = DB::transaction(function () use ($submission, $payload, $files) {
       $submission->update([
         'review' => $payload['review'] ?? null,
         'status' => $payload['status'],
@@ -69,5 +70,10 @@ class BimbinganService
 
       return $submission->refresh();
     });
+
+    $mahasiswa = $reviewed->tugasAkhir->mahasiswa->user;
+    $mahasiswa->notify(new SubmissionReviewed($reviewed, $payload['status']));
+
+    return $reviewed;
   }
 }
