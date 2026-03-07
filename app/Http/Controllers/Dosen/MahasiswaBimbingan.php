@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Dosen;
 
-use App\Models\Submission;
-use Illuminate\Http\Request;
-use App\Models\DosenPembimbing;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dosen\ReviewSubmissionRequest;
+use App\Models\DosenPembimbing;
+use App\Models\Submission;
+use App\Notifications\NewSubmission;
 use App\Services\Dosen\BimbinganService;
+use Illuminate\Http\Request;
 
 class MahasiswaBimbingan extends Controller
 {
@@ -67,6 +68,9 @@ class MahasiswaBimbingan extends Controller
                 payload: $request->validated(),
                 files: $request->file('files', [])
             );
+
+            $request->user()->unreadNotifications()->where('type', NewSubmission::class)
+            ->whereJsonContains('data->submission_id', $submission->id)->update(['read_at' => now()]);
 
             return back()->with('success', 'Review berhasil diberikan.');
         } catch (\Exception $e) {

@@ -7,7 +7,9 @@ use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
 use App\Models\DosenPembimbing;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
+use App\Models\ProfileDosen;
 use App\Models\User;
+use App\Notifications\NewSubmission;
 use App\Services\SubmissionService;
 use Illuminate\Http\Request;
 
@@ -78,14 +80,24 @@ class BimbinganController extends Controller
         $mahasiswa = $request->user()?->profileMahasiswa;
         abort_if(!$mahasiswa, 403, 'Profil mahasiswa tidak ditemukan.');
 
+        $dosenPembimbingId = $request->input('pembimbing');
+
+        $dosenPembimbing = DosenPembimbing::with('dosen.user')
+            ->where('id', $dosenPembimbingId)
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->firstOrFail();
+
+
         try {
-            $this->submissionService->createSubmission(
+            $submission = $this->submissionService->createSubmission(
                 mahasiswa: $mahasiswa,
-                dosenPembimbingId: $request->input('pembimbing'),
+                dosenPembimbingId: $dosenPembimbingId,
                 catatan: $request->input('catatan'),
                 files: $request->file('file_submission'),
                 tahapan: $jenis,
             );
+
+            $dosenPembimbing->dosen->user->notify(new NewSubmission($mahasiswa, $submission));
 
             return back()->with('success', 'Submission berhasil dikirim');
         } catch (\Exception $e) {

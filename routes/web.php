@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\NotificationController;
 
 
 Route::middleware("auth")->get('/', function () {
@@ -33,6 +34,11 @@ Route::get('/download', function (Request $request) {
     abort_if(!$path || !Storage::exists($path), 404);
     return Storage::download($path);
 })->name('storage.download')->middleware('auth');
+
+Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [NotificationController::class, 'index'])->name('index');
+    Route::post('/mark-all-read', [NotificationController::class, 'markAllRead'])->name('markAllRead');
+});
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/mahasiswa.php';
