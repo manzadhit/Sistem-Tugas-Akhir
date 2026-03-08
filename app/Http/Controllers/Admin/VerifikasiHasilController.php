@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DokumenUjian;
 use App\Models\Ujian;
+use App\Notifications\NewUjianHasilSubmission;
+use App\Notifications\UjianHasilReviewed;
 use Illuminate\Http\Request;
 
 class VerifikasiHasilController extends Controller
@@ -60,6 +62,11 @@ class VerifikasiHasilController extends Controller
     ])
       ->findOrFail($id);
 
+    request()->user()->unreadNotifications()
+      ->where('type', NewUjianHasilSubmission::class)
+      ->where('data->ujian_id', $ujian->id)
+      ->update(['read_at' => now()]);
+
     return view('admin.pasca-ujian.detail-verifikasi', compact('ujian'));
   }
 
@@ -90,6 +97,8 @@ class VerifikasiHasilController extends Controller
 
     if ($adaTolak) {
       $ujian->update(['status' => 'revisi_hasil']);
+      $ujian->loadMissing('tugasAkhir.mahasiswa.user');
+      $ujian->tugasAkhir->mahasiswa?->user?->notify(new UjianHasilReviewed($ujian));
 
       return redirect()
         ->back()
@@ -107,6 +116,9 @@ class VerifikasiHasilController extends Controller
     if ($nextTahapan) {
       $ujian->tugasAkhir->update(['tahapan' => $nextTahapan]);
     }
+
+    $ujian->loadMissing('tugasAkhir.mahasiswa.user');
+    $ujian->tugasAkhir->mahasiswa?->user?->notify(new UjianHasilReviewed($ujian));
 
     return redirect()
       ->back()

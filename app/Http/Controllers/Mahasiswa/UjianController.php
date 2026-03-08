@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\SubmitHasilUjianRequest;
 use App\Http\Requests\Mahasiswa\SubmitPengajuanUjianRequest;
 use App\Models\User;
+use App\Notifications\NewUjianHasilSubmission;
 use App\Notifications\NewUjianSyaratSubmission;
 use App\Notifications\UjianInvitationSent;
+use App\Notifications\UjianHasilReviewed;
 use App\Notifications\UjianSyaratReviewed;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
@@ -163,6 +165,11 @@ class UjianController extends Controller
             })->values();
         }
 
+        $request->user()->unreadNotifications()
+            ->where('type', UjianHasilReviewed::class)
+            ->where('data->ujian_id', $ujian->id)
+            ->update(['read_at' => now()]);
+
         return view('mahasiswa.ujian.upload-hasil-ujian', compact('jenis', 'ujian', 'daftarSyarat', 'isRevisi', 'rejectedDokumen'));
     }
 
@@ -188,6 +195,12 @@ class UjianController extends Controller
 
             // Update status ke menunggu_verifikasi_syarat jika semua lengkap
             $ujian->update(['status' => 'menunggu_verifikasi_hasil']);
+            $ujian->loadMissing('tugasAkhir.mahasiswa');
+
+            User::where('role', 'admin')
+                ->get()
+                ->each
+                ->notify(new NewUjianHasilSubmission($ujian));
 
             // Redirect ke index (sementara akan abort 500 sampai route menunggu dibuat)
             return back()->with('success', 'Berhasil mengajukan hasil ujian. Menunggu verifikasi dari admin.');
@@ -205,6 +218,11 @@ class UjianController extends Controller
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
         if ($ujian->status == "selesai") {
+            $request->user()->unreadNotifications()
+                ->where('type', UjianHasilReviewed::class)
+                ->whereJsonContains('data->action_url', route('mahasiswa.ujian.selesai', ['jenis' => $jenis]))
+                ->update(['read_at' => now()]);
+
             return view('mahasiswa.ujian.selesai', compact('jenis', 'ujian'));
         }
 
