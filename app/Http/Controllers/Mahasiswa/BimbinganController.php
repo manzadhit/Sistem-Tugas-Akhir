@@ -8,7 +8,9 @@ use App\Models\DosenPembimbing;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\User;
+use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewSubmission;
+use App\Notifications\PengujiAssigned;
 use App\Notifications\SubmissionReviewed;
 use App\Services\SubmissionService;
 use Illuminate\Http\Request;
@@ -123,10 +125,22 @@ class BimbinganController extends Controller
             ->latest()
             ->first();
 
+        $request->user()->unreadNotifications()
+            ->where('type', KajurSubmissionReviewed::class)
+            ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]))
+            ->update(['read_at' => now()]);
+
         $dosenPenguji = DosenPenguji::with('dosen.user')
             ->where('mahasiswa_id', $mahasiswa->id)
             ->orderBy('jenis_penguji')
             ->get();
+
+        if ($dosenPenguji->isNotEmpty()) {
+            $request->user()->unreadNotifications()
+                ->where('type', PengujiAssigned::class)
+                ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]))
+                ->update(['read_at' => now()]);
+        }
 
         return view('mahasiswa.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'dosenPenguji'));
     }

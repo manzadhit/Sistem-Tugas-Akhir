@@ -68,6 +68,8 @@
     @include('mahasiswa.minta-penguji.menunggu-verifikasi')
   @elseif (isset($kajurSubmission) && $kajurSubmission->status === 'acc' && $dosenPenguji->isNotEmpty())
     @include('mahasiswa.minta-penguji.penguji-ditetapkan')
+  @elseif (isset($kajurSubmission) && $kajurSubmission->status === 'acc')
+    @include('mahasiswa.minta-penguji.menunggu-penetapan-penguji')
   @else
     @include('mahasiswa.minta-penguji.upload-laporan')
   @endif

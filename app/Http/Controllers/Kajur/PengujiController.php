@@ -7,6 +7,9 @@ use App\Http\Requests\Kajur\TetapkanPengujiRequest;
 use App\Http\Requests\Kajur\VerifyLaporanRequest;
 use App\Models\KajurSubmission;
 use App\Models\ProfileDosen;
+use App\Notifications\KajurSubmissionReviewed;
+use App\Notifications\NewPengujiRequest;
+use App\Notifications\PengujiAssigned;
 use App\Services\Kajur\PenetapanPengujiService;
 use Illuminate\Http\Request;
 
@@ -38,6 +41,11 @@ class PengujiController extends Controller
     {
         $permintaan->load(['tugasAkhir.mahasiswa.dosenPembimbing.dosen', 'kajurSubmissionFiles' => fn($q) => $q->where('uploaded_by', 'mahasiswa')->latest()]);
 
+        request()->user()->unreadNotifications()
+            ->where('type', NewPengujiRequest::class)
+            ->where('data->kajur_submission_id', $permintaan->id)
+            ->update(['read_at' => now()]);
+
         $mahasiswa = $permintaan->tugasAkhir->mahasiswa;
         $pembimbing = $mahasiswa->dosenPembimbing->pluck('id');
         $hasPenguji = $mahasiswa->dosenPenguji()->exists();
@@ -50,7 +58,14 @@ class PengujiController extends Controller
     public function verifyLaporan(VerifyLaporanRequest $request, KajurSubmission $permintaan)
     {
         try {
-            $this->penetapanPengujiService->verifyLaporan(kajurSubmission: $permintaan, payload: $request->validated(), files: $request->file('files', []));
+            $reviewed = $this->penetapanPengujiService->verifyLaporan(
+                kajurSubmission: $permintaan,
+                payload: $request->validated(),
+                files: $request->file('files', [])
+            );
+
+            $reviewed->loadMissing('tugasAkhir.mahasiswa.user');
+            $reviewed->tugasAkhir->mahasiswa?->user?->notify(new KajurSubmissionReviewed($reviewed));
 
             return back()->with('success', $request->input('status') . ' telah diberikan');
         } catch (\Throwable $th) {
@@ -66,6 +81,8 @@ class PengujiController extends Controller
 
         try {
             $this->penetapanPengujiService->tetapkanPenguji($mahasiswaId, $dosenIds);
+            $permintaan->loadMissing('tugasAkhir.mahasiswa.user');
+            $permintaan->tugasAkhir->mahasiswa?->user?->notify(new PengujiAssigned($permintaan));
 
             return back()->with('success', 'Penguji berhasil ditetapkan');
         } catch (\Throwable $th) {

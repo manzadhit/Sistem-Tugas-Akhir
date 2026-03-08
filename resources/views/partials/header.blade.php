@@ -16,7 +16,7 @@
   <div class="flex items-center gap-x-4">
     {{-- Notification Bell --}}
     @php
-      $notifications = auth()->user()->notifications()->latest()->limit(5)->get();
+      $notifications = auth()->user()->notifications()->latest()->limit(3)->get();
       $unreadNotifications = auth()->user()->unreadNotifications;
     @endphp
     <div class="relative" x-data="{ open: false }" @click.outside="open = false">

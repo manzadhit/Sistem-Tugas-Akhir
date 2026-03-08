@@ -74,6 +74,16 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
+  @if ($hasTwoAccPembimbing && !$tahapanSelesai)
+    <div class="mb-4 flex justify-center">
+      <a href="{{ route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]) }}"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-800 transition-all">
+        <i class="fas fa-user-check"></i>
+        Minta Penguji
+      </a>
+    </div>
+  @endif
+
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission', ['jenis' => $jenis]) }}" method="POST"
     enctype="multipart/form-data" x-data="fileUpload()"
@@ -280,16 +290,6 @@
           </div>
         @endforelse
       </div>
-
-      @if ($hasTwoAccPembimbing && !$tahapanSelesai)
-        <div class="mt-4 flex justify-end">
-          <a href="{{ route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]) }}"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-800 transition-all">
-            <i class="fas fa-user-check"></i>
-            Minta Penguji
-          </a>
-        </div>
-      @endif
     </div>
   </div>
 
