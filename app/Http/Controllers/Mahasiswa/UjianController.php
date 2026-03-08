@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\SubmitHasilUjianRequest;
 use App\Http\Requests\Mahasiswa\SubmitPengajuanUjianRequest;
+use App\Models\User;
+use App\Notifications\NewUjianSyaratSubmission;
+use App\Notifications\UjianInvitationSent;
+use App\Notifications\UjianSyaratReviewed;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
 
@@ -60,6 +64,11 @@ class UjianController extends Controller
             })->values();
         }
 
+        $request->user()->unreadNotifications()
+            ->where('type', UjianSyaratReviewed::class)
+            ->whereJsonContains('data->action_url', route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]))
+            ->update(['read_at' => now()]);
+
         return view("mahasiswa.ujian.upload-syarat", compact('jenis', 'daftarSyarat', 'ujian', 'isRevisi', 'rejectedDokumen'));
     }
 
@@ -95,6 +104,12 @@ class UjianController extends Controller
 
             // Update status ke menunggu_verifikasi_syarat jika semua lengkap
             $ujian->update(['status' => 'menunggu_verifikasi_syarat']);
+            $ujian->loadMissing('tugasAkhir.mahasiswa');
+
+            User::where('role', 'admin')
+                ->get()
+                ->each
+                ->notify(new NewUjianSyaratSubmission($ujian));
 
             // Redirect ke index (sementara akan abort 500 sampai route menunggu dibuat)
             return back()->with('success', 'Berhasil mengajukan ujian. Menunggu verifikasi dari admin.');
@@ -110,6 +125,16 @@ class UjianController extends Controller
         $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
 
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        $request->user()->unreadNotifications()
+            ->where('type', UjianSyaratReviewed::class)
+            ->whereJsonContains('data->action_url', route('mahasiswa.ujian.undangan', ['jenis' => $jenis]))
+            ->update(['read_at' => now()]);
+
+        $request->user()->unreadNotifications()
+            ->where('type', UjianInvitationSent::class)
+            ->where('data->ujian_id', $ujian->id)
+            ->update(['read_at' => now()]);
 
         return view('mahasiswa.ujian.undangan', compact('jenis', 'ujian'));
     }

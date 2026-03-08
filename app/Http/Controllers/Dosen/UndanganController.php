@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
+use App\Notifications\UjianInvitationSent;
 use App\Models\ProfileMahasiswa;
 use App\Models\UndanganUjian;
 use Illuminate\Http\Request;
@@ -38,6 +39,10 @@ class UndanganController extends Controller
             $item->peran = $this->resolvePeran($mhs, $dosenId);
             return $item;
         });
+
+        $request->user()->unreadNotifications()
+            ->where('type', UjianInvitationSent::class)
+            ->update(['read_at' => now()]);
 
         return view('dosen.undangan', compact('undangan'));
     }

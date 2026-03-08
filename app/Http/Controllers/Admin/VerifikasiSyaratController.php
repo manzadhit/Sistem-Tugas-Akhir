@@ -7,6 +7,9 @@ use App\Models\DokumenUjian;
 use App\Models\ProfileDosen;
 use App\Models\UndanganUjian;
 use App\Models\Ujian;
+use App\Notifications\NewUjianSyaratSubmission;
+use App\Notifications\UjianInvitationSent;
+use App\Notifications\UjianSyaratReviewed;
 use App\Services\Admin\UndanganPdfService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -72,6 +75,11 @@ class VerifikasiSyaratController extends Controller
       'jadwalUjian',
     ])->findOrFail($id);
 
+    request()->user()->unreadNotifications()
+      ->where('type', NewUjianSyaratSubmission::class)
+      ->where('data->ujian_id', $ujian->id)
+      ->update(['read_at' => now()]);
+
     return view('admin.syarat-ujian.detail-verifikasi', compact('ujian'));
   }
 
@@ -102,6 +110,8 @@ class VerifikasiSyaratController extends Controller
 
     if ($adaTolak) {
       $ujian->update(['status' => 'revisi_syarat']);
+      $ujian->loadMissing('tugasAkhir.mahasiswa.user');
+      $ujian->tugasAkhir->mahasiswa?->user?->notify(new UjianSyaratReviewed($ujian));
 
       return redirect()
         ->back()
@@ -109,6 +119,8 @@ class VerifikasiSyaratController extends Controller
     }
 
     $ujian->update(['status' => 'menunggu_undangan']);
+    $ujian->loadMissing('tugasAkhir.mahasiswa.user');
+    $ujian->tugasAkhir->mahasiswa?->user?->notify(new UjianSyaratReviewed($ujian));
 
     return redirect()
       ->route('admin.ujian.syarat.undangan', $ujian->id)
@@ -201,10 +213,31 @@ class VerifikasiSyaratController extends Controller
 
   public function kirimUndangan($id)
   {
-    $ujian = Ujian::with('undanganUjian')->findOrFail($id);
+    $ujian = Ujian::with([
+      'undanganUjian',
+      'tugasAkhir.mahasiswa.user',
+      'tugasAkhir.mahasiswa.dosenPembimbing.dosen.user',
+      'tugasAkhir.mahasiswa.dosenPenguji.dosen.user',
+    ])->findOrFail($id);
 
     $ujian->undanganUjian->update(['status' => 'terkirim']);
     $ujian->update(['status' => 'menunggu_hasil']);
+
+    $mahasiswa = $ujian->tugasAkhir->mahasiswa;
+
+    $recipients = collect([
+      $mahasiswa?->user,
+      ...$mahasiswa->dosenPembimbing
+        ->pluck('dosen.user')
+        ->filter()
+        ->all(),
+      ...$mahasiswa->dosenPenguji
+        ->pluck('dosen.user')
+        ->filter()
+        ->all(),
+    ])->filter()->unique('id');
+
+    $recipients->each->notify(new UjianInvitationSent($ujian));
 
     return redirect()
       ->back()
