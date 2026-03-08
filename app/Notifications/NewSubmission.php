@@ -3,10 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewSubmission extends Notification
+class NewSubmission extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -19,6 +20,7 @@ class NewSubmission extends Notification
     {
         $this->mahasiswa = $mahasiswa;
         $this->submission = $submission;
+        $this->afterCommit();
     }
 
     /**
@@ -28,7 +30,7 @@ class NewSubmission extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database'];
+        return ['database'];
     }
 
     /**

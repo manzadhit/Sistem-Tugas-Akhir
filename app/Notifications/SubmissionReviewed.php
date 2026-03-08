@@ -4,16 +4,19 @@ namespace App\Notifications;
 
 use App\Models\Submission;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 
-class SubmissionReviewed extends Notification
+class SubmissionReviewed extends Notification implements ShouldQueue
 {
     use Queueable;
 
     public function __construct(
         protected Submission $submission,
         protected string $status
-    ) {}
+    ) {
+        $this->afterCommit();
+    }
 
     public function via(object $notifiable): array
     {
