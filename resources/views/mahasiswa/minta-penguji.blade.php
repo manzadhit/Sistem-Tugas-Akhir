@@ -1,18 +1,32 @@
 @extends('layouts.app')
 
-@section('title', 'Minta Penguji')
+@section('title', 'Tahap Ketua Jurusan')
 
 @section('sidebar')
   @include('mahasiswa.sidebar')
 @endsection
 
 @section('content')
+  @php
+    $kajurStepLabel = $jenis === 'proposal' ? 'Minta Penguji' : 'Persetujuan Kajur';
+    $pageTitle = $jenis === 'proposal' ? 'Pengajuan Penguji' : 'Persetujuan Ketua Jurusan';
+    $pageDescription = $jenis === 'proposal'
+        ? 'Upload laporan Tugas Akhir untuk pengajuan penguji ke Ketua Jurusan'
+        : 'Upload laporan Tugas Akhir untuk mendapatkan persetujuan Ketua Jurusan';
+    $completionTitle = $jenis === 'proposal'
+        ? 'Selamat! Bimbingan Proposal Anda Telah Selesai'
+        : 'Selamat! Bimbingan ' . ucfirst($jenis) . ' Anda Telah Selesai';
+    $completionDescription = $jenis === 'proposal'
+        ? 'Kedua pembimbing telah menyetujui proposal Anda. Silakan upload Laporan TA untuk mengajukan penguji.'
+        : 'Kedua pembimbing telah menyetujui bimbingan ' . $jenis . ' Anda. Silakan upload Laporan TA untuk mendapatkan persetujuan Ketua Jurusan.';
+  @endphp
+
   <!-- Page Banner -->
   <div class="relative mb-8 h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-blue-700">
     <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
-      <h1 class="mb-2 text-xl sm:text-[1.75rem] md:text-[2rem] font-bold">Pengajuan Penguji</h1>
+      <h1 class="mb-2 text-xl sm:text-[1.75rem] md:text-[2rem] font-bold">{{ $pageTitle }}</h1>
       <p class="text-xs sm:text-sm md:text-base opacity-90">
-        Upload laporan Tugas Akhir untuk pengajuan penguji ke Ketua Jurusan
+        {{ $pageDescription }}
       </p>
     </div>
   </div>
@@ -31,13 +45,13 @@
         <span class="text-center text-[10px] sm:text-xs font-semibold text-emerald-600">Bimbingan</span>
       </div>
 
-      {{-- Step 2: Minta Penguji (aktif) --}}
+      {{-- Step 2: Tahap Kajur (aktif) --}}
       <div class="relative z-10 flex flex-1 flex-col items-center">
         <div
           class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]">
           <i class="fas fa-user-check text-base"></i>
         </div>
-        <span class="text-center text-[10px] sm:text-xs font-semibold text-blue-600">Minta Penguji</span>
+        <span class="text-center text-[10px] sm:text-xs font-semibold text-blue-600">{{ $kajurStepLabel }}</span>
       </div>
     </div>
   </div>
@@ -48,11 +62,9 @@
       class="mb-6 flex items-start gap-3 rounded-xl border border-[#28a745] bg-gradient-to-br from-[#d4edda] to-[#c3e6cb] p-5">
       <i class="fas fa-check-circle mt-0.5 text-2xl text-[#28a745]"></i>
       <div class="flex-1">
-        <div class="mb-1 font-semibold text-[#155724]">
-          Selamat! Bimbingan Proposal Anda Telah Selesai
-        </div>
+        <div class="mb-1 font-semibold text-[#155724]">{{ $completionTitle }}</div>
         <div class="text-sm text-[#155724]">
-          Kedua pembimbing telah menyetujui proposal Anda. Silakan upload Laporan TA untuk mengajukan penguji.
+          {{ $completionDescription }}
         </div>
       </div>
     </div>

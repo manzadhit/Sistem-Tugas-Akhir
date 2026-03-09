@@ -1,8 +1,12 @@
 {{-- Tampilan saat KajurSubmission status = 'pending' --}}
+@php
+  $pendingTitle = $jenis === 'proposal' ? 'Status Pengajuan Penguji' : 'Status Persetujuan Ketua Jurusan';
+@endphp
+
 <div class="mx-auto mb-8 max-w-3xl overflow-hidden rounded-xl bg-white shadow-sm">
   <!-- Status Header -->
   <div class="border-b border-slate-200 bg-slate-50 px-8 py-6 text-center text-slate-900">
-    <h3 class="mb-1 text-xl font-bold">Status Pengajuan Penguji</h3>
+    <h3 class="mb-1 text-xl font-bold">{{ $pendingTitle }}</h3>
     <p class="text-[0.95rem] text-slate-500">Dokumen Anda sudah diterima dan sedang diverifikasi.</p>
     <div class="mt-3 flex flex-wrap items-center justify-center gap-3">
       <span

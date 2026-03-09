@@ -45,14 +45,14 @@
       </a>
 
       @if ($jenis === 'proposal')
-        <a href="{{ route('mahasiswa.ujian', 'hasil') }}"
+        <a href="{{ route('mahasiswa.bimbingan.bimbingan', ['jenis' => 'hasil']) }}"
           class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-gray-300 focus:outline-none focus:ring-offset-2 flex justify-center items-center">
-          Lanjut Ujian Hasil <i class="fas fa-arrow-right ml-1.5 sm:ml-2 text-gray-400"></i>
+          Lanjut Bimbingan Hasil <i class="fas fa-arrow-right ml-1.5 sm:ml-2 text-gray-400"></i>
         </a>
       @elseif($jenis === 'hasil')
-        <a href="{{ route('mahasiswa.ujian', 'skripsi') }}"
+        <a href="{{ route('mahasiswa.bimbingan.bimbingan', ['jenis' => 'skripsi']) }}"
           class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-gray-300 focus:outline-none focus:ring-offset-2 flex justify-center items-center">
-          Lanjut Ujian Skripsi <i class="fas fa-arrow-right ml-1.5 sm:ml-2 text-gray-400"></i>
+          Lanjut Bimbingan Skripsi <i class="fas fa-arrow-right ml-1.5 sm:ml-2 text-gray-400"></i>
         </a>
       @endif
     </div>
