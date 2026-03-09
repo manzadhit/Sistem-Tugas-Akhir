@@ -16,7 +16,9 @@ class DashboardController extends Controller
     {
         // Data Kajur
         $totalMahasiswa = ProfileMahasiswa::count();
-        $menungguPembimbing = PermintaanPembimbing::where('status', 'pending')->count();
+        $menungguPembimbing = PermintaanPembimbing::where('status', 'pending')
+            ->where('status_verifikasi_bukti', '!=', 'ditolak')
+            ->count();
 
         $menungguPenguji = KajurSubmission::whereIn('status', ['pending', 'acc'])
             ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')

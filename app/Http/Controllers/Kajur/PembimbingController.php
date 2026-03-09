@@ -20,6 +20,7 @@ class PembimbingController extends Controller
 
         $permintaanPembimbing = PermintaanPembimbing::with('mahasiswa')
             ->where('status', 'pending')
+            ->where('status_verifikasi_bukti', '!=', 'ditolak')
             ->when($search !== '', function ($query) use ($search) {
                 $query->whereHas('mahasiswa', function ($mahasiswaQuery) use ($search) {
                     $mahasiswaQuery->where('nama_lengkap', 'like', "%{$search}%")
