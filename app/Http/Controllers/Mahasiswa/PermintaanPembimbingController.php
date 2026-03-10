@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StorePermintaanPembimbingRequest;
+use App\Models\MataKuliah;
 use App\Models\PermintaanPembimbing;
 use App\Models\User;
 use App\Notifications\NewPembimbingRequest;
@@ -29,19 +30,31 @@ class PermintaanPembimbingController extends Controller
             return redirect()->route('mahasiswa.dashboard');
         }
 
+        $mataKuliahOptions = MataKuliah::orderBy('nama')
+            ->get(['id', 'kode', 'nama'])
+            ->map(fn ($mataKuliah) => [
+                'id' => (string) $mataKuliah->id,
+                'label' => "{$mataKuliah->kode} - {$mataKuliah->nama}",
+            ])
+            ->values()
+            ->all();
+
         $permintaanPembimbing = $mahasiswa->permintaanPembimbing;
 
         if ($permintaanPembimbing) {
             $isRejected = $permintaanPembimbing->status_verifikasi_bukti === 'ditolak';
 
             if ($isRejected) {
-                return view('mahasiswa.permintaan-pembimbing-form', compact('permintaanPembimbing'));
+                return view('mahasiswa.permintaan-pembimbing-form', compact(
+                    'permintaanPembimbing',
+                    'mataKuliahOptions'
+                ));
             }
 
             return view('mahasiswa.permintaan-pembimbing', compact('permintaanPembimbing'));
         }
 
-        return view('mahasiswa.permintaan-pembimbing-form');
+        return view('mahasiswa.permintaan-pembimbing-form', compact('mataKuliahOptions'));
     }
 
     public function store(StorePermintaanPembimbingRequest $request)
