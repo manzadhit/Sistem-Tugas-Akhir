@@ -23,7 +23,9 @@ class StorePermintaanPembimbingRequest extends FormRequest
     {
         return [
             'judul_ta' => ['required', 'string', 'max:500'],
-            'bukti_acc' => ['required', 'file', 'mimes:pdf,png,jpg,jpeg', 'max:2048']
+            'bukti_acc' => ['required', 'file', 'mimes:pdf,png,jpg,jpeg', 'max:2048'],
+            'mata_kuliah_ids' => ['required', 'array', 'min:1'],
+            'mata_kuliah_ids.*' => ['integer', 'distinct', 'exists:mata_kuliah,id'],
         ];
     }
 }

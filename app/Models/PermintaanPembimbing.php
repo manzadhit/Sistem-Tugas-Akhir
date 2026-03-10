@@ -37,6 +37,6 @@ class PermintaanPembimbing extends Model
             'permintaan_pembimbing_mata_kuliah',
             'permintaan_pembimbing_id',
             'mata_kuliah_id'
-        );
+        )->withTimestamps();
     }
 }

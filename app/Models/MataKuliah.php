@@ -20,6 +20,6 @@ class MataKuliah extends Model
             'permintaan_pembimbing_mata_kuliah',
             'mata_kuliah_id',
             'permintaan_pembimbing_id'
-        );
+        )->withTimestamps();
     }
 }

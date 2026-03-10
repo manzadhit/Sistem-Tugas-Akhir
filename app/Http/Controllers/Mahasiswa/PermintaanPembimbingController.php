@@ -88,6 +88,7 @@ class PermintaanPembimbingController extends Controller
             ]
         );
 
+        $permintaanPembimbing->mataKuliah()->sync($validated['mata_kuliah_ids']);
         $permintaanPembimbing->loadMissing('mahasiswa');
 
         User::where('role', 'kajur')
