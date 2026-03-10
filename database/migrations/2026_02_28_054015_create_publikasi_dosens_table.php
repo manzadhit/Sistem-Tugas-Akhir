@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId('dosen_id')->constrained('profile_dosen')->cascadeOnDelete();
 
             $table->string('judul');
+            $table->text('abstrak')->nullable();
             $table->enum('jenis_publikasi', ['jurnal', 'haki', 'buku']);
             $table->year('tahun');
             $table->string('penerbit')->nullable();

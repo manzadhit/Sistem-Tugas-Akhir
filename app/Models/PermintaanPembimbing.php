@@ -29,4 +29,14 @@ class PermintaanPembimbing extends Model
     {
         return $this->belongsTo(ProfileMahasiswa::class, 'mahasiswa_id');
     }
+
+    public function mataKuliah()
+    {
+        return $this->belongsToMany(
+            MataKuliah::class,
+            'permintaan_pembimbing_mata_kuliah',
+            'permintaan_pembimbing_id',
+            'mata_kuliah_id'
+        );
+    }
 }
