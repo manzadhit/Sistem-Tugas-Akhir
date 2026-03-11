@@ -149,6 +149,22 @@
             @enderror
           </div>
 
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Mata Kuliah yang Diampu
+            </label>
+            <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions" :selected="old('mata_kuliah_ids', [])"
+              placeholder="Pilih mata kuliah yang diampu..." search-placeholder="Cari mata kuliah..."
+              empty-text="Mata kuliah tidak ditemukan." />
+            <p class="mt-2 text-xs text-slate-500">Bisa pilih lebih dari satu mata kuliah.</p>
+            @error('mata_kuliah_ids')
+              <p class="mt-2 text-xs text-red-500">{{ $message }}</p>
+            @enderror
+            @error('mata_kuliah_ids.*')
+              <p class="mt-2 text-xs text-red-500">{{ $message }}</p>
+            @enderror
+          </div>
+
           {{-- Jabatan Fungsional --}}
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1.5">

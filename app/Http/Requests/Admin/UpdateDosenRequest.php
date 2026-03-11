@@ -20,6 +20,8 @@ class UpdateDosenRequest extends FormRequest
       'keahlian' => ['required', 'string', 'max:255'],
       'jabatan_fungsional' => ['required', 'string', 'max:255'],
       'status' => ['required', 'in:aktif,cuti,nonaktif,pensiun'],
+      'mata_kuliah_ids' => ['nullable', 'array'],
+      'mata_kuliah_ids.*' => ['integer', 'distinct', 'exists:mata_kuliah,id'],
       'no_telp' => ['nullable', 'string', 'max:20'],
     ];
   }

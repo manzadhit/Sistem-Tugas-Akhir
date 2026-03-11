@@ -157,6 +157,21 @@
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
             </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium text-slate-700 mb-1">Mata Kuliah yang Diampu</label>
+              <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions"
+                :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn ($id) => (string) $id)->all())"
+                placeholder="Pilih mata kuliah yang diampu..." search-placeholder="Cari mata kuliah..."
+                empty-text="Mata kuliah tidak ditemukan." />
+              <p class="mt-2 text-xs text-slate-500">Bisa pilih lebih dari satu mata kuliah.</p>
+              @error('mata_kuliah_ids')
+                <p class="mt-2 text-xs text-red-600">{{ $message }}</p>
+              @enderror
+              @error('mata_kuliah_ids.*')
+                <p class="mt-2 text-xs text-red-600">{{ $message }}</p>
+              @enderror
+            </div>
           </div>
         </div>
 

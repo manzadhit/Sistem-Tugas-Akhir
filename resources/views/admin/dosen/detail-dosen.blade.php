@@ -134,6 +134,28 @@
           </div>
         </div>
 
+        <div class="flex items-start gap-3 sm:col-span-2 lg:col-span-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            <i class="fas fa-book-open"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xs text-gray-400 mb-1">Mata Kuliah yang Diampu</div>
+            @if ($dosen->mataKuliah->isNotEmpty())
+              <div class="flex flex-wrap gap-2">
+                @foreach ($dosen->mataKuliah as $mataKuliah)
+                  <span
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-100">
+                    {{ $mataKuliah->kode }} - {{ $mataKuliah->nama }}
+                  </span>
+                @endforeach
+              </div>
+            @else
+              <div class="text-sm font-medium text-gray-500">Belum ada mata kuliah yang diampu.</div>
+            @endif
+          </div>
+        </div>
+
         {{-- No. Telp --}}
         <div class="flex items-start gap-3">
           <div

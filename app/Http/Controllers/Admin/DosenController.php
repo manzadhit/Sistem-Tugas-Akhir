@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDosenRequest;
 use App\Http\Requests\Admin\UpdateDosenRequest;
+use App\Models\MataKuliah;
 use App\Models\ProfileDosen;
 use App\Models\PublikasiDosen;
 use App\Models\User;
@@ -41,7 +42,9 @@ class DosenController extends Controller
 
     public function create()
     {
-        return view('admin.dosen.create-dosen');
+        $mataKuliahOptions = $this->mataKuliahOptions();
+
+        return view('admin.dosen.create-dosen', compact('mataKuliahOptions'));
     }
 
     public function store(StoreDosenRequest $request)
@@ -64,6 +67,8 @@ class DosenController extends Controller
             'no_telp' => $request->no_telp,
         ]);
 
+        $user->profileDosen->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
+
         return redirect()->route('admin.dosen.index')
             ->with('success', "Akun dosen {$request->nama_lengkap} (NIDN: {$request->nidn}) berhasil dibuat. Password default: NIDN.");
     }
@@ -72,6 +77,7 @@ class DosenController extends Controller
     {
         $dosen = ProfileDosen::with([
             'user',
+            'mataKuliah',
             'pembimbingMahasiswa.mahasiswa',
             'pengujiMahasiswa.mahasiswa',
         ])->findOrFail($id);
@@ -81,8 +87,10 @@ class DosenController extends Controller
 
     public function edit($id)
     {
-        $dosen = ProfileDosen::findOrFail($id);
-        return view('admin.dosen.edit-dosen', compact('dosen'));
+        $dosen = ProfileDosen::with('mataKuliah')->findOrFail($id);
+        $mataKuliahOptions = $this->mataKuliahOptions();
+
+        return view('admin.dosen.edit-dosen', compact('dosen', 'mataKuliahOptions'));
     }
 
     public function update(UpdateDosenRequest $request, $id)
@@ -99,8 +107,22 @@ class DosenController extends Controller
             'no_telp' => $request->no_telp,
         ]);
 
+        $dosen->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
+
         return redirect()->route('admin.dosen.index')
             ->with('success', "Data dosen {$dosen->nama_lengkap} berhasil diperbarui.");
+    }
+
+    protected function mataKuliahOptions(): array
+    {
+        return MataKuliah::orderBy('nama')
+            ->get(['id', 'kode', 'nama'])
+            ->map(fn ($mataKuliah) => [
+                'id' => (string) $mataKuliah->id,
+                'label' => "{$mataKuliah->kode} - {$mataKuliah->nama}",
+            ])
+            ->values()
+            ->all();
     }
 
     public function destroy($id)

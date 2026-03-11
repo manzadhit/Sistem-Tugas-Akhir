@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Kajur;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileDosenRequest;
+use App\Models\MataKuliah;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,9 +16,10 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         $user = $request->user();
-        $profile = $user->profileDosen;
+        $profile = $user->profileDosen()->with('mataKuliah')->first();
+        $mataKuliahOptions = $this->mataKuliahOptions();
 
-        return view('kajur.profile', compact('user', 'profile'));
+        return view('kajur.profile', compact('user', 'profile', 'mataKuliahOptions'));
     }
 
     public function update(ProfileDosenRequest $request): RedirectResponse
@@ -45,6 +47,8 @@ class ProfileController extends Controller
             'foto' => $fotoPath,
         ]);
 
+        $profile->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
+
         // Update email
         if ($user->email !== $request->email) {
             $user->email = $request->email;
@@ -59,5 +63,17 @@ class ProfileController extends Controller
 
         return redirect()->route('kajur.profile.edit')
             ->with('success', 'Profil berhasil diperbarui.');
+    }
+
+    protected function mataKuliahOptions(): array
+    {
+        return MataKuliah::orderBy('nama')
+            ->get(['id', 'kode', 'nama'])
+            ->map(fn ($mataKuliah) => [
+                'id' => (string) $mataKuliah->id,
+                'label' => "{$mataKuliah->kode} - {$mataKuliah->nama}",
+            ])
+            ->values()
+            ->all();
     }
 }
