@@ -22,4 +22,14 @@ class MataKuliah extends Model
             'permintaan_pembimbing_id'
         )->withTimestamps();
     }
+
+    public function dosen()
+    {
+        return $this->belongsToMany(
+            ProfileDosen::class,
+            'dosen_mata_kuliah',
+            'mata_kuliah_id',
+            'dosen_id'
+        )->withTimestamps();
+    }
 }

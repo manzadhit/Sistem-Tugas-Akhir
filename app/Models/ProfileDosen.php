@@ -52,4 +52,14 @@ class ProfileDosen extends Model
     {
         return $this->hasMany(PublikasiDosen::class, 'dosen_id');
     }
+
+    public function mataKuliah()
+    {
+        return $this->belongsToMany(
+            MataKuliah::class,
+            'dosen_mata_kuliah',
+            'dosen_id',
+            'mata_kuliah_id'
+        )->withTimestamps();
+    }
 }
