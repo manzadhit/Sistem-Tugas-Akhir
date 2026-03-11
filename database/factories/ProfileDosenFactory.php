@@ -26,8 +26,8 @@ class ProfileDosenFactory extends Factory
             'keahlian' => fake()->randomElement(['Rekayasa Perangkat Lunak', 'Artificial Intelligence', 'Jaringan']),
             'jabatan_fungsional' => fake()->randomElement(['Tenaga Pengajar', 'Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar']),
             'status' => fake()->randomElement(['aktif', 'cuti', 'nonaktif', 'pensiun']),
-            'kuota_pembimbing' => fake()->numberBetween(5, 12),
-            'kuota_penguji' => fake()->numberBetween(5, 15),
+            'total_mahasiswa_dibimbing' => fake()->numberBetween(5, 50),
+            'total_mahasiswa_diuji' => fake()->numberBetween(5, 75),
             'foto' => null,
             'no_telp' => fake()->optional()->phoneNumber()
         ];

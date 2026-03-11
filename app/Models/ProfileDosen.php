@@ -22,15 +22,15 @@ class ProfileDosen extends Model
         'keahlian',
         'jabatan_fungsional',
         'status',
-        'kuota_pembimbing',
-        'kuota_penguji',
+        'total_mahasiswa_dibimbing',
+        'total_mahasiswa_diuji',
         'foto',
         'no_telp'
     ];
 
     protected $casts = [
-        'kuota_pembimbing' => 'integer',
-        'kuota_penguji' => 'integer',
+        'total_mahasiswa_dibimbing' => 'integer',
+        'total_mahasiswa_diuji' => 'integer',
     ];
 
     public function user()
