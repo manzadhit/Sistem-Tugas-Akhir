@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->string('keahlian');
             $table->string('jabatan_fungsional');
             $table->enum('status', ['aktif', 'cuti', 'nonaktif', 'pensiun'])->default('aktif');
+            $table->unsignedInteger('kuota_pembimbing')->nullable();
+            $table->unsignedInteger('kuota_penguji')->nullable();
             $table->string('foto')->nullable();
             $table->string('no_telp')->nullable();
             $table->timestamps();

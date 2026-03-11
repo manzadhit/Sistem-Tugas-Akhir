@@ -21,6 +21,8 @@ class ProfileDosenRequest extends FormRequest
             'program_studi'       => ['required', 'string', 'max:100'],
             'keahlian'            => ['nullable', 'string', 'max:255'],
             'jabatan_fungsional'  => ['nullable', 'string', 'max:100'],
+            'kuota_pembimbing'    => ['nullable', 'integer', 'min:0'],
+            'kuota_penguji'       => ['nullable', 'integer', 'min:0'],
             'no_telp'             => ['nullable', 'string', 'max:20'],
             'foto'                => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'email'               => [
@@ -43,6 +45,8 @@ class ProfileDosenRequest extends FormRequest
             'program_studi'      => 'Program Studi',
             'keahlian'           => 'Keahlian',
             'jabatan_fungsional' => 'Jabatan Fungsional',
+            'kuota_pembimbing'   => 'Kuota Pembimbing',
+            'kuota_penguji'      => 'Kuota Penguji',
             'no_telp'            => 'No. Telepon',
             'foto'               => 'Foto Profil',
             'email'              => 'Email',
@@ -68,6 +72,12 @@ class ProfileDosenRequest extends FormRequest
             'keahlian.max'                => 'Keahlian maksimal 255 karakter.',
 
             'jabatan_fungsional.max'      => 'Jabatan fungsional maksimal 100 karakter.',
+
+            'kuota_pembimbing.integer'    => 'Kuota pembimbing harus berupa angka bulat.',
+            'kuota_pembimbing.min'        => 'Kuota pembimbing minimal 0.',
+
+            'kuota_penguji.integer'       => 'Kuota penguji harus berupa angka bulat.',
+            'kuota_penguji.min'           => 'Kuota penguji minimal 0.',
 
             'no_telp.max'                 => 'No. telepon maksimal 20 karakter.',
 
