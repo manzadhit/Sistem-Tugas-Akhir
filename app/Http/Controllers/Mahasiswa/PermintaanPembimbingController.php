@@ -54,7 +54,10 @@ class PermintaanPembimbingController extends Controller
             return view('mahasiswa.permintaan-pembimbing', compact('permintaanPembimbing'));
         }
 
-        return view('mahasiswa.permintaan-pembimbing-form', compact('mataKuliahOptions'));
+        return view('mahasiswa.permintaan-pembimbing-form', [
+            'mataKuliahOptions' => $mataKuliahOptions,
+            'permintaanPembimbing' => null,
+        ]);
     }
 
     public function store(StorePermintaanPembimbingRequest $request)

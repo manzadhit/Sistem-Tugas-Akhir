@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(MataKuliahSeeder::class);
+
         // ─── Admin ───
         User::create([
             'username' => 'admin',
