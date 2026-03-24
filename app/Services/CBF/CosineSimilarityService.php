@@ -30,7 +30,9 @@ class CosineSimilarityService
       $scores[$dosenId] = $this->calculate($query, $vector);
     }
 
-    return arsort($scores);
+    arsort($scores);
+
+    return $scores;
   }
 
   protected function dotProduct($vectorA, $vectorB)
