@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call(MataKuliahSeeder::class);
+        $this->call(BobotKriteriaSeeder::class);
 
         // ─── Admin ───
         User::create([

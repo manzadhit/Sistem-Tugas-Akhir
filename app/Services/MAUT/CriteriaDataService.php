@@ -18,7 +18,7 @@ class CriteriaDataService
       $result[$id] = [
         'jabatan_fungsional' => $jabatan[$id] ?? 0,
         'jumlah_publikasi' => $jumlahPublikasi[$id] ?? 0,
-        'beban_bimbingan' => $beban[$id] ?? 0
+        'beban_bimbingan' => $bebanBimbingan[$id] ?? 0
       ];
     }
 
