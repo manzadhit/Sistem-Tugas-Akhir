@@ -230,12 +230,11 @@
             </label>
 
             <div class="flex flex-col gap-6" id="pembimbingContainer">
-              <!-- Pembimbing 1 -->
-              @foreach ($dosen as $index => $d)
+              @foreach ($dosen->take(2) as $index => $d)
                 <input type="hidden" name="dosen_ids[]" value={{ $d->id }}>
                 <div
                   class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all"
-                  id="pembimbingCard1" data-dosen-id="1">
+                  id="pembimbingCard{{ $index }}" data-dosen-id="{{ $d->id }}">
                   <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
                     <div class="flex items-center gap-3">
                       <span
@@ -248,7 +247,8 @@
                         class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
                         <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
                           Rekomendasi</span>
-                        <span class="text-lg font-bold text-green-900">0.892</span>
+                        <span
+                          class="text-lg font-bold text-green-900">{{ number_format($rankedScores[$d->id], 2) }}</span>
                       </div>
                     </div>
                   </div>
@@ -258,7 +258,7 @@
                     <div class="flex items-center gap-3">
                       <div
                         class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
-                        FA</div>
+                        {{ strtoupper(substr($d->nama_lengkap, 0, 2)) }}</div>
                       <div>
                         <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5">{{ $d->nama_lengkap }}</h4>
                         <div class="text-xs text-gray-600">
@@ -269,22 +269,31 @@
                     </div>
                     <button type="button"
                       class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
-                      onclick="openGantiModal(1)">
+                      onclick="openGantiModal({{ $index + 1 }})">
                       <i class="fas fa-exchange-alt text-xs"></i> Ganti
                     </button>
                   </div>
-                  <input type="hidden" id="pembimbing1" name="pembimbing1" value="1" required />
+                  <input type="hidden" id="pembimbing{{ $index + 1 }}" name="pembimbing{{ $index + 1 }}"
+                    value="{{ $d->id }}" required />
 
                   <!-- Detail Perhitungan -->
-                  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden" x-data="{ open: false }">
                     <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
-                      onclick="toggleReason('reason1')">
+                      @click="open = !open">
                       <i class="fas fa-calculator text-purple-600"></i>
                       <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
-                      <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform"
-                        id="toggle1"></i>
+                      <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform duration-200"
+                        :class="{ 'rotate-180': open }"></i>
                     </div>
-                    <div class="hidden border-t border-gray-200 p-4 bg-gray-50" id="reason1">
+                    <div x-show="open"
+                      x-transition:enter="transition ease-out duration-200"
+                      x-transition:enter-start="opacity-0 -translate-y-1"
+                      x-transition:enter-end="opacity-100 translate-y-0"
+                      x-transition:leave="transition ease-in duration-150"
+                      x-transition:leave-start="opacity-100 translate-y-0"
+                      x-transition:leave-end="opacity-0 -translate-y-1"
+                      class="border-t border-gray-200 p-4 bg-gray-50">
+                      {{-- CBF Section --}}
                       <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
                         <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
                           <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine Similarity)
@@ -292,9 +301,10 @@
                         <div
                           class="flex justify-between items-center px-3 py-2 bg-blue-100 rounded-md text-xs font-semibold">
                           <span class="text-blue-900">Nilai Similarity (CBF)</span>
-                          <span class="text-blue-900 text-sm">0.94</span>
+                          <span class="text-blue-900 text-sm">{{ number_format($topCandidates[$d->id] ?? 0, 2) }}</span>
                         </div>
                       </div>
+                      {{-- MAUT Section --}}
                       <div>
                         <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
                           <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
@@ -308,7 +318,7 @@
                                   Atribut</th>
                                 <th
                                   class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
-                                  Nilai</th>
+                                  Nilai Ternormalisasi</th>
                                 <th
                                   class="bg-gray-100 px-2 py-2 text-center font-semibold text-gray-700 border border-gray-200">
                                   Bobot</th>
@@ -318,37 +328,26 @@
                               </tr>
                             </thead>
                             <tbody>
-                              <tr>
-                                <td class="px-2 py-2 font-medium border border-gray-200">Similarity (CBF)</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.94</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.35</td>
-                                <td class="px-2 py-2 text-right border border-gray-200">0.329</td>
-                              </tr>
-                              <tr>
-                                <td class="px-2 py-2 font-medium border border-gray-200">Beban Bimbingan</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.25</td>
-                                <td class="px-2 py-2 text-right border border-gray-200">0.213</td>
-                              </tr>
-                              <tr>
-                                <td class="px-2 py-2 font-medium border border-gray-200">Jabatan Fungsional</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.90</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                                <td class="px-2 py-2 text-right border border-gray-200">0.180</td>
-                              </tr>
-                              <tr>
-                                <td class="px-2 py-2 font-medium border border-gray-200">Pengalaman Membimbing</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.85</td>
-                                <td class="px-2 py-2 text-center border border-gray-200">0.20</td>
-                                <td class="px-2 py-2 text-right border border-gray-200">0.170</td>
-                              </tr>
+                              @foreach ($mautDetails[$d->id]['criteria'] as $criterion)
+                                <tr>
+                                  <td class="px-2 py-2 font-medium border border-gray-200">{{ $criterion['label'] }}
+                                  </td>
+                                  <td class="px-2 py-2 text-center border border-gray-200">
+                                    {{ number_format($criterion['nilai'], 2) }}</td>
+                                  <td class="px-2 py-2 text-center border border-gray-200">{{ $criterion['bobot'] }}
+                                  </td>
+                                  <td class="px-2 py-2 text-right border border-gray-200">
+                                    {{ number_format($criterion['utility'], 2) }}</td>
+                                </tr>
+                              @endforeach
                             </tbody>
                           </table>
                         </div>
                         <div
                           class="flex justify-between items-center px-3 py-2 bg-gradient-to-br from-green-200 to-green-300 rounded-md text-xs font-semibold">
                           <span class="text-green-900">Total Skor MAUT</span>
-                          <span class="text-green-900 text-base">0.892</span>
+                          <span
+                            class="text-green-900 text-base">{{ number_format($mautDetails[$d->id]['total_score'], 2) }}</span>
                         </div>
                       </div>
                     </div>

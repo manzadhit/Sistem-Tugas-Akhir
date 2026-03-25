@@ -96,11 +96,50 @@ class MAUTService
     return $scores;
   }
 
+  public function rankWithDetails($similarityScores)
+  {
+    $decisionMatrix = $this->buildDecisionMatrix($similarityScores);
+    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix);
+    $criteria = $this->getActiveCriteria();
+    $scores = $this->calculateAll($normalizedMatrix);
+
+    arsort($scores);
+
+    // Build per-dosen detail: normalized value * weight for each criterion
+    $details = [];
+    foreach ($scores as $dosenId => $totalScore) {
+      $criteriaDetails = [];
+      foreach ($criteria as $criterion) {
+        $key = $criterion['key'];
+        $normalizedValue = $normalizedMatrix[$dosenId][$key] ?? 0;
+        $weight = $criterion['weight'];
+        $criteriaDetails[] = [
+          'key'   => $key,
+          'label' => $criterion['label'] ?? $key,
+          'type'  => $criterion['type'],
+          'nilai' => round($normalizedValue, 2),
+          'bobot' => $weight,
+          'utility' => round($normalizedValue * $weight, 2),
+        ];
+      }
+
+      $details[$dosenId] = [
+        'criteria' => $criteriaDetails,
+        'total_score' => round($totalScore, 2),
+      ];
+    }
+
+    return [
+      'scores' => $scores,
+      'details' => $details,
+    ];
+  }
+
   protected function getActiveCriteria()
   {
     return BobotKriteria::query()
       ->where('is_active', true)
-      ->get(['key', 'weight', 'type'])
+      ->get(['key', 'label', 'weight', 'type'])
       ->toArray();
   }
 

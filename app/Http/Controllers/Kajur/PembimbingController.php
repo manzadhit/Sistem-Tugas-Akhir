@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers\Kajur;
 
-use App\Notifications\NewPembimbingRequest;
-use App\Notifications\PembimbingAssigned;
-use App\Notifications\PembimbingRequestReviewed;
-use App\Models\ProfileDosen;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
 use App\Models\PermintaanPembimbing;
+use App\Models\ProfileDosen;
 use App\Models\TugasAkhir;
+use App\Notifications\NewPembimbingRequest;
+use App\Notifications\PembimbingAssigned;
+use App\Notifications\PembimbingRequestReviewed;
+use App\Services\CBF\ContentBasedFilteringService;
+use App\Services\MAUT\MAUTService;
+use Illuminate\Http\Request;
 
 class PembimbingController extends Controller
 {
@@ -34,8 +36,11 @@ class PembimbingController extends Controller
         return view('kajur.permintaan-pembimbing', compact('permintaanPembimbing', 'search'));
     }
 
-    public function show($permintaan)
-    {
+    public function show(
+        $permintaan,
+        ContentBasedFilteringService $cbfService,
+        MAUTService $mautService
+    ) {
         $permintaan = PermintaanPembimbing::with('mahasiswa')->findOrFail($permintaan);
 
         request()->user()->unreadNotifications()
@@ -43,10 +48,26 @@ class PembimbingController extends Controller
             ->where('data->permintaan_pembimbing_id', $permintaan->id)
             ->update(['read_at' => now()]);
 
-        $dosen = ProfileDosen::limit(2)->get();
+        $topCandidates = $cbfService->getTopN($permintaan->id, 5);
+        $mautResult = $mautService->rankWithDetails($topCandidates);
 
-        return view('kajur.penetapan-pembimbing', compact('permintaan', 'dosen'));
+        $rankedScores = $mautResult['scores'];
+        $mautDetails = $mautResult['details'];
+
+        $dosen = ProfileDosen::whereIn('id', array_keys($rankedScores))
+            ->get()
+            ->sortBy(fn($item) => array_search($item->id, array_keys($rankedScores)))
+            ->values();
+
+        return view('kajur.penetapan-pembimbing', compact(
+            'permintaan',
+            'dosen',
+            'rankedScores',
+            'topCandidates',
+            'mautDetails'
+        ));
     }
+
 
     public function verifyBukti(Request $request, $permintaan)
     {
