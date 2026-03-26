@@ -33,6 +33,10 @@ class ProfileDosen extends Model
         'total_mahasiswa_diuji' => 'integer',
     ];
 
+    protected $appends = [
+        'initials',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
