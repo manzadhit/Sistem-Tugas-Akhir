@@ -12,29 +12,40 @@ class MAUTService
     protected CriteriaDataService $criteriaDataService
   ) {}
 
-  public function buildDecisionMatrix($similarityScores)
+  public function buildDecisionMatrix($similarityScores, $context = 'pembimbing')
   {
     $dosenIds = array_keys($similarityScores);
 
-    $criteriaData = $this->criteriaDataService->getData($dosenIds);
+    $criteriaData = $this->criteriaDataService->getData($dosenIds, $context);
 
     $matrix = [];
 
     foreach ($dosenIds as $dosenId) {
-      $matrix[$dosenId] = [
+      $row = [
         'similarity' => $similarityScores[$dosenId] ?? 0,
         'jabatan_fungsional' => $criteriaData[$dosenId]['jabatan_fungsional'] ?? 0,
         'jumlah_publikasi' => $criteriaData[$dosenId]['jumlah_publikasi'] ?? 0,
-        'beban_bimbingan' => $criteriaData[$dosenId]['beban_bimbingan'] ?? 0,
       ];
+
+      if ($context === 'penguji') {
+        $row['beban_pengujian'] = $criteriaData[$dosenId]['beban_pengujian'] ?? 0;
+      } else {
+        $row['beban_bimbingan'] = $criteriaData[$dosenId]['beban_bimbingan'] ?? 0;
+      }
+
+      $matrix[$dosenId] = $row;
     }
 
     return $matrix;
   }
 
-  public function normalizeDecisionMatrix($decisionMatrix)
+  public function normalizeDecisionMatrix($decisionMatrix, $context = 'pembimbing')
   {
-    $criteria = $this->getActiveCriteria();
+    if (empty($decisionMatrix)) {
+      return [];
+    }
+
+    $criteria = $this->getActiveCriteria($context);
 
     $normalizedMatrix = [];
 
@@ -73,9 +84,9 @@ class MAUTService
     return $result;
   }
 
-  public function calculateAll($normalizedMatrix)
+  public function calculateAll($normalizedMatrix, $context = 'pembimbing')
   {
-    $criteria = $this->getActiveCriteria();
+    $criteria = $this->getActiveCriteria($context);
 
     $result = [];
 
@@ -86,23 +97,31 @@ class MAUTService
     return $result;
   }
 
-  public function rank($similarityScores)
+  public function rank($similarityScores, $context = 'pembimbing')
   {
-    $decisionMatrix = $this->buildDecisionMatrix($similarityScores);
-    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix);
-    $scores = $this->calculateAll($normalizedMatrix);
+    if (empty($similarityScores)) {
+      return [];
+    }
+
+    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context);
+    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context);
+    $scores = $this->calculateAll($normalizedMatrix, $context);
 
     arsort($scores);
 
     return $scores;
   }
 
-  public function rankWithDetails($similarityScores)
+  public function rankWithDetails($similarityScores, $context = 'pembimbing')
   {
-    $decisionMatrix = $this->buildDecisionMatrix($similarityScores);
-    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix);
-    $criteria = $this->getActiveCriteria();
-    $scores = $this->calculateAll($normalizedMatrix);
+    if (empty($similarityScores)) {
+      return [];
+    }
+
+    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context);
+    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context);
+    $criteria = $this->getActiveCriteria($context);
+    $scores = $this->calculateAll($normalizedMatrix, $context);
 
     arsort($scores);
 
@@ -133,12 +152,19 @@ class MAUTService
     return $details;
   }
 
-  protected function getActiveCriteria()
+  protected function getActiveCriteria($context = 'pembimbing')
   {
-    return BobotKriteria::query()
+    $query = BobotKriteria::query()
       ->where('is_active', true)
-      ->get(['key', 'label', 'weight', 'type'])
-      ->toArray();
+      ->select(['key', 'label', 'weight', 'type']);
+
+    if ($context === 'penguji') {
+      $query->where('key', '!=', 'beban_bimbingan');
+    } else {
+      $query->where('key', '!=', 'beban_pengujian');
+    }
+
+    return $query->get()->toArray();
   }
 
   protected function normalizeBenefit($value, $min, $max)

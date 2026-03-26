@@ -10,7 +10,9 @@ use App\Models\ProfileDosen;
 use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewPengujiRequest;
 use App\Notifications\PengujiAssigned;
+use App\Services\CBF\ContentBasedFilteringService;
 use App\Services\Kajur\PenetapanPengujiService;
+use App\Services\MAUT\MAUTService;
 use Illuminate\Http\Request;
 
 class PengujiController extends Controller
@@ -37,8 +39,11 @@ class PengujiController extends Controller
         return view('kajur.permintaan-penguji', compact('permintaanPenguji', 'search'));
     }
 
-    public function show(KajurSubmission $permintaan)
-    {
+    public function show(
+        KajurSubmission $permintaan,
+        ContentBasedFilteringService $cbfService,
+        MAUTService $mautService
+    ) {
         $permintaan->load(['tugasAkhir.mahasiswa.dosenPembimbing.dosen', 'kajurSubmissionFiles' => fn($q) => $q->where('uploaded_by', 'mahasiswa')->latest()]);
 
         request()->user()->unreadNotifications()
@@ -47,12 +52,38 @@ class PengujiController extends Controller
             ->update(['read_at' => now()]);
 
         $mahasiswa = $permintaan->tugasAkhir->mahasiswa;
-        $pembimbing = $mahasiswa->dosenPembimbing->pluck('id');
         $hasPenguji = $mahasiswa->dosenPenguji()->exists();
 
-        $dosenPenguji = ProfileDosen::whereNotIn('id', $pembimbing)->limit(3)->get();
+        $similarityScores = [];
+        $mautResult = [];
+        $rankedDosens = collect();
+        $unrankedDosens = collect();
+        $dosenPenguji = collect();
 
-        return view('kajur.penetapan-penguji', compact('permintaan', 'dosenPenguji', 'hasPenguji'));
+        if (! $hasPenguji && $permintaan->status === 'acc') {
+            $similarityScores = $cbfService->getTopN($permintaan->id, 5, 'penguji');
+            $mautResult = $mautService->rankWithDetails($similarityScores, 'penguji');
+            $rankedIds = array_keys($mautResult);
+
+            $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
+                ->get()
+                ->sortBy(fn($item) => array_search($item->id, $rankedIds))
+                ->values();
+
+            $dosenPenguji = $rankedDosens->take(3)->values();
+
+            $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))->get();
+        }
+
+        return view('kajur.penetapan-penguji', compact(
+            'permintaan',
+            'dosenPenguji',
+            'hasPenguji',
+            'similarityScores',
+            'mautResult',
+            'rankedDosens',
+            'unrankedDosens'
+        ));
     }
 
     public function verifyLaporan(VerifyLaporanRequest $request, KajurSubmission $permintaan)

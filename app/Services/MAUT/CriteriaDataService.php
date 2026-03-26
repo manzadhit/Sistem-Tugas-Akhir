@@ -6,20 +6,27 @@ use App\Models\ProfileDosen;
 
 class CriteriaDataService
 {
-  public function getData($dosenIds)
+  public function getData($dosenIds, $context = 'pembimbing')
   {
     $jabatan = $this->getJabatanFungsional($dosenIds);
     $jumlahPublikasi = $this->getJumlahPublikasi($dosenIds);
-    $bebanBimbingan = $this->getBebanBimbingan($dosenIds);
+    $beban = $this->getBebanByContext($dosenIds, $context);
 
     $result = [];
 
-    foreach($dosenIds as $id) {
-      $result[$id] = [
+    foreach ($dosenIds as $id) {
+      $row = [
         'jabatan_fungsional' => $jabatan[$id] ?? 0,
         'jumlah_publikasi' => $jumlahPublikasi[$id] ?? 0,
-        'beban_bimbingan' => $bebanBimbingan[$id] ?? 0
       ];
+
+      if ($context === 'penguji') {
+        $row['beban_pengujian'] = $beban[$id] ?? 0;
+      } else {
+        $row['beban_bimbingan'] = $beban[$id] ?? 0;
+      }
+
+      $result[$id] = $row;
     }
 
     return $result;
@@ -69,6 +76,28 @@ class CriteriaDataService
     }
 
     return $result;
+  }
+
+  public function getBebanPenguji($dosenIds)
+  {
+    $dosens = ProfileDosen::whereIn('id', $dosenIds)
+      ->select('id', 'total_mahasiswa_diuji')
+      ->get();
+
+    $result = [];
+
+    foreach ($dosens as $dosen) {
+      $result[$dosen->id] = $dosen->total_mahasiswa_diuji;
+    }
+
+    return $result;
+  }
+
+  protected function getBebanByContext($dosenIds, $context)
+  {
+    return $context === 'penguji'
+      ? $this->getBebanPenguji($dosenIds)
+      : $this->getBebanBimbingan($dosenIds);
   }
 
   protected function mapJabatanToValue($jabatan)

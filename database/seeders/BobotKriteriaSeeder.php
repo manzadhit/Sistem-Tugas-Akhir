@@ -22,7 +22,14 @@ class BobotKriteriaSeeder extends Seeder
             ],
             [
                 'key' => 'beban_bimbingan',
-                'label' => 'Jumlah Bimbingan Aktif',
+                'label' => 'Jumlah Mahasiswa Dibimbing',
+                'weight' => 0.25,
+                'type' => 'cost',
+                'is_active' => true,
+            ],
+            [
+                'key' => 'beban_pengujian',
+                'label' => 'Jumlah Mahasiswa Diuji',
                 'weight' => 0.25,
                 'type' => 'cost',
                 'is_active' => true,

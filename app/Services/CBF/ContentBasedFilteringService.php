@@ -10,9 +10,9 @@ class ContentBasedFilteringService
     protected CosineSimilarityService $cosineSimilarity
   ) {}
 
-  public function getRecommendation(int $permintaanPembimbingId)
+  public function getRecommendation($referenceId, $context = 'pembimbing')
   {
-    $preprocessingData = $this->textPreprocessing->preprocessing($permintaanPembimbingId);
+    $preprocessingData = $this->textPreprocessing->preprocessing($referenceId, $context);
     $vocabulary = $this->tfIdf->buildVocabulary($preprocessingData);
     $tfidf = $this->tfIdf->calculateTFIDF($preprocessingData, $vocabulary);
     $scores = $this->cosineSimilarity->calculateAll($tfidf);
@@ -20,9 +20,9 @@ class ContentBasedFilteringService
     return $scores;
   }
 
-  public function getTopN($permintaanPembimbingId, $n)
+  public function getTopN($referenceId, $n, $context = 'pembimbing')
   {
-    $recomend = $this->getRecommendation($permintaanPembimbingId);
+    $recomend = $this->getRecommendation($referenceId, $context);
 
     return array_slice($recomend, 0, $n, true);
   }

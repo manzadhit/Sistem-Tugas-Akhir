@@ -2,6 +2,7 @@
 
 namespace App\Services\CBF;
 
+use App\Models\KajurSubmission;
 use App\Models\PermintaanPembimbing;
 use App\Models\ProfileDosen;
 use Illuminate\Database\Eloquent\Collection;
@@ -19,8 +20,7 @@ class TextPreprocessingService
         $this->stemmer = (new StemmerFactory())->createStemmer();
     }
 
-
-    public function getData(int $permintaanPembimbingId): array
+    protected function getPembimbingData($permintaanPembimbingId)
     {
         $permintaanPembimbing = PermintaanPembimbing::with(['mataKuliah', 'mahasiswa'])
             ->whereKey($permintaanPembimbingId)
@@ -35,12 +35,37 @@ class TextPreprocessingService
         return [
             'permintaan_pembimbing_id' => $permintaanPembimbing->id,
             'mahasiswa_id' => $permintaanPembimbing->mahasiswa_id,
-            'judul_ta' => $this->buildStudentDocument($permintaanPembimbing),
+            'judul_ta' => $this->buildStudentDocumentForPembimbing($permintaanPembimbing),
             'publikasi_dosen' => $this->buildLecturerDocuments($dosens),
         ];
     }
 
-    protected function buildStudentDocument(PermintaanPembimbing $permintaanPembimbing): string
+    protected function getPengujiData($kajurSubmissionId)
+    {
+        $kajurSubmission = KajurSubmission::with([
+            'tugasAkhir.mahasiswa.permintaanPembimbing.mataKuliah',
+            'tugasAkhir.mahasiswa.dosenPembimbing',
+        ])->whereKey($kajurSubmissionId)->first();
+
+        if (! $kajurSubmission || ! $kajurSubmission->tugasAkhir) {
+            throw new InvalidArgumentException('Data permintaan penguji tidak ditemukan.');
+        }
+
+        $tugasAkhir = $kajurSubmission->tugasAkhir;
+        $permintaanPembimbing = $tugasAkhir->mahasiswa?->permintaanPembimbing;
+        $pembimbingIds = $tugasAkhir->mahasiswa?->dosenPembimbing?->pluck('dosen_id')->values()->all() ?? [];
+
+        $dosens = ProfileDosen::with(['publikasi', 'mataKuliah'])->whereNotIn('id', $pembimbingIds)->get();
+
+        return [
+            'kajur_submission_id' => $kajurSubmission->id,
+            'mahasiswa_id' => $tugasAkhir->mahasiswa_id,
+            'judul_ta' => $this->buildStudentDocumentForPenguji($tugasAkhir, $permintaanPembimbing),
+            'publikasi_dosen' => $this->buildLecturerDocuments($dosens),
+        ];
+    }
+
+    protected function buildStudentDocumentForPembimbing(PermintaanPembimbing $permintaanPembimbing): string
     {
         $mataKuliah = $permintaanPembimbing->mataKuliah
             ->map(fn($item) => trim($item->nama))
@@ -48,6 +73,20 @@ class TextPreprocessingService
 
         return trim(implode(' ', array_filter([
             $permintaanPembimbing->judul_ta,
+            $mataKuliah,
+        ])));
+    }
+
+    protected function buildStudentDocumentForPenguji($tugasAkhir, $permintaanPembimbing)
+    {
+        $mataKuliah = $permintaanPembimbing?->mataKuliah
+            ?->map(fn($item) => trim($item->nama))
+            ->implode(' ') ?? '';
+
+        return trim(implode(' ', array_filter([
+            $tugasAkhir->judul,
+            $tugasAkhir->abstrak,
+            $tugasAkhir->kata_kunci,
             $mataKuliah,
         ])));
     }
@@ -79,9 +118,13 @@ class TextPreprocessingService
         return $documents;
     }
 
-    public function preprocessing(int $permintaanPembimbingId): array
+    public function preprocessing($referenceId, $context = 'pembimbing')
     {
-        $data = $this->getData($permintaanPembimbingId);
+        $data = match ($context) {
+            'pembimbing' => $this->getPembimbingData($referenceId),
+            'penguji' => $this->getPengujiData($referenceId),
+            default => throw new InvalidArgumentException('Konteks CBF tidak dikenali.'),
+        };
 
         $judulTaTokens = $this->processText($data['judul_ta']);
 
