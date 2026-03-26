@@ -48,23 +48,24 @@ class PembimbingController extends Controller
             ->where('data->permintaan_pembimbing_id', $permintaan->id)
             ->update(['read_at' => now()]);
 
-        $topCandidates = $cbfService->getTopN($permintaan->id, 5);
-        $mautResult = $mautService->rankWithDetails($topCandidates);
+        $similarityScores = $cbfService->getTopN($permintaan->id, 5);
+        $mautResult = $mautService->rankWithDetails($similarityScores);
 
-        $rankedScores = $mautResult['scores'];
-        $mautDetails = $mautResult['details'];
+        $rankedIds = array_keys($mautResult);
 
-        $dosen = ProfileDosen::whereIn('id', array_keys($rankedScores))
+        $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
             ->get()
-            ->sortBy(fn($item) => array_search($item->id, array_keys($rankedScores)))
+            ->sortBy(fn($item) => array_search($item->id, $rankedIds))
             ->values();
+
+        $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))->get();
 
         return view('kajur.penetapan-pembimbing', compact(
             'permintaan',
-            'dosen',
-            'rankedScores',
-            'topCandidates',
-            'mautDetails'
+            'similarityScores',
+            'mautResult',
+            'rankedDosens',
+            'unrankedDosens'
         ));
     }
 

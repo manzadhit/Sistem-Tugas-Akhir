@@ -62,4 +62,11 @@ class ProfileDosen extends Model
             'mata_kuliah_id'
         )->withTimestamps();
     }
+
+    public function getInitialsAttribute()
+    {
+        return substr(collect(explode(' ', $this->nama_lengkap))
+            ->map(fn($w) => strtoupper($w[0]))
+            ->implode(''), 0, 2);
+    }
 }

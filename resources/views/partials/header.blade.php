@@ -19,7 +19,7 @@
       $notifications = auth()->user()->notifications()->latest()->limit(3)->get();
       $unreadNotifications = auth()->user()->unreadNotifications;
     @endphp
-    <div class="relative" x-data="{ open: false }" @click.outside="open = false">
+    <div class="relative" x-cloak x-data="{ open: false }" @click.outside="open = false">
       <button type="button" @click="open = !open"
         class="relative border py-1.5 px-3 rounded-xl cursor-pointer hover:text-slate-600 transition">
         <i class="fa-regular fa-bell"></i>

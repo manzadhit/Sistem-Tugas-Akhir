@@ -3,7 +3,7 @@
     'subtitle' => '',
 ])
 
-<div class="relative" x-data="{ open: false }" @click.outside="open = false">
+<div class="relative" x-cloak x-data="{ open: false }" @click.outside="open = false">
   <button type="button" class="flex items-center gap-2 text-slate-700 hover:text-slate-900 transition"
     @click="open = !open" :aria-expanded="open.toString()">
     <span class="hidden md:block text-sm">Hi, {{ $name }}</span>

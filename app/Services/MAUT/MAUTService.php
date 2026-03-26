@@ -32,29 +32,30 @@ class MAUTService
     return $matrix;
   }
 
-  public function normalizeDecisionMatrix($decisionMatrix) {
+  public function normalizeDecisionMatrix($decisionMatrix)
+  {
     $criteria = $this->getActiveCriteria();
 
     $normalizedMatrix = [];
 
-    foreach($criteria as $criterion) {
+    foreach ($criteria as $criterion) {
       $key = $criterion['key'];
 
       $values = array_column($decisionMatrix, $key);
       $min = min($values);
       $max = max($values);
 
-      foreach($decisionMatrix as $dosenId => $row) {
+      foreach ($decisionMatrix as $dosenId => $row) {
         $value = $row[$key] ?? 0;
 
-        if($max == $min) {
+        if ($max == $min) {
           $normalizedMatrix[$dosenId][$key] = 1;
           continue;
         }
 
         $normalizedMatrix[$dosenId][$key] = $criterion['type'] == 'cost'
-            ? $this->normalizeCost($value, $min, $max)
-            : $this->normalizeBenefit($value, $min, $max);
+          ? $this->normalizeCost($value, $min, $max)
+          : $this->normalizeBenefit($value, $min, $max);
       }
     }
 
@@ -65,7 +66,7 @@ class MAUTService
   {
     $result = 0.0;
 
-    foreach($criteria as $criterion) {
+    foreach ($criteria as $criterion) {
       $result += $criterion['weight'] * $normalizedValues[$criterion['key']];
     }
 
@@ -78,7 +79,7 @@ class MAUTService
 
     $result = [];
 
-    foreach($normalizedMatrix as $dosenId => $normalizedValues) {
+    foreach ($normalizedMatrix as $dosenId => $normalizedValues) {
       $result[$dosenId] = $this->calculate($normalizedValues, $criteria);
     }
 
@@ -129,10 +130,7 @@ class MAUTService
       ];
     }
 
-    return [
-      'scores' => $scores,
-      'details' => $details,
-    ];
+    return $details;
   }
 
   protected function getActiveCriteria()
