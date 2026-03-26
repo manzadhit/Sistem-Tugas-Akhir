@@ -58,7 +58,6 @@ class PengujiController extends Controller
         $mautResult = [];
         $rankedDosens = collect();
         $unrankedDosens = collect();
-        $dosenPenguji = collect();
 
         if (! $hasPenguji && $permintaan->status === 'acc') {
             $similarityScores = $cbfService->getTopN($permintaan->id, 5, 'penguji');
@@ -70,14 +69,11 @@ class PengujiController extends Controller
                 ->sortBy(fn($item) => array_search($item->id, $rankedIds))
                 ->values();
 
-            $dosenPenguji = $rankedDosens->take(3)->values();
-
             $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))->get();
         }
 
         return view('kajur.penetapan-penguji', compact(
             'permintaan',
-            'dosenPenguji',
             'hasPenguji',
             'similarityScores',
             'mautResult',
