@@ -2,6 +2,7 @@
 
 namespace App\Services\MAUT;
 
+use App\Models\DosenPembimbing;
 use App\Models\ProfileDosen;
 
 class CriteriaDataService
@@ -65,14 +66,17 @@ class CriteriaDataService
 
   public function getBebanBimbingan($dosenIds)
   {
-    $dosens = ProfileDosen::whereIn('id', $dosenIds)
-      ->select('id', 'total_mahasiswa_dibimbing')
-      ->get();
+    $counts = DosenPembimbing::query()
+      ->whereIn('dosen_id', $dosenIds)
+      ->where('status_aktif', true)
+      ->selectRaw('dosen_id, COUNT(*) as total')
+      ->groupBy('dosen_id')
+      ->pluck('total', 'dosen_id');
 
     $result = [];
 
-    foreach ($dosens as $dosen) {
-      $result[$dosen->id] = $dosen->total_mahasiswa_dibimbing;
+    foreach ($dosenIds as $dosenId) {
+      $result[$dosenId] = (int) ($counts[$dosenId] ?? 0);
     }
 
     return $result;

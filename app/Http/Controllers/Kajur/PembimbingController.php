@@ -53,13 +53,19 @@ class PembimbingController extends Controller
         $mautResult = $mautService->rankWithDetails($similarityScores);
 
         $rankedIds = array_keys($mautResult);
+        $activeBimbinganCount = [
+            'pembimbingMahasiswa as total_bimbingan_aktif' => fn($q) => $q->where('status_aktif', true),
+        ];
 
         $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
+            ->withCount($activeBimbinganCount)
             ->get()
             ->sortBy(fn($item) => array_search($item->id, $rankedIds))
             ->values();
 
-        $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))->get();
+        $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
+            ->withCount($activeBimbinganCount)
+            ->get();
 
         return view('kajur.penetapan-pembimbing', compact(
             'permintaan',
@@ -111,8 +117,6 @@ class PembimbingController extends Controller
                         'tanggal_mulai' => now()
                     ]
                 );
-
-                ProfileDosen::whereKey($dosenId)->increment('total_mahasiswa_dibimbing');
             }
 
             $permintaan->update([

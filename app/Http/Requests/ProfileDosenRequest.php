@@ -23,7 +23,6 @@ class ProfileDosenRequest extends FormRequest
             'jabatan_fungsional'  => ['nullable', 'string', 'max:100'],
             'mata_kuliah_ids'     => ['nullable', 'array'],
             'mata_kuliah_ids.*'   => ['integer', 'distinct', 'exists:mata_kuliah,id'],
-            'total_mahasiswa_dibimbing' => ['nullable', 'integer', 'min:0'],
             'total_mahasiswa_diuji' => ['nullable', 'integer', 'min:0'],
             'no_telp'             => ['nullable', 'string', 'max:20'],
             'foto'                => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -48,7 +47,6 @@ class ProfileDosenRequest extends FormRequest
             'keahlian'           => 'Keahlian',
             'jabatan_fungsional' => 'Jabatan Fungsional',
             'mata_kuliah_ids'    => 'Mata Kuliah yang Diampu',
-            'total_mahasiswa_dibimbing' => 'Total Mahasiswa Dibimbing',
             'total_mahasiswa_diuji' => 'Total Mahasiswa Diuji',
             'no_telp'            => 'No. Telepon',
             'foto'               => 'Foto Profil',
@@ -75,9 +73,6 @@ class ProfileDosenRequest extends FormRequest
             'keahlian.max'                => 'Keahlian maksimal 255 karakter.',
 
             'jabatan_fungsional.max'      => 'Jabatan fungsional maksimal 100 karakter.',
-
-            'total_mahasiswa_dibimbing.integer' => 'Total mahasiswa dibimbing harus berupa angka bulat.',
-            'total_mahasiswa_dibimbing.min' => 'Total mahasiswa dibimbing minimal 0.',
 
             'total_mahasiswa_diuji.integer' => 'Total mahasiswa diuji harus berupa angka bulat.',
             'total_mahasiswa_diuji.min' => 'Total mahasiswa diuji minimal 0.',

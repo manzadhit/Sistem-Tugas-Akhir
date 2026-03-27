@@ -456,7 +456,7 @@
                         </p>
                         <p class="text-[0.7rem] text-gray-500 truncate">
                           <span x-text="dosen.keahlian"></span> <span>·</span>
-                          <span x-text="dosen.total_mahasiswa_dibimbing"></span> <span>bimbingan aktif</span>
+                          <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                         </p>
                       </div>
 
@@ -490,7 +490,7 @@
                           </p>
                           <p class="text-[0.7rem] text-gray-500">
                             <span x-text="dosen.keahlian"></span> <span>·</span>
-                            <span x-text="dosen.total_mahasiswa_dibimbing"></span> <span>bimbingan aktif</span>
+                            <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                           </p>
                         </div>
                       </div>
