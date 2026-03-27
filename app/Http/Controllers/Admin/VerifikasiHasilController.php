@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DokumenUjian;
+use App\Models\DosenPembimbing;
 use App\Models\Ujian;
 use App\Notifications\NewUjianHasilSubmission;
 use App\Notifications\UjianHasilReviewed;
@@ -106,6 +107,15 @@ class VerifikasiHasilController extends Controller
     }
 
     $ujian->update(['status' => 'selesai']);
+
+    if ($ujian->jenis_ujian === 'skripsi') {
+      DosenPembimbing::where('mahasiswa_id', $ujian->tugasAkhir->mahasiswa_id)
+        ->where('status_aktif', true)
+        ->update([
+          'status_aktif' => false,
+          'tanggal_selesai' => now(),
+        ]);
+    }
 
     $nextTahapan = match ($ujian->jenis_ujian) {
       'proposal' => 'hasil',
