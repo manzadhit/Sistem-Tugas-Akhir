@@ -12,6 +12,7 @@ use App\Notifications\PembimbingAssigned;
 use App\Notifications\PembimbingRequestReviewed;
 use App\Services\CBF\ContentBasedFilteringService;
 use App\Services\MAUT\MAUTService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class PembimbingController extends Controller
@@ -94,34 +95,36 @@ class PembimbingController extends Controller
     {
         $request->validate([
             'dosen_ids' => ['required', 'array', 'min:1'],
-            'dosen_ids.*' => ['integer', 'exists:profile_dosen,id'],
+            'dosen_ids.*' => ['integer', 'distinct', 'exists:profile_dosen,id'],
         ]);
 
         $mahasiswaId = $permintaan->mahasiswa_id;
         $dosenIds = $request->input('dosen_ids');
 
-        foreach ($dosenIds as $index => $dosenId) {
-            DosenPembimbing::create(
-                [
-                    'dosen_id' => $dosenId,
-                    'mahasiswa_id' => $mahasiswaId,
-                    'jenis_pembimbing' => 'pembimbing_' . $index + 1,
-                    'tanggal_mulai' => now()
-                ]
-            );
-        }
+        DB::transaction(function () use ($dosenIds, $mahasiswaId, $permintaan) {
+            foreach ($dosenIds as $index => $dosenId) {
+                DosenPembimbing::create(
+                    [
+                        'dosen_id' => $dosenId,
+                        'mahasiswa_id' => $mahasiswaId,
+                        'jenis_pembimbing' => 'pembimbing_' . ($index + 1),
+                        'tanggal_mulai' => now()
+                    ]
+                );
 
-        $permintaan->update([
-            'status' => 'selesai',
-            'diproses_pada' => now(),
-        ]);
+                ProfileDosen::whereKey($dosenId)->increment('total_mahasiswa_dibimbing');
+            }
 
-        $permintaan->save();
+            $permintaan->update([
+                'status' => 'selesai',
+                'diproses_pada' => now(),
+            ]);
 
-        TugasAkhir::create([
-            'judul' => $permintaan->judul_ta,
-            'mahasiswa_id' => $permintaan->mahasiswa_id,
-        ]);
+            TugasAkhir::create([
+                'judul' => $permintaan->judul_ta,
+                'mahasiswa_id' => $permintaan->mahasiswa_id,
+            ]);
+        });
 
         $permintaan->loadMissing('mahasiswa.user');
 

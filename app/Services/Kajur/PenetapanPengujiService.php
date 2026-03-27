@@ -5,6 +5,7 @@ namespace App\Services\Kajur;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\KajurSubmissionFile;
+use App\Models\ProfileDosen;
 use Illuminate\Support\Facades\DB;
 
 class PenetapanPengujiService
@@ -41,8 +42,10 @@ class PenetapanPengujiService
         DosenPenguji::create([
           'mahasiswa_id' => $mahasiswaId,
           'dosen_id' => $id,
-          'jenis_penguji' => 'penguji_' . $index + 1,
+          'jenis_penguji' => 'penguji_' . ($index + 1),
         ]);
+
+        ProfileDosen::whereKey($id)->increment('total_mahasiswa_diuji');
       }
     });
   }
