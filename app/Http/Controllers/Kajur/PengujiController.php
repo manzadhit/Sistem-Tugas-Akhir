@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Kajur\TetapkanPengujiRequest;
 use App\Http\Requests\Kajur\VerifyLaporanRequest;
 use App\Models\KajurSubmission;
+use App\Models\PeriodeAkademik;
 use App\Models\ProfileDosen;
 use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewPengujiRequest;
@@ -13,6 +14,8 @@ use App\Notifications\PengujiAssigned;
 use App\Services\CBF\ContentBasedFilteringService;
 use App\Services\Kajur\PenetapanPengujiService;
 use App\Services\MAUT\MAUTService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\MultipleRecordsFoundException;
 use Illuminate\Http\Request;
 
 class PengujiController extends Controller
@@ -58,23 +61,41 @@ class PengujiController extends Controller
         $mautResult = [];
         $rankedDosens = collect();
         $unrankedDosens = collect();
+        $periodeAkademikAktifCount = PeriodeAkademik::query()
+            ->where('is_active', true)
+            ->count();
 
-        if (! $hasPenguji && $permintaan->status === 'acc') {
+        $canAssignPenguji = $periodeAkademikAktifCount === 1;
+        $periodeAkademikId = $canAssignPenguji
+            ? PeriodeAkademik::query()->where('is_active', true)->value('id')
+            : null;
+
+        $pengujiCount = [
+            'pengujiMahasiswa as total_pengujian_periode' => fn($q) => $periodeAkademikId
+                ? $q->where('periode_akademik_id', $periodeAkademikId)
+                : $q->whereRaw('1 = 0'),
+        ];
+
+        if (! $hasPenguji && $permintaan->status === 'acc' && $canAssignPenguji) {
             $similarityScores = $cbfService->getTopN($permintaan->id, 5, 'penguji');
             $mautResult = $mautService->rankWithDetails($similarityScores, 'penguji');
             $rankedIds = array_keys($mautResult);
 
             $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
+                ->withCount($pengujiCount)
                 ->get()
                 ->sortBy(fn($item) => array_search($item->id, $rankedIds))
                 ->values();
 
-            $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))->get();
+            $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
+                ->withCount($pengujiCount)
+                ->get();
         }
 
         return view('kajur.penetapan-penguji', compact(
             'permintaan',
             'hasPenguji',
+            'canAssignPenguji',
             'similarityScores',
             'mautResult',
             'rankedDosens',
@@ -112,6 +133,10 @@ class PengujiController extends Controller
             $permintaan->tugasAkhir->mahasiswa?->user?->notify(new PengujiAssigned($permintaan));
 
             return back()->with('success', 'Penguji berhasil ditetapkan');
+        } catch (ModelNotFoundException) {
+            return back()->with('error', 'Penetapan penguji gagal karena belum ada periode akademik aktif.');
+        } catch (MultipleRecordsFoundException) {
+            return back()->with('error', 'Penetapan penguji gagal karena periode akademik aktif lebih dari satu.');
         } catch (\Throwable $th) {
             return back()->with('error', 'Penguji gagal ditetapkan');
         }

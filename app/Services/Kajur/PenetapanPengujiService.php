@@ -5,7 +5,7 @@ namespace App\Services\Kajur;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\KajurSubmissionFile;
-use App\Models\ProfileDosen;
+use App\Models\PeriodeAkademik;
 use Illuminate\Support\Facades\DB;
 
 class PenetapanPengujiService
@@ -38,14 +38,17 @@ class PenetapanPengujiService
   public function tetapkanPenguji(int $mahasiswaId, array $dosen_ids)
   {
     return DB::transaction(function () use ($mahasiswaId, $dosen_ids) {
+      $periodeAkademik = PeriodeAkademik::query()
+        ->where('is_active', true)
+        ->sole();
+
       foreach ($dosen_ids as $index => $id) {
         DosenPenguji::create([
           'mahasiswa_id' => $mahasiswaId,
           'dosen_id' => $id,
+          'periode_akademik_id' => $periodeAkademik->id,
           'jenis_penguji' => 'penguji_' . ($index + 1),
         ]);
-
-        ProfileDosen::whereKey($id)->increment('total_mahasiswa_diuji');
       }
     });
   }

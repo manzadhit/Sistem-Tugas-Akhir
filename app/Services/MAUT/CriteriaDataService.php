@@ -3,6 +3,8 @@
 namespace App\Services\MAUT;
 
 use App\Models\DosenPembimbing;
+use App\Models\DosenPenguji;
+use App\Models\PeriodeAkademik;
 use App\Models\ProfileDosen;
 
 class CriteriaDataService
@@ -87,14 +89,21 @@ class CriteriaDataService
 
   public function getBebanPenguji($dosenIds)
   {
-    $dosens = ProfileDosen::whereIn('id', $dosenIds)
-      ->select('id', 'total_mahasiswa_diuji')
-      ->get();
+    $periodeAkademik = PeriodeAkademik::query()
+      ->where('is_active', true)
+      ->sole();
+
+    $counts = DosenPenguji::query()
+      ->whereIn('dosen_id', $dosenIds)
+      ->where('periode_akademik_id', $periodeAkademik->id)
+      ->selectRaw('dosen_id, COUNT(*) as total')
+      ->groupBy('dosen_id')
+      ->pluck('total', 'dosen_id');
 
     $result = [];
 
-    foreach ($dosens as $dosen) {
-      $result[$dosen->id] = $dosen->total_mahasiswa_diuji;
+    foreach ($dosenIds as $dosenId) {
+      $result[$dosenId] = (int) ($counts[$dosenId] ?? 0);
     }
 
     return $result;

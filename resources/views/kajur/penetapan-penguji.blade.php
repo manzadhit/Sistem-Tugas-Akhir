@@ -319,7 +319,7 @@
     </div>
   </div>
 
-  @if (!$hasPenguji && $permintaan->status == 'acc')
+  @if (!$hasPenguji && $permintaan->status == 'acc' && $canAssignPenguji)
     <!-- Form Penetapan Penguji -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
       <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
@@ -547,7 +547,7 @@
                         </p>
                         <p class="text-[0.7rem] text-gray-500 truncate">
                           <span x-text="dosen.keahlian"></span> <span>·</span>
-                          <span x-text="dosen.total_mahasiswa_diuji"></span> <span>pengujian aktif</span>
+                          <span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian periode ini</span>
                         </p>
                       </div>
                       <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
@@ -577,7 +577,7 @@
                           <p class="text-[0.7rem] text-gray-500">NIDN: <span x-text="dosen.nidn || '-' "></span></p>
                           <p class="text-[0.7rem] text-gray-500">
                             <span x-text="dosen.keahlian"></span> <span>·</span>
-                            <span x-text="dosen.total_mahasiswa_diuji"></span> <span>pengujian aktif</span>
+                            <span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian periode ini</span>
                           </p>
                         </div>
                       </div>
@@ -610,6 +610,18 @@
             </div>
           </div>
         </form>
+      </div>
+    </div>
+  @elseif (!$hasPenguji && $permintaan->status == 'acc')
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
+      <div class="px-6 py-5 border-b border-gray-200 flex items-center gap-3">
+        <i class="fas fa-calendar-times text-amber-500 text-xl"></i>
+        <h3 class="text-lg font-semibold text-gray-900">Penetapan Penguji Belum Tersedia</h3>
+      </div>
+      <div class="p-6">
+        <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          Form penetapan penguji belum dapat ditampilkan karena periode akademik aktif belum valid. Hubungi Admin.
+        </div>
       </div>
     </div>
   @endif
