@@ -16,21 +16,21 @@ class BobotKriteriaSeeder extends Seeder
             [
                 'key' => 'similarity',
                 'label' => 'Similarity CBF',
-                'weight' => 0.40,
+                'weight' => 0.35,
                 'type' => 'benefit',
                 'is_active' => true,
             ],
             [
                 'key' => 'beban_bimbingan',
                 'label' => 'Jumlah Mahasiswa Dibimbing',
-                'weight' => 0.25,
+                'weight' => 0.20,
                 'type' => 'cost',
                 'is_active' => true,
             ],
             [
                 'key' => 'beban_pengujian',
                 'label' => 'Jumlah Mahasiswa Diuji',
-                'weight' => 0.25,
+                'weight' => 0.20,
                 'type' => 'cost',
                 'is_active' => true,
             ],
@@ -48,6 +48,14 @@ class BobotKriteriaSeeder extends Seeder
                 'type' => 'benefit',
                 'is_active' => true,
             ],
+            [
+                'key' => 'pemerataan_ipk',
+                'label' => 'Pemerataan IPK Mahasiswa',
+                'weight' => 0.10,
+                'type' => 'cost',
+                'is_active' => true,
+            ],
+
         ], ['key'], ['label', 'weight', 'type', 'is_active']);
     }
 }
