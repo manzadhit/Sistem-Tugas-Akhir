@@ -14,6 +14,7 @@ class DosenPenguji extends Model
     protected $fillable = [
         'mahasiswa_id',
         'dosen_id',
+        'periode_akademik_id',
         'jenis_penguji',
         'status_aktif',
     ];
@@ -30,5 +31,10 @@ class DosenPenguji extends Model
     public function dosen() 
     {
         return $this->belongsTo(ProfileDosen::class, 'dosen_id');
+    }
+
+    public function periodeAkademik()
+    {
+        return $this->belongsTo(PeriodeAkademik::class, 'periode_akademik_id');
     }
 }
