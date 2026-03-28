@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('bobot_kriteria', function (Blueprint $table) {
             $table->id();
-            $table->string('key')->unique();
+            $table->enum('context', ['pembimbing', 'penguji']);
+            $table->string('key');
             $table->string('label');
             $table->float('weight');
             $table->enum('type', ['benefit', 'cost']);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+
+            $table->unique(['context', 'key']);
         });
     }
 

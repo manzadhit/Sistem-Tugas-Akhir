@@ -7,11 +7,13 @@ use App\Models\ProfileDosen;
 
 class CriteriaDataService
 {
-  public function getData($dosenIds, $context = 'pembimbing')
+  public function getData($dosenIds, $context, $mahasiswa)
   {
     $jabatan = $this->getJabatanFungsional($dosenIds);
     $jumlahPublikasi = $this->getJumlahPublikasi($dosenIds);
     $beban = $this->getBebanByContext($dosenIds, $context);
+
+    $pemerataanIpk = $context == 'pembimbing' ? $this->getPemerataanIpk($dosenIds, $mahasiswa) : [];
 
     $result = [];
 
@@ -25,6 +27,7 @@ class CriteriaDataService
         $row['beban_pengujian'] = $beban[$id] ?? 0;
       } else {
         $row['beban_bimbingan'] = $beban[$id] ?? 0;
+        $row['pemerataan_ipk'] = $pemerataanIpk[$id] ?? 0;
       }
 
       $result[$id] = $row;
@@ -97,6 +100,43 @@ class CriteriaDataService
     return $result;
   }
 
+  public function getPemerataanIpk($dosenIds, $mahasiswa)
+  {
+    $kategoriIpk = $this->getKategoriIpk($mahasiswa->ipk);
+
+    $data = DosenPembimbing::with('mahasiswa')
+      ->whereIn('dosen_id', $dosenIds)
+      ->where('status_aktif', true)
+      ->get()
+      ->groupBy('dosen_id');
+
+    $result = [];
+
+    foreach ($dosenIds as $dosenId) {
+      $bimbingan = $data->get($dosenId, collect());
+
+      $jumlahKategoriSama = $bimbingan
+        ->filter(fn($item) => $item->mahasiswa != null &&
+          $this->getKategoriIpk($item->mahasiswa->ipk) == $kategoriIpk)
+        ->count();
+
+      $result[$dosenId] = $jumlahKategoriSama;
+    }
+
+    return $result;
+  }
+
+  protected function getKategoriIpk($ipk)
+  {
+    if ($ipk < 3.00) {
+      return 'rendah';
+    } elseif ($ipk < 3.50) {
+      return 'sedang';
+    } else {
+      return 'tinggi';
+    }
+  }
+
   protected function getBebanByContext($dosenIds, $context)
   {
     return $context === 'penguji'
@@ -106,12 +146,12 @@ class CriteriaDataService
 
   protected function mapJabatanToValue($jabatan)
   {
-    return match (strtolower($jabatan)) {
-      'guru_besar' => 5,
-      'lektor_kepala' => 4,
+    return match (strtolower((string) $jabatan)) {
+      'guru besar' => 5,
+      'lektor kepala' => 4,
       'lektor' => 3,
-      'asisten_ahli' => 2,
-      'tenaga_pendidik' => 1,
+      'asisten ahli' => 2,
+      'tenaga pendidik' => 1,
       default => 0
     };
   }

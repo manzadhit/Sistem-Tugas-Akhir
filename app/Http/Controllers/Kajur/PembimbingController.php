@@ -50,7 +50,7 @@ class PembimbingController extends Controller
             ->update(['read_at' => now()]);
 
         $similarityScores = $cbfService->getTopN($permintaan->id, 5);
-        $mautResult = $mautService->rankWithDetails($similarityScores);
+        $mautResult = $mautService->rankWithDetails($similarityScores, 'pembimbing', $permintaan->mahasiswa);
 
         $rankedIds = array_keys($mautResult);
         $activeBimbinganCount = [

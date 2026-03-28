@@ -174,7 +174,7 @@
               class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('jabatan_fungsional') border-red-400 bg-red-50 @enderror">
               <option value="" disabled {{ old('jabatan_fungsional') ? '' : 'selected' }}>-- Pilih jabatan --
               </option>
-              @foreach (['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar', 'Tenaga Pengajar'] as $jabatan)
+              @foreach (['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar', 'Tenaga Pendidik'] as $jabatan)
                 <option value="{{ $jabatan }}" {{ old('jabatan_fungsional') === $jabatan ? 'selected' : '' }}>
                   {{ $jabatan }}</option>
               @endforeach

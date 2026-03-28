@@ -12,11 +12,11 @@ class MAUTService
     protected CriteriaDataService $criteriaDataService
   ) {}
 
-  public function buildDecisionMatrix($similarityScores, $context = 'pembimbing')
+  public function buildDecisionMatrix($similarityScores, $context, $mahasiswa)
   {
     $dosenIds = array_keys($similarityScores);
 
-    $criteriaData = $this->criteriaDataService->getData($dosenIds, $context);
+    $criteriaData = $this->criteriaDataService->getData($dosenIds, $context, $mahasiswa);
 
     $matrix = [];
 
@@ -31,6 +31,7 @@ class MAUTService
         $row['beban_pengujian'] = $criteriaData[$dosenId]['beban_pengujian'] ?? 0;
       } else {
         $row['beban_bimbingan'] = $criteriaData[$dosenId]['beban_bimbingan'] ?? 0;
+        $row['pemerataan_ipk'] = $criteriaData[$dosenId]['pemerataan_ipk'] ?? 0;
       }
 
       $matrix[$dosenId] = $row;
@@ -97,35 +98,19 @@ class MAUTService
     return $result;
   }
 
-  public function rank($similarityScores, $context = 'pembimbing')
+  public function rankWithDetails($similarityScores, $context, $mahasiswa = null)
   {
     if (empty($similarityScores)) {
       return [];
     }
 
-    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context);
-    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context);
-    $scores = $this->calculateAll($normalizedMatrix, $context);
-
-    arsort($scores);
-
-    return $scores;
-  }
-
-  public function rankWithDetails($similarityScores, $context = 'pembimbing')
-  {
-    if (empty($similarityScores)) {
-      return [];
-    }
-
-    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context);
+    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context, $mahasiswa);
     $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context);
     $criteria = $this->getActiveCriteria($context);
     $scores = $this->calculateAll($normalizedMatrix, $context);
 
     arsort($scores);
 
-    // Build per-dosen detail: normalized value * weight for each criterion
     $details = [];
     foreach ($scores as $dosenId => $totalScore) {
       $criteriaDetails = [];
@@ -143,6 +128,8 @@ class MAUTService
         ];
       }
 
+      usort($criteriaDetails, fn($a, $b) => $b['bobot'] <=> $a['bobot']);
+
       $details[$dosenId] = [
         'criteria' => $criteriaDetails,
         'total_score' => round($totalScore, 2),
@@ -152,19 +139,14 @@ class MAUTService
     return $details;
   }
 
-  protected function getActiveCriteria($context = 'pembimbing')
+  protected function getActiveCriteria($context)
   {
-    $query = BobotKriteria::query()
+    return BobotKriteria::query()
+      ->where('context', $context)
       ->where('is_active', true)
-      ->select(['key', 'label', 'weight', 'type']);
-
-    if ($context === 'penguji') {
-      $query->where('key', '!=', 'beban_bimbingan');
-    } else {
-      $query->where('key', '!=', 'beban_pengujian');
-    }
-
-    return $query->get()->toArray();
+      ->select(['key', 'label', 'weight', 'type'])
+      ->get()
+      ->toArray();
   }
 
   protected function normalizeBenefit($value, $min, $max)

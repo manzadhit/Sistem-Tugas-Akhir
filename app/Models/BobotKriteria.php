@@ -12,6 +12,7 @@ class BobotKriteria extends Model
     protected $table = 'bobot_kriteria';
 
     protected $fillable = [
+        'context',
         'key',
         'label',
         'weight',
