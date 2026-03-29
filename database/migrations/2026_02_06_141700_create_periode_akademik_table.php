@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('semester', ['ganjil', 'genap']);
             $table->date('mulai_at');
             $table->date('selesai_at')->nullable();
-            $table->boolean('is_active')->default(false);
+            $table->enum('status', ['draft', 'aktif', 'selesai'])->default('draft');
             $table->timestamps();
 
             $table->unique(['tahun_ajaran', 'semester']);

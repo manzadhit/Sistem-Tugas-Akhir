@@ -25,6 +25,12 @@
           'label' => 'Kelola Publikasi Dosen',
           'active' => request()->is('admin/publikasi*'),
       ],
+      [
+          'href' => route('admin.periode.index'),
+          'icon' => 'fas fa-calendar-alt',
+          'label' => 'Kelola Periode Akademik',
+          'active' => request()->is('admin/periode*'),
+      ],
   
       ['section' => 'Ujian'],
       [

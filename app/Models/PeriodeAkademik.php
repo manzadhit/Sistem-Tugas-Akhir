@@ -16,14 +16,33 @@ class PeriodeAkademik extends Model
         'semester',
         'mulai_at',
         'selesai_at',
-        'is_active',
+        'status',
     ];
 
     protected $casts = [
         'mulai_at' => 'date',
         'selesai_at' => 'date',
-        'is_active' => 'boolean',
     ];
+
+    public function scopeAktif($query)
+    {
+        return $query->where('status', 'aktif');
+    }
+
+    public function isAktif()
+    {
+        return $this->status === 'aktif';
+    }
+
+    public function isDraft()
+    {
+        return $this->status === 'draft';
+    }
+
+    public function isSelesai()
+    {
+        return $this->status === 'selesai';
+    }
 
     public function dosenPenguji()
     {

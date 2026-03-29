@@ -18,15 +18,15 @@ class PeriodeAkademikSeeder extends Seeder
                 'semester' => 'ganjil',
                 'mulai_at' => '2025-08-01',
                 'selesai_at' => '2026-01-31',
-                'is_active' => false,
+                'status' => 'selesai',
             ],
             [
                 'tahun_ajaran' => '2025/2026',
                 'semester' => 'genap',
                 'mulai_at' => '2026-02-01',
-                'selesai_at' => null,
-                'is_active' => true,
+                'selesai_at' => '2026-07-31',
+                'status' => 'aktif',
             ],
-        ], ['tahun_ajaran', 'semester'], ['mulai_at', 'selesai_at', 'is_active']);
+        ], ['tahun_ajaran', 'semester'], ['mulai_at', 'selesai_at', 'status']);
     }
 }

@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         $this->call(PeriodeAkademikSeeder::class);
 
         $periodeAkademikAktifId = PeriodeAkademik::query()
-            ->where('is_active', true)
+            ->aktif()
             ->value('id');
 
         // ─── Admin ───

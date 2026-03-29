@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\MahasiswaController;
+use App\Http\Controllers\Admin\PeriodeAkademikController;
 use App\Http\Controllers\Admin\VerifikasiSyaratController;
 use App\Http\Controllers\Admin\VerifikasiHasilController;
 use App\Http\Controllers\Admin\PublikasiController;
@@ -54,4 +55,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/publikasi/{id}/edit', [PublikasiController::class, 'edit'])->name('publikasi.edit');
   Route::put('/publikasi/{id}', [PublikasiController::class, 'update'])->name('publikasi.update');
   Route::delete('/publikasi/{id}', [PublikasiController::class, 'destroy'])->name('publikasi.destroy');
+
+  // Manajemen Periode Akademik
+  Route::prefix('periode')->name('periode.')->group(function () {
+    Route::get('/', [PeriodeAkademikController::class, 'index'])->name('index');
+    Route::post('/', [PeriodeAkademikController::class, 'store'])->name('store');
+    Route::put('/{periodeAkademik}', [PeriodeAkademikController::class, 'update'])->name('update');
+    Route::delete('/{periodeAkademik}', [PeriodeAkademikController::class, 'destroy'])->name('destroy');
+    Route::patch('/{periodeAkademik}/activate', [PeriodeAkademikController::class, 'activate'])->name('activate');
+    Route::patch('/{periodeAkademik}/complete', [PeriodeAkademikController::class, 'complete'])->name('complete');
+  });
+
 });

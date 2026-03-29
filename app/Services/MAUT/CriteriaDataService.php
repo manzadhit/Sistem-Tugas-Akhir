@@ -90,7 +90,7 @@ class CriteriaDataService
   public function getBebanPenguji($dosenIds)
   {
     $periodeAkademik = PeriodeAkademik::query()
-      ->where('is_active', true)
+      ->aktif()
       ->sole();
 
     $counts = DosenPenguji::query()
