@@ -61,22 +61,13 @@ class PengujiController extends Controller
         $mautResult = [];
         $rankedDosens = collect();
         $unrankedDosens = collect();
-        $periodeAkademikAktifCount = PeriodeAkademik::query()
-            ->where('is_active', true)
-            ->count();
-
-        $canAssignPenguji = $periodeAkademikAktifCount === 1;
-        $periodeAkademikId = $canAssignPenguji
-            ? PeriodeAkademik::query()->where('is_active', true)->value('id')
-            : null;
+        $periodeAktifId = PeriodeAkademik::aktif()->value('id');
 
         $pengujiCount = [
-            'pengujiMahasiswa as total_pengujian_periode' => fn($q) => $periodeAkademikId
-                ? $q->where('periode_akademik_id', $periodeAkademikId)
-                : $q->whereRaw('1 = 0'),
+            'pengujiMahasiswa as total_pengujian_periode' => $this->penetapanPengujiService->getPengujianAktifQuery($periodeAktifId)
         ];
 
-        if (! $hasPenguji && $permintaan->status === 'acc' && $canAssignPenguji) {
+        if (! $hasPenguji && $permintaan->status === 'acc') {
             $similarityScores = $cbfService->getTopN($permintaan->id, 5, 'penguji');
             $mautResult = $mautService->rankWithDetails($similarityScores, 'penguji');
             $rankedIds = array_keys($mautResult);
@@ -95,7 +86,6 @@ class PengujiController extends Controller
         return view('kajur.penetapan-penguji', compact(
             'permintaan',
             'hasPenguji',
-            'canAssignPenguji',
             'similarityScores',
             'mautResult',
             'rankedDosens',
@@ -133,10 +123,6 @@ class PengujiController extends Controller
             $permintaan->tugasAkhir->mahasiswa?->user?->notify(new PengujiAssigned($permintaan));
 
             return back()->with('success', 'Penguji berhasil ditetapkan');
-        } catch (ModelNotFoundException) {
-            return back()->with('error', 'Penetapan penguji gagal karena belum ada periode akademik aktif.');
-        } catch (MultipleRecordsFoundException) {
-            return back()->with('error', 'Penetapan penguji gagal karena periode akademik aktif lebih dari satu.');
         } catch (\Throwable $th) {
             return back()->with('error', 'Penguji gagal ditetapkan');
         }

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('mahasiswa_id')->constrained('profile_mahasiswa')->cascadeOnDelete();
             $table->foreignId('dosen_id')->constrained('profile_dosen')->cascadeOnDelete();
-            $table->foreignId('periode_akademik_id')->nullable()->constrained('periode_akademik')->nullOnDelete();
             $table->enum('jenis_penguji', ['penguji_1', 'penguji_2', 'penguji_3']);
             $table->boolean('status_aktif')->default(true);
             $table->timestamps();

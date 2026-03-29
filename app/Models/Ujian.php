@@ -10,6 +10,7 @@ class Ujian extends Model
 
     protected $fillable = [
         'tugas_akhir_id',
+        'periode_akademik_id',
         'jenis_ujian',
         'status',
         'catatan'
@@ -18,6 +19,11 @@ class Ujian extends Model
     public function tugasAkhir()
     {
         return $this->belongsTo(TugasAkhir::class, 'tugas_akhir_id');
+    }
+
+    public function periodeAkademik()
+    {
+        return $this->belongsTo(PeriodeAkademik::class, 'periode_akademik_id');
     }
 
     public function dokumenUjian()

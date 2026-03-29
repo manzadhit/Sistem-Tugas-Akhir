@@ -6,7 +6,6 @@ use App\Models\DosenPembimbing;
 use App\Models\PublikasiDosen;
 use App\Models\User;
 use App\Models\ProfileDosen;
-use App\Models\PeriodeAkademik;
 use Illuminate\Database\Seeder;
 use App\Models\ProfileMahasiswa;
 use App\Models\Submission;
@@ -25,10 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MataKuliahSeeder::class);
         $this->call(BobotKriteriaSeeder::class);
         $this->call(PeriodeAkademikSeeder::class);
-
-        $periodeAkademikAktifId = PeriodeAkademik::query()
-            ->aktif()
-            ->value('id');
 
         // ─── Admin ───
         User::create([
@@ -157,9 +152,9 @@ class DatabaseSeeder extends Seeder
             if (in_array($mahasiswa->user->username, ['mhs1', 'mhs2'])) {
                 $calonPenguji = $dosens->whereNotIn('id', [$pair[0]->id, $pair[1]->id])->take(3)->values();
                 if ($calonPenguji->count() >= 3) {
-                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[0]->id, 'periode_akademik_id' => $periodeAkademikAktifId, 'jenis_penguji' => 'penguji_1']);
-                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[1]->id, 'periode_akademik_id' => $periodeAkademikAktifId, 'jenis_penguji' => 'penguji_2']);
-                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[2]->id, 'periode_akademik_id' => $periodeAkademikAktifId, 'jenis_penguji' => 'penguji_3']);
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[0]->id, 'jenis_penguji' => 'penguji_1']);
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[1]->id, 'jenis_penguji' => 'penguji_2']);
+                    DosenPenguji::create(['mahasiswa_id' => $mahasiswa->id, 'dosen_id' => $calonPenguji[2]->id, 'jenis_penguji' => 'penguji_3']);
                 }
             }
         }

@@ -13,6 +13,7 @@ return new class extends Migration {
         Schema::create('ujian', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tugas_akhir_id')->constrained('tugas_akhir')->cascadeOnDelete();
+            $table->foreignId('periode_akademik_id')->nullable()->constrained('periode_akademik')->cascadeOnDelete();
             $table->enum('jenis_ujian', ['proposal', 'hasil', 'skripsi']);
             $table->enum('status', [
                 'draft',

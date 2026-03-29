@@ -319,7 +319,7 @@
     </div>
   </div>
 
-  @if (!$hasPenguji && $permintaan->status == 'acc' && $canAssignPenguji)
+  @if (!$hasPenguji && $permintaan->status == 'acc')
     <!-- Form Penetapan Penguji -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
       <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
@@ -610,18 +610,6 @@
             </div>
           </div>
         </form>
-      </div>
-    </div>
-  @elseif (!$hasPenguji && $permintaan->status == 'acc')
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-      <div class="px-6 py-5 border-b border-gray-200 flex items-center gap-3">
-        <i class="fas fa-calendar-times text-amber-500 text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Penetapan Penguji Belum Tersedia</h3>
-      </div>
-      <div class="p-6">
-        <div class="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Form penetapan penguji belum dapat ditampilkan karena periode akademik aktif belum valid. Hubungi Admin.
-        </div>
       </div>
     </div>
   @endif
