@@ -59,7 +59,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   // Manajemen Periode Akademik
   Route::prefix('periode')->name('periode.')->group(function () {
     Route::get('/', [PeriodeAkademikController::class, 'index'])->name('index');
+    Route::get('/create', [PeriodeAkademikController::class, 'create'])->name('create');
     Route::post('/', [PeriodeAkademikController::class, 'store'])->name('store');
+    Route::get('/{periodeAkademik}/edit', [PeriodeAkademikController::class, 'edit'])->name('edit');
     Route::put('/{periodeAkademik}', [PeriodeAkademikController::class, 'update'])->name('update');
     Route::delete('/{periodeAkademik}', [PeriodeAkademikController::class, 'destroy'])->name('destroy');
     Route::patch('/{periodeAkademik}/activate', [PeriodeAkademikController::class, 'activate'])->name('activate');

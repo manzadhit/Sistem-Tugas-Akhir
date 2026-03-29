@@ -14,14 +14,13 @@ class PeriodeAkademikController extends Controller
 {
     public function index(Request $request)
     {
-        $search = trim((string) $request->query('search'));
+        $search   = trim((string) $request->query('search'));
         $semester = trim((string) $request->query('semester'));
 
         $periodes = PeriodeAkademik::query()
-            ->when($search !== '', fn($query) => $query->where('tahun_ajaran', 'like', "%{$search}%"))
-            ->when(in_array($semester, ['ganjil', 'genap'], true), fn($query) => $query->where('semester', $semester))
-            ->orderByDesc('mulai_at')
-            ->orderByDesc('id')
+            ->when($search !== '', fn($q) => $q->where('tahun_ajaran', 'like', "%{$search}%"))
+            ->when(in_array($semester, ['ganjil', 'genap'], true), fn($q) => $q->where('semester', $semester))
+            ->latest()
             ->paginate(10)
             ->withQueryString();
 
@@ -30,30 +29,59 @@ class PeriodeAkademikController extends Controller
             ->latest('mulai_at')
             ->first();
 
-        return view('admin.periode-akademik', compact('periodes', 'periodeAktif'));
+        return view('admin.periode-akademik.list-periode-akademik', compact('periodes', 'periodeAktif'));
+    }
+
+    public function create()
+    {
+        return view('admin.periode-akademik.create-periode-akademik');
     }
 
     public function store(StorePeriodeAkademikRequest $request)
     {
-        $payload = $request->validated();
-        $payload['status'] = 'draft';
+        $payload           = $request->validated();
+        $langsungAktifkan  = $request->boolean('langsung_aktifkan');
 
-        PeriodeAkademik::create($payload);
+        if ($langsungAktifkan) {
+            // Buat periode baru dan langsung aktifkan dalam satu transaksi
+            DB::transaction(function () use ($payload) {
+                // Periode yang sedang aktif otomatis diselesaikan
+                PeriodeAkademik::aktif()->update([
+                    'status'     => 'selesai',
+                    'selesai_at' => Carbon::today(),
+                ]);
+
+                PeriodeAkademik::create(array_merge($payload, ['status' => 'aktif']));
+            });
+
+            return redirect()->route('admin.periode.index')
+                ->with('success', 'Periode akademik berhasil ditambahkan dan langsung diaktifkan.');
+        }
+
+        // Default: simpan sebagai draft
+        PeriodeAkademik::create(array_merge($payload, ['status' => 'draft']));
 
         return redirect()->route('admin.periode.index')
-            ->with('success', 'Periode akademik berhasil ditambahkan.');
+            ->with('success', 'Periode akademik berhasil ditambahkan sebagai draft.');
+    }
+
+    public function edit(PeriodeAkademik $periodeAkademik)
+    {
+        return view('admin.periode-akademik.edit-periode-akademik', [
+            'periode' => $periodeAkademik,
+        ]);
     }
 
     public function update(UpdatePeriodeAkademikRequest $request, PeriodeAkademik $periodeAkademik)
     {
+        // Jika bukan draft, hanya izinkan perubahan tanggal
         $data = $periodeAkademik->isDraft()
             ? $request->validated()
             : $request->only(['mulai_at', 'selesai_at']);
 
         $periodeAkademik->update($data);
 
-        return redirect()
-            ->route('admin.periode.index')
+        return redirect()->route('admin.periode.index')
             ->with('success', 'Periode akademik berhasil diperbarui.');
     }
 
@@ -78,6 +106,7 @@ class PeriodeAkademikController extends Controller
         }
 
         DB::transaction(function () use ($periodeAkademik) {
+            // Periode aktif sebelumnya otomatis diselesaikan
             PeriodeAkademik::aktif()->update([
                 'status'     => 'selesai',
                 'selesai_at' => Carbon::today(),
@@ -98,7 +127,7 @@ class PeriodeAkademikController extends Controller
         }
 
         $periodeAkademik->update([
-            'status' => 'selesai',
+            'status'     => 'selesai',
             'selesai_at' => $periodeAkademik->selesai_at ?? Carbon::today(),
         ]);
 
