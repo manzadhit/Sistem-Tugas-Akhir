@@ -34,7 +34,7 @@
           'href' => route('dosen.publikasi.index'),
           'icon' => 'fas fa-book',
           'label' => 'Publikasi Saya',
-          'active' => request()->routeIs('dosen.publikasi.index'),
+          'active' => request()->routeIs('dosen.publikasi.*'),
       ],
   
       ['section' => 'Akun'],

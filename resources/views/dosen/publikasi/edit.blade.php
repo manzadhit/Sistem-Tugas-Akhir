@@ -135,7 +135,7 @@
 
       {{-- ██ Action Buttons --}}
       <div class="flex items-center justify-between gap-3">
-        <a href="{{ route('dosen.publikasi.show', $publikasi->id) }}"
+        <a href="{{ route('dosen.publikasi.index') }}"
           class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all">
           <i class="fas fa-arrow-left text-xs"></i> Batal
         </a>
