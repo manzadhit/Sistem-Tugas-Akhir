@@ -398,6 +398,14 @@
                         <div class="text-xs text-gray-600">
                           <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
                           <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
+                          <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                              <i class="fas fa-laptop-code text-[0.6rem]"></i> <span x-text="dosen.keahlian"></span>
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                              <i class="fas fa-tasks text-[0.6rem]"></i> <span x-text="dosen.total_pengujian_periode ?? 0"></span> Pengujian
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -545,10 +553,14 @@
                         <h5 class="text-sm font-semibold text-gray-900 truncate" x-text="dosen.nama_lengkap"></h5>
                         <p class="text-[0.7rem] text-gray-500 truncate">NIDN: <span x-text="dosen.nidn || '-' "></span>
                         </p>
-                        <p class="text-[0.7rem] text-gray-500 truncate">
-                          <span x-text="dosen.keahlian"></span> <span>·</span>
-                          <span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian periode ini</span>
-                        </p>
+                        <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                          <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            <span x-text="dosen.keahlian || 'Umum'"></span>
+                          </span>
+                          <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                            <span x-text="dosen.total_pengujian_periode ?? 0"></span> Ujian
+                          </span>
+                        </div>
                       </div>
                       <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
                         <span class="text-[0.65rem] font-bold text-blue-600"
@@ -575,10 +587,14 @@
                         <div>
                           <h5 class="text-[0.9rem] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h5>
                           <p class="text-[0.7rem] text-gray-500">NIDN: <span x-text="dosen.nidn || '-' "></span></p>
-                          <p class="text-[0.7rem] text-gray-500">
-                            <span x-text="dosen.keahlian"></span> <span>·</span>
-                            <span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian periode ini</span>
-                          </p>
+                          <div class="flex items-center gap-1.5 mt-1 flex-wrap">
+                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                              <span x-text="dosen.keahlian || 'Umum'"></span>
+                            </span>
+                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                              <span x-text="dosen.total_pengujian_periode ?? 0"></span> Ujian
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </button>
