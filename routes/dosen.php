@@ -16,6 +16,7 @@ Route::middleware(['auth', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('d
 
   Route::get('/bimbingan', [MahasiswaBimbingan::class, 'index'])->name('bimbingan.index');
   Route::get('/bimbingan/mahasiswa', [MahasiswaBimbingan::class, 'mahasiswaList'])->name('bimbingan.mahasiswa');
+  Route::get('/bimbingan/mahasiswa-lulus', [MahasiswaBimbingan::class, 'mahasiswaLulusList'])->name('bimbingan.mahasiswa-lulus');
   Route::get('/bimbingan/mahasiswa/{dosenPembimbing}/riwayat', [MahasiswaBimbingan::class, 'riwayatBimbingan'])->name('bimbingan.riwayat');
   Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbingan::class, 'getDetail'])->name('bimbingan.detail');
   Route::put('/bimbingan/{submission}/review', [MahasiswaBimbingan::class, 'review'])->name('bimbingan.review');

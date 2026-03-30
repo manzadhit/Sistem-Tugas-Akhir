@@ -26,7 +26,7 @@
       <span class="text-gray-900 font-medium">Riwayat</span>
     </nav>
     <div class="flex items-center gap-3 mb-4">
-      <a href="{{ route('dosen.bimbingan.mahasiswa') }}" class="text-gray-500 hover:text-gray-700 transition-colors">
+      <a href="{{ route('dosen.bimbingan.index') }}" class="text-gray-500 hover:text-gray-700 transition-colors">
         <i class="fas fa-arrow-left"></i>
       </a>
       <h1 class="text-3xl font-bold text-gray-900">Riwayat Bimbingan</h1>

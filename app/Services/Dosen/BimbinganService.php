@@ -19,11 +19,14 @@ class BimbinganService
         $q->where('dosen_id', $dosenId)
           ->where('status_aktif', true);
       })
-      ->when($search, function ($q) use ($search) {
-        $q->whereHas('tugasAkhir.mahasiswa', function ($q) use ($search) {
-          $q->where('nama_lengkap', 'like', "%{$search}%")
-            ->orWhere('nim', 'like', "%{$search}%");
-        });
+      ->whereHas('tugasAkhir.mahasiswa', function ($q) use ($search) {
+        $q->where('status_akademik', 'aktif')
+          ->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+              $q->where('nama_lengkap', 'like', "%{$search}%")
+                ->orWhere('nim', 'like', "%{$search}%");
+            });
+          });
       })
       ->when($tahap, function ($q) use ($tahap) {
         $q->whereHas('tugasAkhir', fn($q) => $q->where('tahapan', $tahap));
@@ -33,16 +36,19 @@ class BimbinganService
       ->withQueryString();
   }
 
-  public function getAllMahasiswaBimbingan(int $dosenId, ?string $search = null)
+  public function getMahasiswaByStatus(int $dosenId, string $status, ?string $search = null)
   {
     return DosenPembimbing::with(['mahasiswa.tugasAkhir'])
       ->where('dosen_id', $dosenId)
-      ->where('status_aktif', true)
-      ->when($search, function ($q) use ($search) {
-        $q->whereHas('mahasiswa', function ($q) use ($search) {
-          $q->where('nama_lengkap', 'like', "%{$search}%")
-            ->orWhere('nim', 'like', "%{$search}%");
-        });
+      ->when($status === 'aktif', fn($q) => $q->where('status_aktif', true))
+      ->whereHas('mahasiswa', function ($q) use ($status, $search) {
+        $q->where('status_akademik', $status)
+          ->when($search, function ($q) use ($search) {
+            $q->where(function ($q) use ($search) {
+              $q->where('nama_lengkap', 'like', "%{$search}%")
+                ->orWhere('nim', 'like', "%{$search}%");
+            });
+          });
       })
       ->paginate(15)
       ->withQueryString();

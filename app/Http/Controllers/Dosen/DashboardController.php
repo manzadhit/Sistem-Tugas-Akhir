@@ -15,6 +15,7 @@ class DashboardController extends Controller
 
         $totalMahasiswaBimbingan = DosenPembimbing::where('dosen_id', $dosenId)
             ->where('status_aktif', true)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'aktif'))
             ->count();
 
         $totalPublikasi = PublikasiDosen::where('dosen_id', $dosenId)->count();
@@ -22,6 +23,18 @@ class DashboardController extends Controller
         $mahasiswaBimbingan = DosenPembimbing::with(['mahasiswa.tugasAkhir'])
             ->where('dosen_id', $dosenId)
             ->where('status_aktif', true)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'aktif'))
+            ->latest()
+            ->limit(5)
+            ->get();
+
+        $totalMahasiswaLulus = DosenPembimbing::where('dosen_id', $dosenId)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'lulus'))
+            ->count();
+
+        $mahasiswaLulus = DosenPembimbing::with(['mahasiswa.tugasAkhir'])
+            ->where('dosen_id', $dosenId)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'lulus'))
             ->latest()
             ->limit(5)
             ->get();
@@ -33,8 +46,10 @@ class DashboardController extends Controller
 
         return view('dosen.dashboard', compact(
             'totalMahasiswaBimbingan',
+            'totalMahasiswaLulus',
             'totalPublikasi',
             'mahasiswaBimbingan',
+            'mahasiswaLulus',
             'publikasiTerbaru'
         ));
     }

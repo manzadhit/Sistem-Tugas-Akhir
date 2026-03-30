@@ -18,16 +18,20 @@ class MahasiswaBimbingan extends Controller
     {
         $dosenId = $request->user()?->profileDosen->id;
 
-        $mahasiswaBimbingan = DosenPembimbing::where('dosen_id', $dosenId)->get();
+        $totalMahasiswaBimbingan = DosenPembimbing::where('dosen_id', $dosenId)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'aktif'))
+            ->count();
 
-        $totalMahasiswaBimbingan = $mahasiswaBimbingan->count();
+        $totalMahasiswaLulus = DosenPembimbing::where('dosen_id', $dosenId)
+            ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'lulus'))
+            ->count();
 
         $search = $request->input('search');
         $tahap  = $request->input('tahap');
 
         $pendingSubmissions = $this->bimbinganService->getPendingSubmissionByDosen($dosenId, $search, $tahap);
 
-        return view('dosen.bimbingan', compact('mahasiswaBimbingan', 'totalMahasiswaBimbingan', 'pendingSubmissions'));
+        return view('dosen.bimbingan', compact('totalMahasiswaBimbingan', 'totalMahasiswaLulus', 'pendingSubmissions'));
     }
 
     public function mahasiswaList(Request $request)
@@ -35,9 +39,19 @@ class MahasiswaBimbingan extends Controller
         $dosenId = $request->user()?->profileDosen->id;
         $search  = $request->input('search');
 
-        $mahasiswaBimbingan = $this->bimbinganService->getAllMahasiswaBimbingan($dosenId, $search);
+        $mahasiswaBimbingan = $this->bimbinganService->getMahasiswaByStatus($dosenId, 'aktif', $search);
 
         return view('dosen.mahasiswa-bimbingan', compact('mahasiswaBimbingan'));
+    }
+
+    public function mahasiswaLulusList(Request $request)
+    {
+        $dosenId = $request->user()?->profileDosen->id;
+        $search  = $request->input('search');
+
+        $mahasiswaLulus = $this->bimbinganService->getMahasiswaByStatus($dosenId, 'lulus', $search);
+
+        return view('dosen.mahasiswa-lulus', compact('mahasiswaLulus'));
     }
 
     public function riwayatBimbingan(DosenPembimbing $dosenPembimbing)

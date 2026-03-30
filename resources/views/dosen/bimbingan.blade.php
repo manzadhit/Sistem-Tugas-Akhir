@@ -23,7 +23,7 @@
   </div>
 
   <!-- Stats -->
-  <div class="grid grid-cols-2 gap-3 lg:gap-6 mb-6 lg:mb-8">
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-6 mb-6 lg:mb-8">
     <a href="{{ route('dosen.bimbingan.mahasiswa') }}"
       class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
       <div
@@ -31,8 +31,19 @@
         <i class="fas fa-users"></i>
       </div>
       <div class="flex-1 min-w-0">
-        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Total Mahasiswa</div>
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Bimbingan Aktif</div>
         <div class="text-xl lg:text-3xl font-bold text-gray-900">{{ $totalMahasiswaBimbingan }}</div>
+      </div>
+    </a>
+    <a href="{{ route('dosen.bimbingan.mahasiswa-lulus') }}"
+      class="bg-white rounded-xl p-4 lg:p-6 shadow-sm flex items-center gap-3 lg:gap-4 hover:-translate-y-0.5 hover:shadow-md transition-all">
+      <div
+        class="w-10 h-10 lg:w-14 lg:h-14 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg lg:text-2xl shrink-0">
+        <i class="fas fa-graduation-cap"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="text-xs lg:text-sm text-gray-500 mb-0.5 lg:mb-1">Bimbingan Lulus</div>
+        <div class="text-xl lg:text-3xl font-bold text-gray-900">{{ $totalMahasiswaLulus }}</div>
       </div>
     </a>
     <div
