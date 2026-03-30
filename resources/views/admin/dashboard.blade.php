@@ -14,7 +14,21 @@
   </div>
 
   {{-- Stats --}}
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    {{-- Card 1: Periode Aktif --}}
+    <div
+      class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-xl text-white">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div>
+        <p class="text-sm text-slate-500">Periode Aktif</p>
+        <p class="text-xl font-bold text-slate-900">{{ $stats['periode_aktif'] }}</p>
+      </div>
+    </div>
+    
+    {{-- Card 2: Total Mahasiswa --}}
     <div
       class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
       <div
@@ -26,6 +40,8 @@
         <p class="text-2xl font-bold text-slate-900">{{ $stats['total_mahasiswa'] }}</p>
       </div>
     </div>
+
+    {{-- Card 3: Total Dosen --}}
     <div
       class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
       <div
@@ -37,6 +53,34 @@
         <p class="text-2xl font-bold text-slate-900">{{ $stats['total_dosen'] }}</p>
       </div>
     </div>
+
+    {{-- Card 4: Menunggu Verifikasi Syarat --}}
+    <div
+      class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 to-rose-600 text-xl text-white">
+        <i class="fas fa-file-signature"></i>
+      </div>
+      <div>
+        <p class="text-sm text-slate-500">Menunggu Verif Syarat</p>
+        <p class="text-2xl font-bold text-slate-900">{{ $stats['verif_syarat'] }}</p>
+      </div>
+    </div>
+
+    {{-- Card 5: Menunggu Verifikasi Hasil --}}
+    <div
+      class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
+      <div
+        class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 text-xl text-white">
+        <i class="fas fa-clipboard-check"></i>
+      </div>
+      <div>
+        <p class="text-sm text-slate-500">Menunggu Verif Hasil</p>
+        <p class="text-2xl font-bold text-slate-900">{{ $stats['verif_hasil'] }}</p>
+      </div>
+    </div>
+
+    {{-- Card 6: Total Publikasi --}}
     <div
       class="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:-translate-y-0.5 transition">
       <div
@@ -73,10 +117,6 @@
         <div class="flex justify-between items-center rounded-lg bg-slate-50 px-4 py-3">
           <span class="text-sm text-slate-600">Dosen Aktif</span>
           <span class="font-semibold text-slate-900">{{ $stats['dosen_aktif'] }}</span>
-        </div>
-        <div class="flex justify-between items-center rounded-lg bg-slate-50 px-4 py-3">
-          <span class="text-sm text-slate-600">Ujian Menunggu Verifikasi</span>
-          <span class="font-semibold text-slate-900">{{ $stats['ujian_pending'] }}</span>
         </div>
       </div>
     </div>
