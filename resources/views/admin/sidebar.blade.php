@@ -6,6 +6,20 @@
           'active' => request()->routeIs('admin.dashboard'),
       ],
   
+      ['section' => 'Ujian'],
+      [
+          'href' => route('admin.ujian.syarat.index'),
+          'icon' => 'fas fa-file-signature',
+          'label' => 'Verifikasi Syarat Ujian',
+          'active' => request()->is('admin/ujian/verifikasi-syarat*'),
+      ],
+      [
+          'href' => route('admin.ujian.hasil.index'),
+          'icon' => 'fas fa-clipboard-check',
+          'label' => 'Verifikasi Hasil Ujian',
+          'active' => request()->is('admin/ujian/verifikasi-hasil*'),
+      ],
+  
       ['section' => 'Kelola Data'],
       [
           'href' => route('admin.mahasiswa.index'),
@@ -30,19 +44,5 @@
           'icon' => 'fas fa-calendar-alt',
           'label' => 'Kelola Periode Akademik',
           'active' => request()->is('admin/periode*'),
-      ],
-  
-      ['section' => 'Ujian'],
-      [
-          'href' => route('admin.ujian.syarat.index'),
-          'icon' => 'fas fa-file-signature',
-          'label' => 'Verifikasi Syarat Ujian',
-          'active' => request()->is('admin/ujian/verifikasi-syarat*'),
-      ],
-      [
-          'href' => route('admin.ujian.hasil.index'),
-          'icon' => 'fas fa-clipboard-check',
-          'label' => 'Verifikasi Hasil Ujian',
-          'active' => request()->is('admin/ujian/verifikasi-hasil*'),
       ],
   ]" />

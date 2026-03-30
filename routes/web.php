@@ -23,6 +23,7 @@ Route::middleware('auth')->get("/dashboard", function () {
     return match ($user->role) {
         "mahasiswa" => $user->profileMahasiswa?->dosenPembimbing()->exists() ? redirect()->route('mahasiswa.dashboard') : redirect()->route('mahasiswa.permintaan-pembimbing.create'),
         "dosen" => redirect()->route('dosen.dashboard'),
+        "sekjur" => redirect()->route('dosen.dashboard'),
         "kajur" => redirect()->route('kajur.dashboard'),
         "admin" => redirect()->route('admin.dashboard'),
         default => abort(403),

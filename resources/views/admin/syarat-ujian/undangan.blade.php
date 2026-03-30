@@ -170,9 +170,43 @@
 
   {{-- Section Stack --}}
   <div class="flex flex-col gap-4">
-    {{-- Detail Surat Card --}}
+    {{-- Card: Periode Akademik --}}
     <form method="POST" action="{{ route('admin.ujian.syarat.undangan.store', $ujian->id) }}">
       @csrf
+      {{-- Card Periode Akademik --}}
+      <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden mb-4">
+        <div class="flex items-center gap-2 px-6 py-4 border-b border-gray-100">
+          <i class="fas fa-calendar-alt text-blue-500 text-sm"></i>
+          <h2 class="text-base font-semibold text-gray-900">Periode Akademik</h2>
+          @if ($ujian->periodeAkademik)
+            <span class="ml-auto px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+              {{ $ujian->periodeAkademik->tahun_ajaran }} — {{ ucfirst($ujian->periodeAkademik->semester) }}
+            </span>
+          @endif
+        </div>
+        <div class="px-6 py-5">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-semibold text-gray-700">Pilih Periode <span class="text-red-500">*</span></label>
+            <select name="periode_akademik_id" required
+              class="px-3 py-2.5 border {{ $errors->has('periode_akademik_id') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
+              <option value="">-- Pilih Periode Akademik --</option>
+              @foreach ($periodeAkademik as $p)
+                <option value="{{ $p->id }}"
+                  {{ old('periode_akademik_id', $ujian->periode_akademik_id) == $p->id ? 'selected' : '' }}>
+                  {{ $p->tahun_ajaran }} — Semester {{ ucfirst($p->semester) }}
+                  @if ($p->status === 'aktif') (Aktif) @endif
+                </option>
+              @endforeach
+            </select>
+            @error('periode_akademik_id')
+              <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
+            @enderror
+            <p class="text-xs text-gray-400 mt-0.5">Pilih periode akademik yang berlaku untuk ujian ini sebelum membuat surat undangan.</p>
+          </div>
+        </div>
+      </div>
+
+      {{-- Card Detail Surat --}}
       <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
         <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
           <h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
@@ -300,10 +334,7 @@
       <div
         class="flex items-center justify-between p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 mt-6 max-sm:flex-col max-sm:gap-4 max-sm:text-center">
         <div class="flex items-center gap-3">
-          <div>
-            <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan
-              Mahasiswa</p>
-          </div>
+          <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan Mahasiswa</p>
         </div>
         <div class="flex gap-3 max-sm:w-full">
           <button type="button" @click="showConfirmModal = true"
