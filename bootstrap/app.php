@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\EnsureBimbinganSequence;
+use App\Http\Middleware\EnsureMahasiswaAktif;
 use App\Http\Middleware\EnsureMahasiswaHasPembimbing;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureUjianSequence;
@@ -17,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => EnsureRole::class,
+            'mahasiswa.aktif' => EnsureMahasiswaAktif::class,
             'has.pembimbing' => EnsureMahasiswaHasPembimbing::class,
             'ujian.sequence' => EnsureUjianSequence::class,
             'bimbingan.sequence' => EnsureBimbinganSequence::class

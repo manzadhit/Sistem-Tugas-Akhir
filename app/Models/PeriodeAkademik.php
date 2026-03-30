@@ -44,8 +44,8 @@ class PeriodeAkademik extends Model
         return $this->status === 'selesai';
     }
 
-    public function dosenPenguji()
+    public function ujian()
     {
-        return $this->hasMany(DosenPenguji::class, 'periode_akademik_id');
+        return $this->hasMany(Ujian::class, 'periode_akademik_id');
     }
 }

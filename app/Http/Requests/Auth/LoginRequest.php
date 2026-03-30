@@ -49,6 +49,18 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+        if ($user->role === 'mahasiswa') {
+            $status = $user->profileMahasiswa?->status_akademik;
+            if (! in_array($status, ['aktif', 'lulus'])) {
+                Auth::logout();
+
+                throw ValidationException::withMessages([
+                    'username' => 'Akun Anda tidak dapat mengakses sistem karena status akademik Anda saat ini: ' . ($status ?? 'tidak diketahui') . '. Silakan hubungi admin untuk informasi lebih lanjut.',
+                ]);
+            }
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

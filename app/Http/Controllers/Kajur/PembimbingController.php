@@ -54,7 +54,9 @@ class PembimbingController extends Controller
 
         $rankedIds = array_keys($mautResult);
         $activeBimbinganCount = [
-            'pembimbingMahasiswa as total_bimbingan_aktif' => fn($q) => $q->where('status_aktif', true),
+            'pembimbingMahasiswa as total_bimbingan_aktif' => fn($q) => $q
+                ->where('status_aktif', true)
+                ->whereHas('mahasiswa', fn($m) => $m->where('status_akademik', 'aktif')),
         ];
 
         $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
