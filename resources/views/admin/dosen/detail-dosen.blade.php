@@ -10,7 +10,7 @@
 
   {{-- Breadcrumb --}}
   <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-    <a href="{{ route('admin.dosen.index') }}" class="hover:text-teal-600 transition-colors">Kelola Dosen</a>
+    <a href="{{ route('admin.dosen.index') }}" class="hover:text-blue-600 transition-colors">Kelola Dosen</a>
     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
     <span class="text-gray-800 font-medium truncate">{{ $dosen->nama_lengkap }}</span>
   </div>
@@ -35,7 +35,7 @@
             $statusColor = $statusColors[$dosen->status] ?? 'bg-gray-100 text-gray-500 border-gray-200';
           @endphp
           <div
-            class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-teal-50 text-teal-700 border border-teal-100 flex items-center justify-center text-2xl sm:text-3xl font-bold shrink-0">
+            class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center text-2xl sm:text-3xl font-bold shrink-0">
             {{ $initials }}
           </div>
           <div class="min-w-0">
@@ -56,7 +56,7 @@
 
         <div class="flex items-center gap-2 shrink-0">
           <a href="{{ route('admin.dosen.edit', $dosen->id) }}"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition-colors">
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-colors">
             <i class="fas fa-edit text-xs"></i> Edit Data
           </a>
         </div>
@@ -69,7 +69,7 @@
     {{-- ██ Data Pribadi & Akademik --}}
     <div class="bg-white rounded-xl shadow-sm overflow-hidden">
       <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-        <i class="fas fa-id-card text-teal-500 text-sm"></i>
+        <i class="fas fa-id-card text-blue-500 text-sm"></i>
         <h2 class="text-sm font-semibold text-gray-800">Data Dosen</h2>
       </div>
       <div class="px-5 py-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -77,7 +77,7 @@
         {{-- NIDN --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-id-badge"></i>
           </div>
           <div class="min-w-0">
@@ -89,7 +89,7 @@
         {{-- Jurusan --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-building-columns"></i>
           </div>
           <div class="min-w-0">
@@ -101,7 +101,7 @@
         {{-- Program Studi --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-graduation-cap"></i>
           </div>
           <div class="min-w-0">
@@ -113,7 +113,7 @@
         {{-- Jabatan Fungsional --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-briefcase"></i>
           </div>
           <div class="min-w-0">
@@ -125,7 +125,7 @@
         {{-- Keahlian --}}
         <div class="flex items-start gap-3 sm:col-span-2 lg:col-span-1">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-flask"></i>
           </div>
           <div class="min-w-0">
@@ -136,7 +136,7 @@
 
         <div class="flex items-start gap-3 sm:col-span-2 lg:col-span-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-book-open"></i>
           </div>
           <div class="min-w-0">
@@ -159,7 +159,7 @@
         {{-- No. Telp --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-phone"></i>
           </div>
           <div class="min-w-0">
@@ -171,7 +171,7 @@
         {{-- Email --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-envelope"></i>
           </div>
           <div class="min-w-0">
@@ -183,7 +183,7 @@
         {{-- Status --}}
         <div class="flex items-start gap-3">
           <div
-            class="w-8 h-8 rounded-lg bg-teal-50 text-teal-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-circle-check"></i>
           </div>
           <div class="min-w-0">
@@ -245,7 +245,7 @@
               </div>
 
               <a href="{{ route('admin.mahasiswa.show', $mhs->id) }}"
-                class="shrink-0 text-gray-400 hover:text-teal-600 transition-colors ml-1">
+                class="shrink-0 text-gray-400 hover:text-blue-600 transition-colors ml-1">
                 <i class="fas fa-chevron-right text-xs"></i>
               </a>
             </div>
@@ -306,7 +306,7 @@
               </div>
 
               <a href="{{ route('admin.mahasiswa.show', $mhs->id) }}"
-                class="shrink-0 text-gray-400 hover:text-teal-600 transition-colors ml-1">
+                class="shrink-0 text-gray-400 hover:text-blue-600 transition-colors ml-1">
                 <i class="fas fa-chevron-right text-xs"></i>
               </a>
             </div>

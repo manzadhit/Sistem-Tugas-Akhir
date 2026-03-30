@@ -9,7 +9,7 @@
 @section('content')
 
   <div class="flex items-center gap-2 text-sm text-gray-500 mb-4">
-    <a href="#" class="hover:text-blue-600 transition-colors">
+    <a href="{{ route('admin.mahasiswa.index') }}" class="hover:text-blue-600 transition-colors">
       Kelola Mahasiswa
     </a>
     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
@@ -151,38 +151,38 @@
     </div>
 
     {{-- data tugas akhir --}}
-    @if($mhs->tugasAkhir)
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-      <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <i class="fas fa-book-open text-purple-500 text-sm"></i>
-          <h2 class="text-sm font-semibold text-gray-800">Tugas Akhir</h2>
+    @if ($mhs->tugasAkhir)
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-gray-100 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fas fa-book-open text-purple-500 text-sm"></i>
+            <h2 class="text-sm font-semibold text-gray-800">Tugas Akhir</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+              {{ ucfirst($mhs->tugasAkhir->tahapan) }}
+            </span>
+          </div>
         </div>
-        <div class="flex items-center gap-2">
-          <span
-            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
-            {{ ucfirst($mhs->tugasAkhir->tahapan) }}
-          </span>
-        </div>
-      </div>
-      <div class="px-5 py-4">
-        <h3 class="text-base font-semibold text-gray-900 mb-2 leading-snug">{{ $mhs->tugasAkhir->judul }}</h3>
-        <p class="text-sm text-gray-600 mb-3 leading-relaxed">
-          {{ $mhs->tugasAkhir->abstrak ?? '' }}
-        </p>
-        <div class="flex flex-wrap gap-1.5">
-          @php
-            $kataKunci = array_filter(array_map('trim', explode(',', $mhs->tugasAkhir->kata_kunci ?? '')));
-          @endphp
+        <div class="px-5 py-4">
+          <h3 class="text-base font-semibold text-gray-900 mb-2 leading-snug">{{ $mhs->tugasAkhir->judul }}</h3>
+          <p class="text-sm text-gray-600 mb-3 leading-relaxed">
+            {{ $mhs->tugasAkhir->abstrak ?? '' }}
+          </p>
+          <div class="flex flex-wrap gap-1.5">
+            @php
+              $kataKunci = array_filter(array_map('trim', explode(',', $mhs->tugasAkhir->kata_kunci ?? '')));
+            @endphp
 
-          @forelse ($kataKunci as $keyword)
-            <span class="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">{{ $keyword }}</span>
-          @empty
-            <span class="text-xs text-gray-400">-</span>
-          @endforelse
+            @forelse ($kataKunci as $keyword)
+              <span class="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">{{ $keyword }}</span>
+            @empty
+              <span class="text-xs text-gray-400">-</span>
+            @endforelse
+          </div>
         </div>
       </div>
-    </div>
     @endif
 
     {{-- data dosen pembimbing --}}
@@ -343,4 +343,3 @@
   </div>
 
 @endsection
-
