@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Dosen\PublikasiController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Dosen\DashboardController;
+use App\Http\Controllers\Dosen\InputNilaiController;
 use App\Http\Controllers\Dosen\JadwalController;
 use App\Http\Controllers\Dosen\MahasiswaBimbingan;
 use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
+use App\Http\Controllers\Dosen\PublikasiController;
 use App\Http\Controllers\Dosen\UndanganController;
-use App\Http\Controllers\Dosen\DashboardController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('dosen.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
@@ -23,6 +24,8 @@ Route::middleware(['auth', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('d
 
   Route::get('/undangan', [UndanganController::class, 'index'])->name('undangan.index');
   Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+  Route::get('/input-nilai', [InputNilaiController::class, 'index'])->name('nilai.index');
+  Route::post('/input-nilai/{dosenPenguji}', [InputNilaiController::class, 'store'])->name('nilai.store');
 
   Route::prefix('publikasi')->name('publikasi.')->controller(PublikasiController::class)->group(function () {
     Route::get('/', 'index')->name('index');

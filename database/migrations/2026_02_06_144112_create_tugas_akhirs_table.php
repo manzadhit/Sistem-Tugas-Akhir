@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('tahapan', ['proposal', 'hasil', 'skripsi'])->default('proposal');
             $table->string('file_path')->nullable();
             $table->enum('status', ['draft', 'revisi', 'acc', 'reject'])->default('draft');
+            $table->decimal('nilai', 5, 2)->nullable();
             $table->timestamps();
 
             $table->unique('mahasiswa_id');

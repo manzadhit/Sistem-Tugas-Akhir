@@ -22,7 +22,7 @@ class JadwalController extends Controller
                     $q2->where('dosen_id', $dosenId)->where('status_aktif', true);
                 })
                     ->orWhereHas('dosenPenguji', function ($q2) use ($dosenId) {
-                        $q2->where('dosen_id', $dosenId)->where('status_aktif', true);
+                        $q2->where('dosen_id', $dosenId);
                     });
             })
             ->orderBy('tanggal_ujian', 'asc')

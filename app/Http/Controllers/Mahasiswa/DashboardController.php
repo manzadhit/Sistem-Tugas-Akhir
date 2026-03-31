@@ -35,7 +35,6 @@ class DashboardController extends Controller
 
         $dosenPenguji = DosenPenguji::with('dosen')
             ->where('mahasiswa_id', $mahasiswa->id)
-            ->where('status_aktif', true)
             ->orderBy('jenis_penguji')->get();
 
         $riwayatBimbingan = Submission::with(['dosenPembimbing.dosen'])

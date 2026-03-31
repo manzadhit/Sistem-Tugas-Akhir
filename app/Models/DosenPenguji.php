@@ -16,10 +16,12 @@ class DosenPenguji extends Model
         'dosen_id',
         'jenis_penguji',
         'status_aktif',
+        'nilai',
     ];
 
     protected $casts = [
         'status_aktif' => 'boolean',
+        'nilai' => 'decimal:2',
     ];
 
     public function mahasiswa()

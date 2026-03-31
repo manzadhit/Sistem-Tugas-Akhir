@@ -20,6 +20,7 @@ class TugasAkhir extends Model
         'tahapan',
         'file_path',
         'status',
+        'nilai',
     ];
 
     public function mahasiswa()

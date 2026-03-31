@@ -18,6 +18,8 @@ class JadwalUjian extends Model
 
     protected $casts = [
         'tanggal_ujian' => 'date',
+        'jam_mulai' => 'datetime',
+        'jam_selesai' => 'datetime',
     ];
 
     public function ujian()
