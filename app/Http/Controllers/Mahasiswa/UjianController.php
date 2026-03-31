@@ -223,6 +223,7 @@ class UjianController extends Controller
                 ->whereJsonContains('data->action_url', route('mahasiswa.ujian.selesai', ['jenis' => $jenis]))
                 ->update(['read_at' => now()]);
 
+            $ujian->loadMissing('tugasAkhir');
             return view('mahasiswa.ujian.selesai', compact('jenis', 'ujian'));
         }
 

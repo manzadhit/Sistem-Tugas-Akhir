@@ -38,6 +38,20 @@
       Semua berkas kelengkapan telah diverifikasi dan disetujui (di-ACC) oleh staf akademik.
     </p>
 
+    @if ($jenis === 'skripsi')
+      @php $nilaiAkhir = $ujian->tugasAkhir?->nilai; @endphp
+      <div class="max-w-sm mx-auto mb-8 rounded-xl border-2 {{ $nilaiAkhir !== null ? 'border-emerald-200 bg-emerald-50' : 'border-gray-200 bg-gray-50' }} p-6">
+        <p class="text-xs font-semibold uppercase tracking-wide {{ $nilaiAkhir !== null ? 'text-emerald-500' : 'text-gray-400' }} mb-1">Nilai Akhir Skripsi</p>
+        @if ($nilaiAkhir !== null)
+          <p class="text-5xl font-bold text-emerald-600">{{ number_format($nilaiAkhir, 2) }}</p>
+          <p class="text-xs text-gray-500 mt-1">Dari skala 0–100 (bobot 3 penguji)</p>
+        @else
+          <p class="text-2xl font-semibold text-gray-400">Belum tersedia</p>
+          <p class="text-xs text-gray-400 mt-1">Menunggu semua penguji menginput nilai</p>
+        @endif
+      </div>
+    @endif
+
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
       <a href="{{ route('mahasiswa.dashboard') }}"
         class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none focus:ring-offset-2 flex justify-center items-center">
