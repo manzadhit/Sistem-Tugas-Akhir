@@ -136,6 +136,6 @@ class PembimbingController extends Controller
 
         $permintaan->mahasiswa?->user?->notify(new PembimbingAssigned($permintaan));
 
-        return back()->with('success', 'Pembimbing berhasil ditetapkan');
+        return back()->with('show_success_modal', true);
     }
 }

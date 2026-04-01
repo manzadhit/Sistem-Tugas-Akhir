@@ -122,7 +122,7 @@ class PengujiController extends Controller
             $permintaan->loadMissing('tugasAkhir.mahasiswa.user');
             $permintaan->tugasAkhir->mahasiswa?->user?->notify(new PengujiAssigned($permintaan));
 
-            return back()->with('success', 'Penguji berhasil ditetapkan');
+            return back()->with('show_success_modal', true);
         } catch (\Throwable $th) {
             return back()->with('error', 'Penguji gagal ditetapkan');
         }
