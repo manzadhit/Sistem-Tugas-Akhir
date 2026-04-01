@@ -229,7 +229,8 @@ class VerifikasiSyaratController extends Controller
     ])->findOrFail($id);
 
     $ujian->undanganUjian->update(['status' => 'terkirim']);
-    $ujian->update(['status' => 'menunggu_hasil']);
+    $newStatus = $ujian->jenis_ujian === 'skripsi' ? 'menunggu_nilai' : 'menunggu_hasil';
+    $ujian->update(['status' => $newStatus]);
 
     $mahasiswa = $ujian->tugasAkhir->mahasiswa;
 

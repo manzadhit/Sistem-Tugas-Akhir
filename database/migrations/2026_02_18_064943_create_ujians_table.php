@@ -20,6 +20,7 @@ return new class extends Migration {
                 'menunggu_verifikasi_syarat',
                 'revisi_syarat',
                 'menunggu_undangan',
+                'menunggu_nilai',
                 'menunggu_hasil',
                 'menunggu_verifikasi_hasil',
                 'revisi_hasil',

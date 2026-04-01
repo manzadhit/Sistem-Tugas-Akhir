@@ -16,7 +16,7 @@
   </div>
 
   <!-- Progress Bar -->
-  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 2])
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 'undangan'])
 
   <!-- Status Undangan -->
   @if (optional($ujian->undanganUjian)->status === 'terkirim')
@@ -97,11 +97,19 @@
         </div>
 
         <div class="mt-8 flex justify-center">
-          <a class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer border-none sm:w-auto w-full justify-center shadow-[0_2px_8px_rgba(37,99,235,0.3)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
-            href="{{ route('mahasiswa.ujian.hasil-ujian', $jenis) }}">
-            <i class="fas fa-upload"></i>
-            Upload Hasil Ujian
-          </a>
+          @if ($jenis === 'skripsi')
+            <a class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer border-none sm:w-auto w-full justify-center shadow-[0_2px_8px_rgba(37,99,235,0.3)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
+              href="{{ route('mahasiswa.ujian.penilaian', $jenis) }}">
+              <i class="fas fa-star"></i>
+              Lihat Penilaian
+            </a>
+          @else
+            <a class="inline-flex items-center gap-2 px-6 py-3 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer border-none sm:w-auto w-full justify-center shadow-[0_2px_8px_rgba(37,99,235,0.3)] hover:shadow-[0_4px_12px_rgba(37,99,235,0.4)]"
+              href="{{ route('mahasiswa.ujian.hasil-ujian', $jenis) }}">
+              <i class="fas fa-upload"></i>
+              Upload Hasil Ujian
+            </a>
+          @endif
         </div>
       </div>
     </div>

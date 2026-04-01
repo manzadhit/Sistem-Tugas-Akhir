@@ -38,8 +38,12 @@
         'label' => 'Jadwal Ujian',
         'active' => request()->routeIs('dosen.jadwal.index'),
     ],
-    ['href' => '#', 'icon' => 'fas fa-edit', 'label' => 'Input Nilai'],
-
+    [
+        'href' => route('dosen.nilai.index'),
+        'icon' => 'fas fa-edit',
+        'label' => 'Input Nilai',
+        'active' => request()->routeIs('dosen.nilai.index'),
+    ],
     ['section' => 'Publikasi'],
     [
         'href' => route('dosen.publikasi.index'),

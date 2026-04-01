@@ -22,7 +22,7 @@
         <i class="fas fa-file-alt"></i>
       </div>
       <div>
-        <p class="text-sm text-slate-500">Mahasiswa Ajukan Proposal</p>
+        <p class="text-sm text-slate-500">Mahasiswa Ajukan Ujian</p>
         <p class="text-2xl font-bold text-slate-900">{{ $totalPengajuan ?? 0 }}</p>
       </div>
     </div>

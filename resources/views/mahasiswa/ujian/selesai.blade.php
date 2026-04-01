@@ -20,7 +20,7 @@
   </div>
 
   {{-- Progress Bar --}}
-  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 4])
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 'selesai'])
 
   {{-- Konten Utama Selesai --}}
   <div class="bg-white shadow-sm rounded-xl overflow-hidden p-8 text-center border-t-4 border-emerald-500">

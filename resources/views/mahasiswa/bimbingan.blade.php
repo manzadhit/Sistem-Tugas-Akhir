@@ -239,11 +239,15 @@
                       {{ $status['label'] }}
                     </span>
                   </h4>
+                  <div class="flex items-center gap-1.5 text-[0.8rem] text-gray-600 mb-1.5">
+                    <i class="fas fa-user-tie text-blue-500 w-3.5 text-center shrink-0"></i>
+                    <span class="font-medium text-gray-700">{{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
+                    <span class="text-gray-300">·</span>
+                    <span>{{ $submission->dosenPembimbing->dosen->nama_lengkap }}</span>
+                  </div>
                   <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.75rem] sm:text-[0.8rem] text-gray-500">
                     <span><i class="far fa-clock"></i> {{ $submission->created_at?->format('d M Y, H:i') }}</span>
                     <span><i class="far fa-file"></i> {{ $fileCount }} file</span>
-                    <span><i class="fas fa-user"></i> {{ $submission->status == 'pending' ? 'Dikirim ke:' : 'Dari: ' }}
-                      {{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
                   </div>
                 </div>
                 <div class="flex w-full items-center justify-end gap-2 sm:gap-3 lg:w-auto">

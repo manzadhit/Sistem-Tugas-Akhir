@@ -81,6 +81,7 @@
             <div class="px-6 py-4 flex items-start justify-between gap-4">
               <div class="min-w-0">
                 <p class="text-sm font-semibold text-slate-800 truncate">
+                  {{ $submission->dosenPembimbing->getJenisPembimbing() }} -
                   {{ $submission->dosenPembimbing->dosen->nama_lengkap ?? '-' }}
                 </p>
                 @if ($submission->catatan)
@@ -126,7 +127,11 @@
                 <p class="text-sm font-semibold text-slate-900">Pembimbing {{ $loop->iteration }}</p>
                 <p class="text-xs text-slate-500">{{ $pembimbing->dosen->nama_lengkap ?? '-' }}</p>
               </div>
-              <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>
+              @if ($pembimbing->status_aktif)
+                <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>
+              @else
+                <span class="rounded-full bg-slate-50 px-2.5 py-0.5 text-xs font-semibold text-slate-700">Selesai</span>
+              @endif
             </div>
           @empty
             <p class="text-sm text-slate-500 text-center py-2">Belum ada pembimbing.</p>
@@ -148,7 +153,6 @@
                 <p class="text-sm font-semibold text-slate-900">Penguji {{ $loop->iteration }}</p>
                 <p class="text-xs text-slate-500">{{ $penguji->dosen->nama_lengkap ?? '-' }}</p>
               </div>
-              <span class="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">Aktif</span>
             </div>
           @empty
             <div class="p-6 space-y-3">

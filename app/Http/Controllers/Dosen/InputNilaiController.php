@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use App\Models\DosenPenguji;
 use App\Models\TugasAkhir;
+use App\Models\Ujian;
 use Illuminate\Http\Request;
 
 class InputNilaiController extends Controller
@@ -62,6 +63,12 @@ class InputNilaiController extends Controller
 
             TugasAkhir::where('mahasiswa_id', $mahasiswaId)
                 ->update(['nilai' => round($nilaiAkhir, 2)]);
+
+            // Ubah status ujian skripsi → menunggu_hasil agar mahasiswa bisa upload hasil
+            Ujian::whereHas('tugasAkhir', fn($q) => $q->where('mahasiswa_id', $mahasiswaId))
+                ->where('jenis_ujian', 'skripsi')
+                ->where('status', 'menunggu_nilai')
+                ->update(['status' => 'menunggu_hasil']);
         }
 
         return redirect()->route('dosen.nilai.index')

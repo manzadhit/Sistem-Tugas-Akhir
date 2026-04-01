@@ -36,7 +36,10 @@ class UjianController extends Controller
             'draft', 'revisi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_undangan' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
-            'menunggu_hasil' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
+            'menunggu_nilai' => redirect()->route('mahasiswa.ujian.penilaian', ['jenis' => $jenis]),
+            'menunggu_hasil' => $jenis === 'skripsi'
+                ? redirect()->route('mahasiswa.ujian.hasil-ujian', ['jenis' => $jenis])
+                : redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'selesai' => redirect()->route('mahasiswa.ujian.selesai', ['jenis' => $jenis]),
             default => abort(500, 'Status ujian tidak valid')
         };
@@ -121,6 +124,22 @@ class UjianController extends Controller
         }
     }
 
+    public function showPenilaian(Request $request, string $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
+
+        $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        if (!in_array($ujian->status, ['menunggu_nilai', 'menunggu_hasil'])) {
+            return redirect()->route('mahasiswa.ujian', ['jenis' => $jenis]);
+        }
+
+        $ujian->loadMissing('tugasAkhir.mahasiswa.dosenPenguji.dosen');
+
+        return view('mahasiswa.ujian.penilaian', compact('jenis', 'ujian'));
+    }
+
     public function showUndangan(Request $request, $jenis)
     {
         $mahasiswa = $request->user()->profileMahasiswa;
@@ -147,6 +166,11 @@ class UjianController extends Controller
         $tugasAkhirId = $mahasiswa->tugasAkhir?->id;
 
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        if ($ujian->status === 'menunggu_nilai') {
+            return redirect()->route('mahasiswa.ujian.penilaian', ['jenis' => $jenis])
+                ->with('warning', 'Silakan tunggu hingga semua penguji menginput nilai.');
+        }
 
         $daftarSyarat = collect(config("pasca_ujian.{$jenis}"));
 

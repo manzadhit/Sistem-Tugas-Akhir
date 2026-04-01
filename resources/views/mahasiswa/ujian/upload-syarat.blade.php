@@ -26,7 +26,7 @@
   </div>
 
   {{-- Progress Bar --}}
-  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 1])
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 'syarat'])
 
   @if (in_array($ujian->status, ['draft', 'revisi_syarat']))
     {{-- Alert --}}

@@ -108,6 +108,7 @@ class VerifikasiHasilController extends Controller
 
     $ujian->update(['status' => 'selesai']);
 
+    // Menonaktifkan dosen pembimbing dan meluluskan mahasiswa
     if ($ujian->jenis_ujian === 'skripsi') {
       DosenPembimbing::where('mahasiswa_id', $ujian->tugasAkhir->mahasiswa_id)
         ->where('status_aktif', true)
@@ -115,6 +116,8 @@ class VerifikasiHasilController extends Controller
           'status_aktif' => false,
           'tanggal_selesai' => now(),
         ]);
+
+      $ujian->tugasAkhir->mahasiswa()->update(['status_akademik' => 'lulus']);
     }
 
     $nextTahapan = match ($ujian->jenis_ujian) {

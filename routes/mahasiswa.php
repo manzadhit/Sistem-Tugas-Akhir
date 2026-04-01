@@ -46,6 +46,8 @@ Route::middleware(['auth', 'role:mahasiswa', 'mahasiswa.aktif'])->prefix('mahasi
 
         Route::get('/{jenis}/undangan', [UjianController::class, 'showUndangan'])->name('ujian.undangan');
 
+        Route::get('/{jenis}/penilaian', [UjianController::class, 'showPenilaian'])->name('ujian.penilaian');
+
         Route::get('/{jenis}/hasil-ujian', [UjianController::class, 'showHasilUjian'])->name('ujian.hasil-ujian');
         Route::post('/{jenis}/hasil-ujian', [UjianController::class, 'submitHasilUjian'])->name('ujian.submitHasilUjian');
 

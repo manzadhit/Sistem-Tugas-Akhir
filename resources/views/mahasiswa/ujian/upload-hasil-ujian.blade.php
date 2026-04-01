@@ -26,7 +26,7 @@
   </div>
 
   {{-- Progress Bar --}}
-  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 3])
+  @include('mahasiswa.ujian.partials.progress-bar', ['activeStep' => 'hasil'])
 
   @if (in_array($ujian->status, ['menunggu_hasil', 'revisi_hasil']))
     {{-- Alert --}}
@@ -125,7 +125,14 @@
         </div>
 
         {{-- Action Buttons --}}
-        <div class="flex justify-end gap-3 pt-6 mt-6 border-t border-gray-200">
+        <div class="flex justify-between gap-3 pt-6 mt-6 border-t border-gray-200">
+          {{-- Kembali --}}
+          <a href="{{ $jenis === 'skripsi' ? route('mahasiswa.ujian.penilaian', $jenis) : route('mahasiswa.ujian.undangan', $jenis) }}"
+            class="inline-flex items-center gap-2 px-5 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition cursor-pointer no-underline">
+            <i class="fas fa-arrow-left text-gray-400"></i>
+            Kembali
+          </a>
+
           <button type="button"
             @click="if(document.getElementById('ujianForm').checkValidity()) { showModal = true } else { document.getElementById('ujianForm').reportValidity() }"
             class="inline-flex items-center gap-2 px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-medium text-white transition {{ $isRevisi ?? false ? 'bg-red-600 hover:bg-red-700 shadow-[0_4px_12px_rgba(220,38,38,0.3)]' : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:-translate-y-0.5 shadow-[0_4px_12px_rgba(37,99,235,0.3)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)]' }} rounded-xl border-none cursor-pointer">
