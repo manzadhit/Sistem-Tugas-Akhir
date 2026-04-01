@@ -60,6 +60,9 @@
     </div>
 
     <div x-data="fileUpload()">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Laporan <span class="text-red-500">*</span>
+      </label>
       <!-- Upload Area -->
       <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
         @drop.prevent="handleDrop($event)" :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
@@ -108,14 +111,76 @@
           </div>
         </template>
       </div>
+
+      @error('files')
+        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+      @enderror
+    </div>
+
+    {{-- Abstrak --}}
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        Abstrak <span class="text-red-500">*</span>
+      </label>
+      <textarea name="abstrak" required rows="5"
+        class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] resize-y transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 @error('abstrak') border-red-400 @enderror"
+        placeholder="Tuliskan abstrak dari tugas akhir Anda...">{{ old('abstrak', $tugasAkhir->abstrak ?? '') }}</textarea>
+      @error('abstrak')
+        <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
+      @enderror
+    </div>
+
+    {{-- Kata Kunci --}}
+    @php
+      $existingKeywords = old('kata_kunci')
+        ? array_values(array_filter(array_map('trim', explode(',', old('kata_kunci')))))
+        : array_values(array_filter(array_map('trim', explode(',', $tugasAkhir->kata_kunci ?? ''))));
+    @endphp
+    <div x-data="kataKunciInput(@js($existingKeywords))">
+      <label class="block text-sm font-medium text-gray-700 mb-1.5">
+        Kata Kunci <span class="text-red-500">*</span>
+        <span class="text-xs font-normal text-gray-400 ml-1">(minimal 5 kata kunci)</span>
+      </label>
+
+      {{-- Tags container --}}
+      <div class="rounded-xl border border-slate-200 bg-white shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-400">
+        <div class="flex flex-wrap items-center gap-2 p-2" @click="$refs.kataKunciInput.focus()">
+
+          {{-- Render chip untuk setiap tag --}}
+          <template x-for="(tag, index) in tags" :key="index">
+            <span class="inline-flex items-center gap-2 rounded-lg bg-slate-100 border border-slate-200 px-3 py-1.5 text-sm text-slate-700">
+              <span x-text="tag"></span>
+              <button type="button" @click.stop="removeTag(index)"
+                class="text-slate-500 hover:text-slate-700 bg-transparent border-none cursor-pointer p-0">
+                <i class="fas fa-times text-xs"></i>
+              </button>
+            </span>
+          </template>
+
+          {{-- Input teks untuk menambah tag --}}
+          <input type="text" x-ref="kataKunciInput" x-model="currentTag"
+            @keydown.enter.prevent="addTag()"
+            @keydown.comma.prevent="addTag()"
+            @keydown.backspace="currentTag === '' && removeTag(tags.length - 1)"
+            placeholder="Ketik lalu tekan Enter atau koma..."
+            class="flex-1 min-w-[180px] border-0 bg-transparent px-2 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none" />
+        </div>
+      </div>
+
+      {{-- Nilai dikirim ke server sebagai string comma-separated --}}
+      <input type="hidden" name="kata_kunci" :value="tags.join(', ')" />
+
+      @error('kata_kunci')
+        <p class="mt-1.5 text-xs text-red-500">{{ $message }}</p>
+      @enderror
     </div>
 
     <!-- Notes/Description -->
-    <div class="mb-5">
-      <label class="block text-sm font-medium text-gray-700 mb-2">Catatan untuk Ketua Jurusan</label>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Catatan (opsional)</label>
       <textarea name="catatan"
         class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] resize-y min-h-[100px] transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
-        placeholder="Tambahkan catatan atau keterangan mengenai laporan yang diupload..."></textarea>
+        placeholder="Tambahkan catatan atau keterangan mengenai laporan yang diupload...">{{ old('catatan') }}</textarea>
     </div>
 
     <!-- Action Buttons -->
@@ -126,10 +191,33 @@
         Kembali
       </a>
       <button type="submit"
-        class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium cursor-pointer transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed">
+        class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium cursor-pointer transition-all border-0 bg-blue-600 text-white hover:bg-blue-800">
         <i class="fas fa-paper-plane"></i>
         {{ isset($kajurSubmission) && in_array($kajurSubmission->status, ['revisi', 'reject']) ? 'Upload & Kirim Ulang' : 'Upload & Kirim' }}
       </button>
     </div>
   </form>
 </div>
+
+<script>
+  function kataKunciInput(initialTags) {
+    return {
+      tags: initialTags ?? [],
+      currentTag: '',
+
+      addTag() {
+        const tag = this.currentTag.replace(/,/g, '').trim();
+        if (tag && !this.tags.includes(tag)) {
+          this.tags.push(tag);
+        }
+        this.currentTag = '';
+      },
+
+      removeTag(index) {
+        if (index >= 0 && index < this.tags.length) {
+          this.tags.splice(index, 1);
+        }
+      },
+    }
+  }
+</script>

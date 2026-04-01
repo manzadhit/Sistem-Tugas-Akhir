@@ -69,18 +69,16 @@
         <!-- Abstrak -->
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Abstrak</span>
-          <span class="text-base text-gray-900 text-justify leading-relaxed">{{ $permintaan->tugasAkhir->abstrak }}</span>
+          <span class="text-base text-gray-900 text-justify leading-relaxed line-clamp-5">{{ $permintaan->tugasAkhir->abstrak }}</span>
         </div>
         <!-- Kata Kunci -->
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Kata Kunci</span>
           <div class="flex flex-wrap gap-2 mt-1">
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">K-Means</span>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">DBSCAN</span>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">Clustering</span>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">Data Mining</span>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">Silhouette Score</span>
-            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">Data Mahasiswa</span>
+            @foreach (explode(',', $permintaan->tugasAkhir->kata_kunci) as $kata_kunci)
+              <span
+                class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-md text-sm font-medium">{{ $kata_kunci }}</span>
+            @endforeach
           </div>
         </div>
         <!-- Dosen Pembimbing -->
@@ -399,11 +397,14 @@
                           <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
                           <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
                           <div class="flex items-center gap-2 mt-1.5 flex-wrap">
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            <span
+                              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                               <i class="fas fa-laptop-code text-[0.6rem]"></i> <span x-text="dosen.keahlian"></span>
                             </span>
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                              <i class="fas fa-tasks text-[0.6rem]"></i> <span x-text="dosen.total_pengujian_periode ?? 0"></span> Pengujian
+                            <span
+                              class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                              <i class="fas fa-tasks text-[0.6rem]"></i> <span
+                                x-text="dosen.total_pengujian_periode ?? 0"></span> Pengujian
                             </span>
                           </div>
                         </div>
@@ -554,10 +555,12 @@
                         <p class="text-[0.7rem] text-gray-500 truncate">NIDN: <span x-text="dosen.nidn || '-' "></span>
                         </p>
                         <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                          <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                          <span
+                            class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                             <span x-text="dosen.keahlian || 'Umum'"></span>
                           </span>
-                          <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                          <span
+                            class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
                             <span x-text="dosen.total_pengujian_periode ?? 0"></span> Ujian
                           </span>
                         </div>
@@ -588,10 +591,12 @@
                           <h5 class="text-[0.9rem] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h5>
                           <p class="text-[0.7rem] text-gray-500">NIDN: <span x-text="dosen.nidn || '-' "></span></p>
                           <div class="flex items-center gap-1.5 mt-1 flex-wrap">
-                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
+                            <span
+                              class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                               <span x-text="dosen.keahlian || 'Umum'"></span>
                             </span>
-                            <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
+                            <span
+                              class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
                               <span x-text="dosen.total_pengujian_periode ?? 0"></span> Ujian
                             </span>
                           </div>
@@ -647,7 +652,8 @@
             <div class="mt-3 text-center sm:mt-5">
               <h3 class="text-lg font-semibold leading-6 text-gray-900">Penguji Berhasil Ditetapkan!</h3>
               <div class="mt-2">
-                <p class="text-sm text-gray-500">Dosen penguji telah ditetapkan dan mahasiswa akan mendapatkan notifikasi.</p>
+                <p class="text-sm text-gray-500">Dosen penguji telah ditetapkan dan mahasiswa akan mendapatkan
+                  notifikasi.</p>
               </div>
             </div>
           </div>

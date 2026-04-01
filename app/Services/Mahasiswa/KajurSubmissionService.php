@@ -9,12 +9,16 @@ use Illuminate\Support\Facades\DB;
 
 class kajurSubmissionService
 {
-  public function createKajurSubmission(int $mahasiswaId, ?string $catatan, array $files): KajurSubmission
+  public function createKajurSubmission(int $mahasiswaId, ?string $catatan, string $abstrak, string $kataKunci, array $files): KajurSubmission
   {
     $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswaId)->first();
 
+    return DB::transaction(function () use ($tugasAkhir, $catatan, $abstrak, $kataKunci, $files) {
+      $tugasAkhir->update([
+        'abstrak' => $abstrak,
+        'kata_kunci' => $kataKunci,
+      ]);
 
-    return DB::transaction(function () use ($tugasAkhir, $catatan, $files) {
       $kajurSubmission = KajurSubmission::create([
         'tugas_akhir_id' => $tugasAkhir->id,
         'catatan' => $catatan,

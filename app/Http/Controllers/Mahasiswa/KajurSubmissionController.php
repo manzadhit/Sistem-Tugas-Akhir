@@ -19,9 +19,11 @@ class KajurSubmissionController extends Controller
             $mahasiswaId = $request->user()->profileMahasiswa->id;
 
             $catatan = $request->input('catatan');
+            $abstrak = $request->input('abstrak');
+            $kataKunci = $request->input('kata_kunci');
             $files = $request->file('files');
 
-            $kajurSubmission = $this->kajurSubmissionService->createKajurSubmission($mahasiswaId, $catatan, $files);
+            $kajurSubmission = $this->kajurSubmissionService->createKajurSubmission($mahasiswaId, $catatan, $abstrak, $kataKunci, $files);
             $kajurSubmission->loadMissing('tugasAkhir.mahasiswa');
 
             User::where('role', 'kajur')
