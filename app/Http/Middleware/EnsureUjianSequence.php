@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\KajurSubmission;
 use App\Models\Submission;
 use App\Models\TugasAkhir;
+use App\Models\Ujian;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -24,11 +25,21 @@ class EnsureUjianSequence
         $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswaId)->first();
         abort_if(!$tugasAkhir, 403, 'Tugas akhir belum tersedia.');
 
-        $tahapan = $tugasAkhir->tahapan;
-        $urutan = ['proposal' => 1, 'hasil' => 2, 'skripsi' => 3];
+        $previousJenis = [
+            'hasil' => 'proposal',
+            'skripsi' => 'hasil',
+        ][$jenis] ?? null;
 
-        if (($urutan[$jenis] ?? 0) > ($urutan[$tahapan] ?? 0)) {
-            abort(403, 'Belum bisa akses ujian ini.');
+        if ($previousJenis) {
+            $previousUjianSelesai = Ujian::query()
+                ->where('tugas_akhir_id', $tugasAkhir->id)
+                ->where('jenis_ujian', $previousJenis)
+                ->where('status', 'selesai')
+                ->exists();
+
+            if (! $previousUjianSelesai) {
+                abort(403, 'Belum bisa akses ujian ini sebelum ujian tahap sebelumnya selesai.');
+            }
         }
 
         $latestSubmissionPerPembimbing = Submission::query()
@@ -46,6 +57,7 @@ class EnsureUjianSequence
 
         $kajurSubmissionApproved = KajurSubmission::query()
             ->where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('tahapan', $jenis)
             ->latest('id')
             ->value('status') === 'acc';
 

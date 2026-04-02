@@ -17,7 +17,7 @@
 
   {{-- Stat Jurusan --}}
   <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-2">Ringkasan Jurusan</p>
-  <div class="grid grid-cols-3 gap-3 mb-5">
+  <div class="grid grid-cols-2 gap-3 mb-5">
 
     <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
       <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
@@ -46,6 +46,16 @@
       <div>
         <p class="text-xs text-slate-500">Menunggu Penguji</p>
         <p class="text-xl font-bold text-slate-900">{{ $menungguPenguji }}</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+        <i class="fas fa-file-signature text-sm"></i>
+      </div>
+      <div>
+        <p class="text-xs text-slate-500">Menunggu Persetujuan Hasil & Skripsi</p>
+        <p class="text-xl font-bold text-slate-900">{{ $menungguPersetujuan }}</p>
       </div>
     </div>
   </div>

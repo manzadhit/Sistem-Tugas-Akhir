@@ -21,6 +21,12 @@ class DashboardController extends Controller
             ->count();
 
         $menungguPenguji = KajurSubmission::whereIn('status', ['pending', 'acc'])
+        ->where('tahapan', 'proposal')
+            ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
+            ->count();
+
+        $menungguPersetujuan = KajurSubmission::where('status', 'pending')
+        ->whereIn('tahapan', ['proposal', 'hasil'])
             ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
             ->count();
 
@@ -55,6 +61,7 @@ class DashboardController extends Controller
             'totalMahasiswa',
             'menungguPembimbing',
             'menungguPenguji',
+            'menungguPersetujuan',
             'totalMahasiswaBimbingan',
             'totalPublikasi',
             'mahasiswaBimbingan',

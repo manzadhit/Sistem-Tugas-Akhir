@@ -137,6 +137,7 @@ class BimbinganController extends Controller
 
         $kajurSubmission = KajurSubmission::with('kajurSubmissionFiles')
             ->where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('tahapan', $jenis)
             ->latest()
             ->first();
 
