@@ -22,21 +22,17 @@
   @if (optional($ujian->undanganUjian)->status === 'terkirim')
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
       <div class="px-8 py-6 border-b border-gray-200 text-center bg-slate-50">
-        <div class="text-lg sm:text-xl font-bold text-slate-900 mb-1">Status Undangan</div>
-        <div class="text-xs sm:text-sm text-slate-500">
-          Undangan resmi sudah dikirim ke seluruh dosen penguji.
-        </div>
-      </div>
-      <div class="p-6 sm:p-8 text-center">
+        <div class="text-lg sm:text-xl font-bold text-slate-900 mb-2">Status Undangan</div>
         <span
-          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold bg-green-100 text-green-800 mb-4">
+          class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[0.8rem] font-semibold bg-green-100 text-green-800 mb-2">
           <i class="fas fa-check-circle"></i>
           Terkirim ke Penguji
         </span>
         <div class="text-xs sm:text-sm text-slate-500 mb-5">
-          Silakan persiapkan presentasi dan berkas pendukung.
+          Undangan resmi sudah dikirim ke seluruh dosen penguji. Silakan persiapkan presentasi dan berkas pendukung.
         </div>
-
+      </div>
+      <div class="p-6 sm:p-8 text-center">
         <div class="border border-gray-200 rounded-xl p-4 sm:p-5 bg-gray-50 text-left mb-5 w-full">
           <div class="text-[0.9rem] font-bold text-slate-900 mb-3">Jadwal Ujian</div>
           <div class="flex flex-col gap-2">

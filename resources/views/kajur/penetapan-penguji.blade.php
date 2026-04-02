@@ -69,7 +69,8 @@
         <!-- Abstrak -->
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Abstrak</span>
-          <span class="text-base text-gray-900 text-justify leading-relaxed line-clamp-5">{{ $permintaan->tugasAkhir->abstrak }}</span>
+          <span
+            class="text-base text-gray-900 text-justify leading-relaxed line-clamp-5">{{ $permintaan->tugasAkhir->abstrak }}</span>
         </div>
         <!-- Kata Kunci -->
         <div class="flex flex-col gap-1 md:col-span-2">
@@ -213,54 +214,8 @@
                       :disabled="status === 'pending' || status === 'acc'"></textarea>
                   </div>
 
-                  <div x-data="fileUpload()">
-                    <label class="block text-xs font-semibold text-gray-600 mb-1.5">Upload File Pendukung <span
-                        class="text-xs text-gray-400 font-normal">(Opsional)</span></label>
-                    <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true"
-                      @dragleave.prevent="dragging = false" @drop.prevent="handleDrop($event)"
-                      :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
-                      class="border-2 border-dashed rounded-xl p-2 text-center transition-all cursor-pointer mb-6 hover:border-blue-600 hover:bg-blue-50">
-                      <i class="fas fa-cloud-upload-alt text-2xl text-gray-400 mb-4"></i>
-                      <p class="text-gray-500 mb-2 text-sm">
-                        Drag and drop file Anda di sini, atau <span
-                          class="text-blue-600 font-medium cursor-pointer">browse
-                          files</span>
-                      </p>
-                      <p class="text-xs text-gray-400">Format yang didukung: PDF, DOC, DOCX (Maks 10MB)</p>
-                    </div>
-                    <input type="file" name="files[]" x-ref="fileInput" @change="handleFiles($event.target.files)"
-                      class="hidden" accept=".pdf,.doc,.docx" multiple />
-
-                    <div class="mb-6" x-show="files.length > 0">
-                      <div class="text-xs font-medium text-gray-700 mb-3">File yang dipilih:</div>
-                      <template x-for="(file, index) in files" :key="index">
-                        <div class="flex items-center justify-between px-4 py-2 bg-gray-50 rounded-lg mb-2">
-                          <div class="flex items-center gap-3">
-                            <div :class="getFileIconClass(file.name)"
-                              class="w-5 h-4 rounded-md flex items-center justify-center text-base">
-                              <i :class="getFileIcon(file.name)"></i>
-                            </div>
-                            <div>
-                              <div class="text-sm font-medium text-gray-900" x-text="file.name"></div>
-                              <div class="text-xs text-gray-500" x-text="formatFileSize(file.size)"></div>
-                            </div>
-                          </div>
-                          <div class="flex gap-2">
-                            <button @click="viewFile(file)" type="button"
-                              class="w-4 h-4 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-blue-100 text-blue-600 hover:bg-blue-200"
-                              title="Lihat">
-                              <i class="fas fa-eye"></i>
-                            </button>
-                            <button @click="removeFile(index)" type="button"
-                              class="w-4 h-4 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-red-100 text-red-600 hover:bg-red-200"
-                              title="Hapus">
-                              <i class="fas fa-trash"></i>
-                            </button>
-                          </div>
-                        </div>
-                      </template>
-                    </div>
-                  </div>
+                  <x-file-upload name="files[]" accept=".pdf,.doc,.docx" :multiple="true"
+                    label="Upload File Pendukung (Opsional)" :max-mb="10" class="mb-6" />
 
                   <div class="flex gap-2 justify-end">
                     <button type="button" @click="status = 'pending'"
@@ -636,37 +591,10 @@
   @endif
 
   {{-- Success Modal --}}
-  <div x-data="{ showSuccessModal: {{ session('show_success_modal') ? 'true' : 'false' }} }">
-    <div x-show="showSuccessModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-black/50 z-[100]"
-      style="display: none;"></div>
-    <div x-show="showSuccessModal" class="fixed inset-0 z-[101] overflow-y-auto" style="display: none;">
-      <div class="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
-        <div x-show="showSuccessModal" x-transition:enter="ease-out duration-300"
-          x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-          class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-          <div>
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-              <i class="fas fa-check text-xl text-emerald-600"></i>
-            </div>
-            <div class="mt-3 text-center sm:mt-5">
-              <h3 class="text-lg font-semibold leading-6 text-gray-900">Penguji Berhasil Ditetapkan!</h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">Dosen penguji telah ditetapkan dan mahasiswa akan mendapatkan
-                  notifikasi.</p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 sm:mt-6">
-            <a href="{{ route('kajur.permintaan-penguji.index') }}"
-              class="inline-flex w-full justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-colors">
-              Oke, Kembali ke Daftar
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @if (session('show_success_modal'))
+    <x-result-modal status="success" title="Penguji Berhasil Ditetapkan!"
+      desc="Dosen penguji telah ditetapkan dan mahasiswa akan mendapatkan notifikasi." :href="route('kajur.permintaan-penguji.index')" />
+  @endif
 
   <script>
     function pengujiHandler(rankedDosens, unrankedDosens, initialSelected, similarityScores, mautResult) {
@@ -772,88 +700,6 @@
 
         get filteredAvailableUnranked() {
           return this.availableUnranked.filter(d => this.matchesSearch(d));
-        }
-      }
-    }
-
-    // Alpine.js Component for File Upload
-    function fileUpload() {
-      return {
-        files: [],
-        dragging: false,
-
-        handleFiles(fileList) {
-          const maxSize = 10 * 1024 * 1024; // 10MB
-          const allowedTypes = ['application/pdf', 'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-          ];
-
-          Array.from(fileList).forEach(file => {
-            // Validate file size
-            if (file.size > maxSize) {
-              alert(`File ${file.name} terlalu besar. Maksimal 10MB`);
-              return;
-            }
-
-            // Validate file type
-            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|doc|docx)$/i)) {
-              alert(`File ${file.name} format tidak didukung. Hanya PDF, DOC, DOCX`);
-              return;
-            }
-
-            const isDuplicate = this.files.some(existingFile =>
-              existingFile.name === file.name &&
-              existingFile.size === file.size &&
-              existingFile.lastModified === file.lastModified
-            );
-
-            if (isDuplicate) {
-              return;
-            }
-
-            this.files.push(file);
-          });
-          this.syncInputFiles();
-        },
-
-        handleDrop(e) {
-          this.dragging = false;
-          const files = e.dataTransfer.files;
-          this.handleFiles(files);
-        },
-
-        removeFile(index) {
-          this.files.splice(index, 1);
-          this.syncInputFiles();
-        },
-
-        viewFile(file) {
-          const url = URL.createObjectURL(file);
-          window.open(url, '_blank');
-        },
-
-        getFileIcon(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-word';
-        },
-
-        getFileIconClass(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600';
-        },
-
-        formatFileSize(bytes) {
-          return (bytes / 1024 / 1024).toFixed(2) + ' MB';
-        },
-
-        syncInputFiles() {
-          const dataTransfer = new DataTransfer();
-
-          this.files.forEach(file => {
-            dataTransfer.items.add(file);
-          });
-
-          this.$refs.fileInput.files = dataTransfer.files;
         }
       }
     }

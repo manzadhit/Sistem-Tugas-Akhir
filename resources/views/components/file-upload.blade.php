@@ -1,108 +1,72 @@
 @props([
-  'name' => 'file',
-  'accept' => '',
-  'maxMb' => 2,
+    'name' => 'file',
+    'accept' => '.pdf,.doc,.docx',
+    'maxMb' => 10,
+    'multiple' => false,
+    'required' => false,
+    'label' => '',
+    'hint' => null,
 ])
 
 @php
   $maxBytes = (int) $maxMb * 1024 * 1024;
+  $defaultHint =
+      'Format yang didukung: ' .
+      strtoupper(str_replace(',', ', ', str_replace('.', '', $accept))) .
+      " (Maks {$maxMb}MB)";
 @endphp
 
-<div
-  x-data="fileUpload({ maxBytes: {{ $maxBytes }}, accept: @js($accept) })"
-  class="space-y-3"
->
-  <div
-    class="rounded-xl border-2 border-dashed border-slate-300 bg-white/80 p-5 text-center
-           min-h-[128px] flex flex-col items-center justify-center gap-2
-           hover:border-blue-500 hover:bg-blue-50/40 transition cursor-pointer"
-    :class="dragover ? 'border-blue-600 bg-blue-50/70 scale-[1.01]' : ''"
-    @dragenter.prevent="dragover = true"
-    @dragover.prevent="dragover = true"
-    @dragleave.prevent="dragover = false"
-    @drop.prevent="onDrop($event)"
-    @click="$refs.input.click()"
-  >
-    <div
-      class="h-11 w-11 rounded-2xl flex items-center justify-center text-white shadow-lg"
-      :class="file ? 'bg-emerald-500 shadow-emerald-500/20' : 'bg-gradient-to-br from-blue-800 to-blue-600 shadow-blue-600/20'"
-    >
-      <i class="fas" :class="file ? 'fa-check' : 'fa-upload'"></i>
-    </div>
+<div x-data="fileUpload({ maxBytes: {{ $maxBytes }}, accept: @js($accept), multiple: @js($multiple) })" {{ $attributes->class(['space-y-3']) }}>
+  @if ($label !== '')
+    <label class="block text-sm font-medium text-gray-700">
+      {{ $label }}
+      @if ($required)
+        <span class="text-red-600">*</span>
+      @endif
+    </label>
+  @endif
 
-    <p class="text-sm font-extrabold text-slate-900">Klik upload / drag &amp; drop</p>
-    <p class="text-xs text-slate-500">PDF, JPG, PNG • Maks. {{ $maxMb }}MB</p>
+  <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
+    @drop.prevent="handleDrop($event)" :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
+    class="border-2 border-dashed rounded-xl p-6 text-center transition-all cursor-pointer hover:border-blue-600 hover:bg-blue-50">
+    <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-3"></i>
+    <p class="text-gray-500 mb-1">Drag and drop file Anda di sini, atau <span class="text-blue-600 font-medium">browse
+        files</span></p>
+    <p class="text-xs text-gray-400">{{ $hint ?? $defaultHint }}</p>
 
-    <input
-      x-ref="input"
-      type="file"
-      name="{{ $name }}"
-      accept="{{ $accept }}"
-      class="hidden"
-      @change="onChange($event)"
-    />
+    <input x-ref="fileInput" type="file" name="{{ $name }}" accept="{{ $accept }}" class="hidden"
+      @change="handleFiles($event.target.files)" @if ($multiple) multiple @endif
+      @if ($required) required @endif />
   </div>
 
-  <template x-if="file">
-    <div class="flex items-center gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
-      <i class="fas fa-circle-check"></i>
-      <span class="text-sm font-semibold" x-text="file.name"></span>
-    </div>
-  </template>
+  <div x-show="files.length > 0">
+    <div class="text-sm font-medium text-gray-700 mb-3">File yang dipilih:</div>
 
-  <template x-if="error">
-    <p class="text-sm text-red-600" x-text="error"></p>
-  </template>
+    <template x-for="(file, index) in files" :key="index">
+      <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg mb-2">
+        <div class="flex items-center gap-3">
+          <div :class="getFileIconClass(file.name)"
+            class="w-9 h-9 rounded-md flex items-center justify-center text-base">
+            <i :class="getFileIcon(file.name)"></i>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-gray-900" x-text="file.name"></div>
+            <div class="text-xs text-gray-500" x-text="formatFileSize(file.size)"></div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button @click="viewFile(file)" type="button"
+            class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-blue-100 text-blue-600 hover:bg-blue-200"
+            title="Lihat">
+            <i class="fas fa-eye"></i>
+          </button>
+          <button @click="removeFile(index)" type="button"
+            class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-red-100 text-red-600 hover:bg-red-200"
+            title="Hapus">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+    </template>
+  </div>
 </div>
-
-<script>
-  function fileUpload({ maxBytes, accept }) {
-    const allowed = (accept || "")
-      .split(",")
-      .map(s => s.trim().replace(".", "").toLowerCase())
-      .filter(Boolean);
-
-    return {
-      dragover: false,
-      file: null,
-      error: "",
-      validate(file) {
-        if (!file) return true;
-        if (file.size > maxBytes) {
-          this.error = "Ukuran file melebihi batas.";
-          return false;
-        }
-        const ext = (file.name.split(".").pop() || "").toLowerCase();
-        if (allowed.length && !allowed.includes(ext)) {
-          this.error = "Format file tidak sesuai.";
-          return false;
-        }
-        this.error = "";
-        return true;
-      },
-      setFile(file) {
-        if (!this.validate(file)) {
-          this.file = null;
-          // reset input biar bisa pilih ulang file yg sama
-          this.$refs.input.value = "";
-          return;
-        }
-        this.file = file;
-      },
-      onChange(e) {
-        const f = e.target.files && e.target.files[0];
-        this.setFile(f);
-      },
-      onDrop(e) {
-        this.dragover = false;
-        const f = e.dataTransfer?.files?.[0];
-        if (!f) return;
-        // inject ke input supaya ikut terkirim saat submit
-        const dt = new DataTransfer();
-        dt.items.add(f);
-        this.$refs.input.files = dt.files;
-        this.setFile(f);
-      },
-    }
-  }
-</script>

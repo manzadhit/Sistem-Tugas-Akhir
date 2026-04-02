@@ -3,6 +3,7 @@
 use App\Http\Controllers\Kajur\DashboardController;
 use App\Http\Controllers\Kajur\PembimbingController;
 use App\Http\Controllers\Kajur\PengujiController;
+use App\Http\Controllers\Kajur\PersetujuanKajurController;
 use App\Http\Controllers\Kajur\ProfileController as KajurProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,8 @@ Route::middleware(['auth', 'role:kajur'])->prefix('kajur')->name('kajur.')->grou
   Route::get('/permintaan-penguji/{permintaan}', [PengujiController::class, 'show'])->name('penetapan-penguji');
   Route::put('/permintaan-penguji/{permintaan}/verify-laporan', [PengujiController::class, 'verifyLaporan'])->name('verify-laporan');
   Route::post('/permintaan-penguji/{permintaan}/tetapkan', [PengujiController::class, 'tetapkanPenguji'])->name('tetapkanPenguji');
+
+  Route::get('/persetujuan-kajur', [PersetujuanKajurController::class, 'index'])->name('persetujuan-kajur.index');
+  Route::get('/persetujuan-kajur/{persetujuan}', [PersetujuanKajurController::class, 'show'])->name('persetujuan-kajur.show');
+  Route::put('/persetujuan-kajur/{persetujuan}/verify', [PersetujuanKajurController::class, 'verify'])->name('persetujuan-kajur.verify');
 });

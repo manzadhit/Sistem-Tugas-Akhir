@@ -12,7 +12,7 @@
   @endphp
 
   <!-- Page Banner -->
-  @if ($tahapanSelesai)
+  @if ($ujianSelesai)
     <div class="relative h-40 rounded-xl overflow-hidden mb-8 bg-gradient-to-br from-emerald-500 to-emerald-700">
       <div class="absolute inset-0 flex items-center justify-center flex-col text-white text-center p-4">
         <div class="flex items-center gap-2 mb-2">
@@ -45,29 +45,40 @@
     <div class="flex justify-between relative">
       <!-- Progress Line -->
       <div
-        class="absolute top-5 left-[25%] right-[25%] h-0.5 {{ $tahapanSelesai ? 'bg-emerald-400' : 'bg-gray-200' }} z-0">
+        class="absolute top-5 left-[16%] right-[16%] h-0.5 {{ $ujianSelesai ? 'bg-emerald-400' : ($ujianSelesai ? 'bg-emerald-400' : 'bg-gray-200') }} z-0">
       </div>
 
       <!-- Step 1: Bimbingan -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
-          {{ $tahapanSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]' }}">
-          <i class="{{ $tahapanSelesai ? 'fas fa-check' : 'fas fa-comments' }}"></i>
+          {{ $ujianSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]' }}">
+          <i class="{{ $ujianSelesai ? 'fas fa-check' : 'fas fa-comments' }}"></i>
         </div>
         <span
-          class="text-[10px] sm:text-xs font-semibold text-center {{ $tahapanSelesai ? 'text-emerald-600' : 'text-blue-600' }}">Bimbingan</span>
+          class="text-[10px] sm:text-xs font-semibold text-center {{ $ujianSelesai ? 'text-emerald-600' : 'text-blue-600' }}">Bimbingan</span>
       </div>
 
-      <!-- Step 2: Tahap Kajur (selalu abu di halaman ini) -->
+      <!-- Step 2: Tahap Kajur -->
       <div class="flex flex-col items-center relative z-10 flex-1">
         <div
           class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
-          {{ $tahapanSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
-          <i class="{{ $tahapanSelesai ? 'fas fa-check' : 'fas fa-user-check' }}"></i>
+          {{ $ujianSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
+          <i class="{{ $ujianSelesai ? 'fas fa-check' : 'fas fa-user-check' }}"></i>
         </div>
         <span
-          class="text-[10px] sm:text-xs font-medium text-center {{ $tahapanSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">{{ $kajurStepLabel }}</span>
+          class="text-[10px] sm:text-xs font-medium text-center {{ $ujianSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">{{ $kajurStepLabel }}</span>
+      </div>
+
+      <!-- Step 3: Selesai -->
+      <div class="flex flex-col items-center relative z-10 flex-1">
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 transition-all duration-300
+          {{ $ujianSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
+          <i class="{{ $ujianSelesai ? 'fas fa-check' : 'fas fa-flag-checkered' }}"></i>
+        </div>
+        <span
+          class="text-[10px] sm:text-xs font-medium text-center {{ $ujianSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">Selesai</span>
       </div>
     </div>
   </div>
@@ -77,9 +88,15 @@
   <x-alert type="error" />
   <x-alert type="warning" />
 
-  @if ($hasTwoAccPembimbing && !$tahapanSelesai)
+  @if ($hasTwoAccPembimbing && !$ujianSelesai)
+    @php
+      $href =
+          $jenis == 'proposal'
+              ? route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis])
+              : route('mahasiswa.bimbingan.persetujuanKajur', ['jenis' => $jenis]);
+    @endphp
     <div class="mb-4 flex justify-center">
-      <a href="{{ route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]) }}"
+      <a href="{{ $href }}"
         class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-800 transition-all">
         <i class="fas fa-user-check"></i>
         {{ $kajurStepLabel }}
@@ -89,8 +106,8 @@
 
   <!-- Upload Form Card -->
   <form action="{{ route('mahasiswa.bimbingan.createSubmission', ['jenis' => $jenis]) }}" method="POST"
-    enctype="multipart/form-data" x-data="fileUpload()"
-    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing || $tahapanSelesai ? 'hidden' : '' }}">
+    enctype="multipart/form-data" x-data="{ selectedPembimbing: '' }"
+    class="bg-white rounded-xl shadow-sm overflow-hidden mb-8 {{ $hasTwoAccPembimbing || $ujianSelesai ? 'hidden' : '' }}">
     @csrf
 
     <div class="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
@@ -102,7 +119,7 @@
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Kirim ke Pembimbing <span class="text-red-600">*</span>
         </label>
-        <select name="pembimbing" x-model="selectedPembimbing"
+        <select name="pembimbing" x-model="selectedPembimbing" required
           class="w-full px-3 py-3 border border-gray-300 rounded-lg text-[0.95rem] bg-white cursor-pointer transition-colors focus:outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-100 disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-400">
           <option value="" disabled selected>-- Pilih Pembimbing --</option>
           @foreach ($pembimbing as $p)
@@ -118,56 +135,10 @@
         </select>
       </div>
 
-      <div>
-        <!-- Upload Area -->
-        <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
-          @drop.prevent="handleDrop($event)" :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
-          class="border-2 border-dashed rounded-xl p-10 text-center transition-all cursor-pointer mb-6 hover:border-blue-600 hover:bg-blue-50">
-          <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
-          <p class="text-gray-500 mb-2">
-            Drag and drop file Anda di sini, atau <span class="text-blue-600 font-medium cursor-pointer">browse
-              files</span>
-          </p>
-          <p class="text-xs text-gray-400">
-            Format yang didukung: PDF, DOC, DOCX (Maks 10MB) - Upload satu
-            atau beberapa BAB sekaligus
-          </p>
-        </div>
-        <input type="file" name="file_submission[]" x-ref="fileInput" @change="handleFiles($event.target.files)"
-          class="hidden" accept=".pdf,.doc,.docx" multiple />
-
-        <!-- Selected Files -->
-        <div class="mb-6" x-show="files.length > 0">
-          <div class="text-sm font-medium text-gray-700 mb-3">File yang dipilih:</div>
-
-          <template x-for="(file, index) in files" :key="index">
-            <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg mb-2">
-              <div class="flex items-center gap-3">
-                <div :class="getFileIconClass(file.name)"
-                  class="w-9 h-9 rounded-md flex items-center justify-center text-base">
-                  <i :class="getFileIcon(file.name)"></i>
-                </div>
-                <div>
-                  <div class="text-sm font-medium text-gray-900" x-text="file.name"></div>
-                  <div class="text-xs text-gray-500" x-text="formatFileSize(file.size)"></div>
-                </div>
-              </div>
-              <div class="flex gap-2">
-                <button @click="viewFile(file)" type="button"
-                  class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-blue-100 text-blue-600 hover:bg-blue-200"
-                  title="Lihat">
-                  <i class="fas fa-eye"></i>
-                </button>
-                <button @click="removeFile(index)" type="button"
-                  class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-red-100 text-red-600 hover:bg-red-200"
-                  title="Hapus">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-          </template>
-        </div>
-      </div>
+      <x-file-upload name="file_submission[]" accept=".pdf,.doc,.docx" :multiple="true" :required="true" label="Laporan"
+        :max-mb="10"
+        hint="Format yang didukung: PDF, DOC, DOCX (Maks 10MB) - Upload satu atau beberapa BAB sekaligus"
+        class="mb-6" />
 
       <!-- Notes/Description -->
       <div class="mb-5">
@@ -179,7 +150,7 @@
 
       <!-- Action Buttons -->
       <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 mt-6">
-        <button type="submit" :disabled="files.length === 0 || !selectedPembimbing"
+        <button type="submit" :disabled="!selectedPembimbing"
           class="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-medium transition-all border-0 bg-blue-600 text-white hover:bg-blue-800 disabled:bg-blue-300 disabled:cursor-not-allowed disabled:pointer-events-none">
           <i class="fas fa-paper-plane"></i>
           Upload & Kirim
@@ -191,7 +162,7 @@
   <!-- History Section -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
     <div class="p-4 sm:p-6">
-      @if ($tahapanSelesai)
+      @if ($ujianSelesai)
         <div class="flex items-center gap-3 mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3">
           <i class="fas fa-check-circle text-emerald-600 text-lg"></i>
           <div>
@@ -241,7 +212,8 @@
                   </h4>
                   <div class="flex items-center gap-1.5 text-[0.8rem] text-gray-600 mb-1.5">
                     <i class="fas fa-user-tie text-blue-500 w-3.5 text-center shrink-0"></i>
-                    <span class="font-medium text-gray-700">{{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
+                    <span
+                      class="font-medium text-gray-700">{{ $submission->dosenPembimbing->getJenisPembimbing() }}</span>
                     <span class="text-gray-300">·</span>
                     <span>{{ $submission->dosenPembimbing->dosen->nama_lengkap }}</span>
                   </div>
@@ -301,89 +273,6 @@
   </div>
 
   <script>
-    // Alpine.js Component for File Upload
-    function fileUpload() {
-      return {
-        files: [],
-        dragging: false,
-        selectedPembimbing: '',
-
-        handleFiles(fileList) {
-          const maxSize = 10 * 1024 * 1024; // 10MB
-          const allowedTypes = ['application/pdf', 'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-          ];
-
-          Array.from(fileList).forEach(file => {
-            // Validate file size
-            if (file.size > maxSize) {
-              alert(`File ${file.name} terlalu besar. Maksimal 10MB`);
-              return;
-            }
-
-            // Validate file type
-            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|doc|docx)$/i)) {
-              alert(`File ${file.name} format tidak didukung. Hanya PDF, DOC, DOCX`);
-              return;
-            }
-
-            const isDuplicate = this.files.some(existingFile =>
-              existingFile.name === file.name &&
-              existingFile.size === file.size &&
-              existingFile.lastModified === file.lastModified
-            );
-
-            if (isDuplicate) {
-              return;
-            }
-
-            this.files.push(file);
-          });
-          this.syncInputFiles();
-        },
-
-        handleDrop(e) {
-          this.dragging = false;
-          const files = e.dataTransfer.files;
-          this.handleFiles(files);
-        },
-
-        removeFile(index) {
-          this.files.splice(index, 1);
-          this.syncInputFiles();
-        },
-
-        viewFile(file) {
-          const url = URL.createObjectURL(file);
-          window.open(url, '_blank');
-        },
-
-        getFileIcon(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-word';
-        },
-
-        getFileIconClass(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600';
-        },
-
-        formatFileSize(bytes) {
-          return (bytes / 1024 / 1024).toFixed(2) + ' MB';
-        },
-
-        syncInputFiles() {
-          const dataTransfer = new DataTransfer();
-
-          this.files.forEach(file => {
-            dataTransfer.items.add(file);
-          });
-
-          this.$refs.fileInput.files = dataTransfer.files;
-        }
-      }
-    }
-
     // Toggle History Files
     function toggleHistory(id) {
       const filesDiv = document.getElementById(`files-${id}`);

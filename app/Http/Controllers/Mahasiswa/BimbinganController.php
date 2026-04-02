@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StoreSubmissionRequest;
 use App\Models\DosenPembimbing;
+use App\Models\Ujian;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\User;
@@ -35,8 +36,20 @@ class BimbinganController extends Controller
             ->where('status', 'acc')
             ->count() >= 2;
 
+        $ujianSelesai = Ujian::where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('jenis_ujian', $jenis)
+            ->where('status', 'selesai')
+            ->exists();
+
+        if ($ujianSelesai) {
+            return redirect()->route('mahasiswa.bimbingan.selesai', ['jenis' => $jenis]);
+        }
+
         if ($hasTwoAccPembimbing) {
-            return redirect()->route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]);
+            if ($jenis === 'proposal') {
+                return redirect()->route('mahasiswa.bimbingan.mintaPenguji', ['jenis' => $jenis]);
+            }
+            return redirect()->route('mahasiswa.bimbingan.persetujuanKajur', ['jenis' => $jenis]);
         }
 
         return redirect()->route('mahasiswa.bimbingan.bimbingan', ['jenis' => $jenis]);
@@ -49,8 +62,10 @@ class BimbinganController extends Controller
         $tugasAkhir = $mahasiswa->tugasAkhir;
         $tugasAkhirId = $tugasAkhir->id;
 
-        $urutan = ['proposal' => 1, 'hasil' => 2, 'skripsi' => 3];
-        $tahapanSelesai = ($urutan[$tugasAkhir->tahapan] ?? 1) > ($urutan[$jenis] ?? 1);
+        $ujianSelesai = Ujian::where('tugas_akhir_id', $tugasAkhirId)
+            ->where('jenis_ujian', $jenis)
+            ->where('status', 'selesai')
+            ->exists();
 
         $allSubmission = $this->submissionService->getHistorySubmission($tugasAkhirId, $jenis);
         $latestSubmissionPerPembimbing = $allSubmission
@@ -80,7 +95,7 @@ class BimbinganController extends Controller
             ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.bimbingan', ['jenis' => $jenis]))
             ->update(['read_at' => now()]);
 
-        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'tahapanSelesai'));
+        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'ujianSelesai'));
     }
 
     public function createSubmission(StoreSubmissionRequest $request, string $jenis)
@@ -142,6 +157,52 @@ class BimbinganController extends Controller
                 ->update(['read_at' => now()]);
         }
 
-        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'dosenPenguji'));
+        $ujianSelesai = Ujian::where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('jenis_ujian', $jenis)
+            ->where('status', 'selesai')
+            ->exists();
+
+        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'dosenPenguji', 'ujianSelesai'));
+    }
+
+    public function persetujuanKajur(Request $request, string $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+
+        $kajur = User::with('profileDosen')->where('role', 'kajur')->first();
+
+        $kajurSubmission = KajurSubmission::with('kajurSubmissionFiles')
+            ->where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('tahapan', $jenis)
+            ->latest()
+            ->first();
+
+        $request->user()->unreadNotifications()
+            ->where('type', KajurSubmissionReviewed::class)
+            ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.persetujuanKajur', ['jenis' => $jenis]))
+            ->update(['read_at' => now()]);
+
+        $ujianSelesai = Ujian::where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('jenis_ujian', $jenis)
+            ->where('status', 'selesai')
+            ->exists();
+
+        return view('mahasiswa.persetujuan-kajur', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'ujianSelesai'));
+    }
+
+    public function selesai(Request $request, string $jenis)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+
+        $ujianSelesai = Ujian::where('tugas_akhir_id', $tugasAkhir->id)
+            ->where('jenis_ujian', $jenis)
+            ->where('status', 'selesai')
+            ->exists();
+
+        abort_unless($ujianSelesai, 403, 'Ujian belum selesai.');
+
+        return view('mahasiswa.bimbingan-selesai', compact('jenis', 'tugasAkhir'));
     }
 }

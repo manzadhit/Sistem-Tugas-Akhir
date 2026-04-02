@@ -32,6 +32,10 @@ Route::middleware(['auth', 'role:mahasiswa', 'mahasiswa.aktif'])->prefix('mahasi
 
         Route::get('/{jenis}/minta-penguji', [BimbinganController::class, 'mintaPenguji'])->name('bimbingan.mintaPenguji');
 
+        Route::get('/{jenis}/persetujuan-kajur', [BimbinganController::class, 'persetujuanKajur'])->name('bimbingan.persetujuanKajur');
+
+        Route::get('/{jenis}/selesai', [BimbinganController::class, 'selesai'])->name('bimbingan.selesai');
+
         Route::post('/{jenis}/create-kajur-submission', [KajurSubmissionController::class, 'createKajurSubmission'])->name('bimbingan.createKajurSubmission');
       });
 

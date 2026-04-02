@@ -8,6 +8,7 @@ class KajurSubmission extends Model
 {
     protected $fillable = [
         'tugas_akhir_id',
+        'tahapan',
         'status',
         'catatan',
         'review'

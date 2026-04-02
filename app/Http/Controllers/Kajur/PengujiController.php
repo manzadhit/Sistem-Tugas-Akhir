@@ -27,6 +27,7 @@ class PengujiController extends Controller
         $search = trim((string) $request->query('search'));
 
         $permintaanPenguji = KajurSubmission::with('tugasAkhir.mahasiswa.dosenPembimbing.dosen')
+            ->where('tahapan', 'proposal')
             ->whereIn('status', ['pending', 'acc'])
             ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
             ->when($search !== '', function ($query) use ($search) {

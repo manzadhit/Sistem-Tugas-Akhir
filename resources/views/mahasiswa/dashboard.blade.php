@@ -8,12 +8,33 @@
 
 @section('content')
   {{-- Banner --}}
-  <div class="relative h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 mb-8">
+  <div class="relative h-40 overflow-hidden rounded-xl mb-8
+    {{ auth()->user()->profileMahasiswa?->status_akademik === 'lulus' ? 'bg-gradient-to-br from-emerald-500 to-emerald-700' : 'bg-gradient-to-br from-blue-600 to-blue-800' }}">
     <div class="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-4">
       <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-1">Dashboard Mahasiswa</h1>
-      <p class="text-xs sm:text-sm opacity-90">Ringkasan informasi tugas akhir dan bimbingan</p>
+      <p class="text-xs sm:text-sm opacity-90">
+        {{ auth()->user()->profileMahasiswa?->status_akademik === 'lulus' ? 'Selamat! Anda telah berhasil menyelesaikan studi.' : 'Ringkasan informasi tugas akhir dan bimbingan' }}
+      </p>
     </div>
   </div>
+
+  {{-- Banner Kelulusan --}}
+  @if (auth()->user()->profileMahasiswa?->status_akademik === 'lulus')
+    <div class="mb-8 flex items-center gap-4 rounded-xl border border-emerald-300 bg-gradient-to-br from-emerald-50 to-emerald-100 p-5 shadow-sm">
+      <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white shadow">
+        <i class="fas fa-graduation-cap text-xl"></i>
+      </div>
+      <div class="flex-1">
+        <div class="text-base font-bold text-emerald-800">Selamat, Anda Telah Lulus! 🎉</div>
+        <div class="mt-0.5 text-sm text-emerald-700">
+          Seluruh tahapan Tugas Akhir telah selesai. Status akademik Anda kini tercatat sebagai <span class="font-semibold">Lulus</span>.
+        </div>
+      </div>
+      <span class="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-500 px-4 py-1.5 text-xs font-bold text-white shadow">
+        <i class="fas fa-check-circle"></i> LULUS
+      </span>
+    </div>
+  @endif
 
   {{-- Profil Singkat --}}
   <div class="rounded-xl border border-slate-200 bg-white shadow-sm mb-8 overflow-hidden">
@@ -21,8 +42,14 @@
       <h3 class="flex items-center gap-2 font-semibold text-slate-900">
         <i class="fas fa-user-graduate text-blue-600"></i> Profil Mahasiswa
       </h3>
-      <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap:
-        {{ ucfirst($tugasAkhir->tahapan) }}</span>
+      @if (auth()->user()->profileMahasiswa?->status_akademik === 'lulus')
+        <span class="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+          <i class="fas fa-graduation-cap mr-1"></i>Lulus
+        </span>
+      @else
+        <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Tahap:
+          {{ ucfirst($tugasAkhir->tahapan) }}</span>
+      @endif
     </div>
     <div class="grid grid-cols-2 gap-4 p-6">
       <div>

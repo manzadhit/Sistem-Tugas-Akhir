@@ -19,7 +19,7 @@
         @elseif ($ujian->status === 'revisi_syarat')
           Upload ulang dokumen yang ditolak oleh Admin
         @elseif ($ujian->status === 'menunggu_verifikasi_syarat')
-          Pengajuan ujian Anda sedang ditinjau oleh Koordinator/Kajur
+          Pengajuan ujian Anda sedang ditinjau oleh Admin/Staf
         @endif
       </p>
     </div>

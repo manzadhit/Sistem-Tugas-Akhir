@@ -22,7 +22,7 @@
   @endphp
 
   <!-- Page Banner -->
-  <div class="relative mb-8 h-40 overflow-hidden rounded-xl bg-gradient-to-br from-blue-600 to-blue-700">
+  <div class="relative mb-8 h-40 overflow-hidden rounded-xl bg-gradient-to-br {{ $ujianSelesai ? 'from-emerald-500 to-emerald-700' : 'from-blue-600 to-blue-700' }}">
     <div class="absolute inset-0 flex flex-col items-center justify-center px-4 text-center text-white">
       <h1 class="mb-2 text-xl sm:text-[1.75rem] md:text-[2rem] font-bold">{{ $pageTitle }}</h1>
       <p class="text-xs sm:text-sm md:text-base opacity-90">
@@ -34,27 +34,37 @@
   <!-- Progress -->
   <div class="mb-8 rounded-xl bg-white p-6 shadow-sm">
     <div class="relative flex justify-between">
-      <div class="absolute left-[25%] right-[25%] top-5 h-0.5 bg-emerald-400"></div>
+      {{-- Garis 1: Bimbingan → Kajur (selalu hijau) --}}
+      <div class="absolute left-[16%] right-[50%] top-5 h-0.5 bg-emerald-400"></div>
+      {{-- Garis 2: Kajur → Selesai (hijau jika selesai, abu jika belum) --}}
+      <div class="absolute left-[50%] right-[16%] top-5 h-0.5 {{ $ujianSelesai ? 'bg-emerald-400' : 'bg-gray-200' }}"></div>
 
       {{-- Step 1: Bimbingan (selesai) --}}
       <div class="relative z-10 flex flex-1 flex-col items-center">
-        <div
-          class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
+        <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
           <i class="fas fa-check text-base"></i>
         </div>
         <span class="text-center text-[10px] sm:text-xs font-semibold text-emerald-600">Bimbingan</span>
       </div>
 
-      {{-- Step 2: Tahap Kajur (aktif) --}}
+      {{-- Step 2: Tahap Kajur --}}
       <div class="relative z-10 flex flex-1 flex-col items-center">
-        <div
-          class="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]">
-          <i class="fas fa-user-check text-base"></i>
+        <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full {{ $ujianSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-blue-600 text-white shadow-[0_0_0_4px_rgba(37,99,235,0.2)]' }}">
+          <i class="{{ $ujianSelesai ? 'fas fa-check' : 'fas fa-user-check' }} text-base"></i>
         </div>
-        <span class="text-center text-[10px] sm:text-xs font-semibold text-blue-600">{{ $kajurStepLabel }}</span>
+        <span class="text-center text-[10px] sm:text-xs font-semibold {{ $ujianSelesai ? 'text-emerald-600' : 'text-blue-600' }}">{{ $kajurStepLabel }}</span>
+      </div>
+
+      {{-- Step 3: Selesai --}}
+      <div class="relative z-10 flex flex-1 flex-col items-center">
+        <div class="mb-2 flex h-10 w-10 items-center justify-center rounded-full {{ $ujianSelesai ? 'bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]' : 'bg-gray-200 text-gray-400' }}">
+          <i class="{{ $ujianSelesai ? 'fas fa-check' : 'fas fa-flag-checkered' }} text-base"></i>
+        </div>
+        <span class="text-center text-[10px] sm:text-xs font-medium {{ $ujianSelesai ? 'text-emerald-600 font-semibold' : 'text-gray-500' }}">Selesai</span>
       </div>
     </div>
   </div>
+
 
   @if (!isset($kajurSubmission))
     <!-- Alert -->
@@ -85,89 +95,4 @@
   @else
     @include('mahasiswa.minta-penguji.upload-laporan')
   @endif
-
-  <script>
-    // Alpine.js Component for File Upload
-    function fileUpload() {
-      return {
-        files: [],
-        dragging: false,
-
-        handleFiles(fileList) {
-          const maxSize = 10 * 1024 * 1024; // 10MB
-          const allowedTypes = ['application/pdf', 'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-          ];
-
-          Array.from(fileList).forEach(file => {
-            // Validate file size
-            if (file.size > maxSize) {
-              alert(`File ${file.name} terlalu besar. Maksimal 10MB`);
-              return;
-            }
-
-            // Validate file type
-            if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|doc|docx)$/i)) {
-              alert(`File ${file.name} format tidak didukung. Hanya PDF, DOC, DOCX`);
-              return;
-            }
-
-            const isDuplicate = this.files.some(existingFile =>
-              existingFile.name === file.name &&
-              existingFile.size === file.size &&
-              existingFile.lastModified === file.lastModified
-            );
-
-            if (isDuplicate) {
-              return;
-            }
-
-            this.files.push(file);
-          });
-          this.syncInputFiles();
-        },
-
-        handleDrop(e) {
-          this.dragging = false;
-          const files = e.dataTransfer.files;
-          this.handleFiles(files);
-        },
-
-        removeFile(index) {
-          this.files.splice(index, 1);
-          this.syncInputFiles();
-        },
-
-        viewFile(file) {
-          const url = URL.createObjectURL(file);
-          window.open(url, '_blank');
-        },
-
-        getFileIcon(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'fas fa-file-pdf' : 'fas fa-file-word';
-        },
-
-        getFileIconClass(filename) {
-          const ext = filename.split('.').pop().toLowerCase();
-          return ext === 'pdf' ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600';
-        },
-
-        formatFileSize(bytes) {
-          return (bytes / 1024 / 1024).toFixed(2) + ' MB';
-        },
-
-        syncInputFiles() {
-          const dataTransfer = new DataTransfer();
-
-          this.files.forEach(file => {
-            dataTransfer.items.add(file);
-          });
-
-          this.$refs.fileInput.files = dataTransfer.files;
-        }
-      }
-    }
-  </script>
-
 @endsection

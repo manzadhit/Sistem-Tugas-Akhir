@@ -59,58 +59,11 @@
       </div>
     </div>
 
-    <div x-data="fileUpload()">
-      <label class="block text-sm font-medium text-gray-700 mb-2">
-        Laporan <span class="text-red-500">*</span>
-      </label>
-      <!-- Upload Area -->
-      <div @click="$refs.fileInput.click()" @dragover.prevent="dragging = true" @dragleave.prevent="dragging = false"
-        @drop.prevent="handleDrop($event)" :class="dragging ? 'border-blue-600 bg-blue-50' : 'border-gray-300'"
-        class="border-2 border-dashed rounded-xl p-10 text-center transition-all cursor-pointer mb-6 hover:border-blue-600 hover:bg-blue-50">
-        <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
-        <p class="text-gray-500 mb-2">
-          Drag and drop file Anda di sini, atau <span class="text-blue-600 font-medium cursor-pointer">browse
-            files</span>
-        </p>
-        <p class="text-xs text-gray-400">
-          Format yang didukung: PDF, DOC, DOCX (Maks 10MB) - Upload satu
-          atau beberapa BAB sekaligus
-        </p>
-      </div>
-      <input type="file" name="files[]" x-ref="fileInput" @change="handleFiles($event.target.files)" class="hidden"
-        accept=".pdf,.doc,.docx" multiple />
-
-      <!-- Selected Files -->
-      <div class="mb-6" x-show="files.length > 0">
-        <div class="text-sm font-medium text-gray-700 mb-3">File yang dipilih:</div>
-
-        <template x-for="(file, index) in files" :key="index">
-          <div class="flex items-center justify-between px-4 py-3 bg-gray-50 rounded-lg mb-2">
-            <div class="flex items-center gap-3">
-              <div :class="getFileIconClass(file.name)"
-                class="w-9 h-9 rounded-md flex items-center justify-center text-base">
-                <i :class="getFileIcon(file.name)"></i>
-              </div>
-              <div>
-                <div class="text-sm font-medium text-gray-900" x-text="file.name"></div>
-                <div class="text-xs text-gray-500" x-text="formatFileSize(file.size)"></div>
-              </div>
-            </div>
-            <div class="flex gap-2">
-              <button @click="viewFile(file)" type="button"
-                class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-blue-100 text-blue-600 hover:bg-blue-200"
-                title="Lihat">
-                <i class="fas fa-eye"></i>
-              </button>
-              <button @click="removeFile(index)" type="button"
-                class="w-8 h-8 border-0 rounded-md cursor-pointer flex items-center justify-center transition-all bg-red-100 text-red-600 hover:bg-red-200"
-                title="Hapus">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>
-        </template>
-      </div>
+    <div>
+      <x-file-upload name="files[]" accept=".pdf,.doc,.docx" :multiple="true" :required="true" label="Laporan"
+        :max-mb="10"
+        hint="Format yang didukung: PDF, DOC, DOCX (Maks 10MB) - Upload satu atau beberapa BAB sekaligus"
+        class="mb-6" />
 
       @error('files')
         <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
@@ -133,8 +86,8 @@
     {{-- Kata Kunci --}}
     @php
       $existingKeywords = old('kata_kunci')
-        ? array_values(array_filter(array_map('trim', explode(',', old('kata_kunci')))))
-        : array_values(array_filter(array_map('trim', explode(',', $tugasAkhir->kata_kunci ?? ''))));
+          ? array_values(array_filter(array_map('trim', explode(',', old('kata_kunci')))))
+          : array_values(array_filter(array_map('trim', explode(',', $tugasAkhir->kata_kunci ?? ''))));
     @endphp
     <div x-data="kataKunciInput(@js($existingKeywords))">
       <label class="block text-sm font-medium text-gray-700 mb-1.5">
@@ -143,12 +96,14 @@
       </label>
 
       {{-- Tags container --}}
-      <div class="rounded-xl border border-slate-200 bg-white shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-400">
+      <div
+        class="rounded-xl border border-slate-200 bg-white shadow-sm focus-within:ring-4 focus-within:ring-blue-100 focus-within:border-blue-400">
         <div class="flex flex-wrap items-center gap-2 p-2" @click="$refs.kataKunciInput.focus()">
 
           {{-- Render chip untuk setiap tag --}}
           <template x-for="(tag, index) in tags" :key="index">
-            <span class="inline-flex items-center gap-2 rounded-lg bg-slate-100 border border-slate-200 px-3 py-1.5 text-sm text-slate-700">
+            <span
+              class="inline-flex items-center gap-2 rounded-lg bg-slate-100 border border-slate-200 px-3 py-1.5 text-sm text-slate-700">
               <span x-text="tag"></span>
               <button type="button" @click.stop="removeTag(index)"
                 class="text-slate-500 hover:text-slate-700 bg-transparent border-none cursor-pointer p-0">
@@ -158,10 +113,8 @@
           </template>
 
           {{-- Input teks untuk menambah tag --}}
-          <input type="text" x-ref="kataKunciInput" x-model="currentTag"
-            @keydown.enter.prevent="addTag()"
-            @keydown.comma.prevent="addTag()"
-            @keydown.backspace="currentTag === '' && removeTag(tags.length - 1)"
+          <input type="text" x-ref="kataKunciInput" x-model="currentTag" @keydown.enter.prevent="addTag()"
+            @keydown.comma.prevent="addTag()" @keydown.backspace="currentTag === '' && removeTag(tags.length - 1)"
             placeholder="Ketik lalu tekan Enter atau koma..."
             class="flex-1 min-w-[180px] border-0 bg-transparent px-2 py-1.5 text-sm text-slate-900 placeholder:text-slate-400 focus:ring-0 focus:outline-none" />
         </div>

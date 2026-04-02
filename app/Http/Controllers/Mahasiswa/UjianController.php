@@ -36,9 +36,9 @@ class UjianController extends Controller
             'draft', 'revisi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_undangan' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
-            'menunggu_nilai' => redirect()->route('mahasiswa.ujian.penilaian', ['jenis' => $jenis]),
+            'menunggu_nilai' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'menunggu_hasil' => $jenis === 'skripsi'
-                ? redirect()->route('mahasiswa.ujian.hasil-ujian', ['jenis' => $jenis])
+                ? redirect()->route('mahasiswa.ujian.penilaian', ['jenis' => $jenis])
                 : redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'selesai' => redirect()->route('mahasiswa.ujian.selesai', ['jenis' => $jenis]),
             default => abort(500, 'Status ujian tidak valid')

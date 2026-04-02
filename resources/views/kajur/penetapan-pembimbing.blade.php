@@ -533,37 +533,10 @@
 
 
   {{-- Success Modal --}}
-  <div x-data="{ showSuccessModal: {{ session('show_success_modal') ? 'true' : 'false' }} }">
-    <div x-show="showSuccessModal" x-transition.opacity class="fixed inset-0 transition-opacity bg-black/50 z-[100]"
-      style="display: none;"></div>
-    <div x-show="showSuccessModal" class="fixed inset-0 z-[101] overflow-y-auto" style="display: none;">
-      <div class="flex items-center justify-center min-h-full p-4 text-center sm:p-0">
-        <div x-show="showSuccessModal" x-transition:enter="ease-out duration-300"
-          x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
-          class="relative px-4 pt-5 pb-4 text-left transition-all transform bg-white shadow-xl overflow-hidden rounded-xl sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-          <div>
-            <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100">
-              <i class="fas fa-check text-xl text-emerald-600"></i>
-            </div>
-            <div class="mt-3 text-center sm:mt-5">
-              <h3 class="text-lg font-semibold leading-6 text-gray-900">Pembimbing Berhasil Ditetapkan!</h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">Dosen pembimbing telah ditetapkan dan mahasiswa akan mendapatkan
-                  notifikasi.</p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-5 sm:mt-6">
-            <a href="{{ route('kajur.permintaan-pembimbing') }}"
-              class="inline-flex w-full justify-center rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 transition-colors">
-              Oke, Kembali ke Daftar
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  @if (session('show_success_modal'))
+    <x-result-modal status="success" title="Pembimbing Berhasil Ditetapkan!"
+      desc="Dosen pembimbing telah ditetapkan dan mahasiswa akan mendapatkan notifikasi." :href="route('kajur.permintaan-pembimbing')" />
+  @endif
 
 @endsection
 

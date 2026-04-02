@@ -17,6 +17,12 @@
         'label' => 'Permintaan Penguji',
         'active' => request()->routeIs('kajur.permintaan-penguji.index', 'kajur.penetapan-penguji'),
     ],
+    [
+        'href' => route('kajur.persetujuan-kajur.index'),
+        'icon' => 'fas fa-file-signature',
+        'label' => 'Persetujuan Kajur',
+        'active' => request()->routeIs('kajur.persetujuan-kajur.*'),
+    ],
     ['section' => 'Pembimbingan'],
     [
         'href' => route('dosen.bimbingan.index'),
