@@ -85,7 +85,7 @@
   <x-alert type="warning" />
 
   @if (isset($kajurSubmission) && $kajurSubmission->status === 'pending')
-    @include('mahasiswa.minta-penguji.menunggu-verifikasi')
+    @include('mahasiswa.bimbingan.minta-penguji.menunggu-verifikasi')
   @elseif (isset($kajurSubmission) && $kajurSubmission->status === 'acc')
     {{-- Disetujui Kajur --}}
     <div class="mx-auto mb-8 max-w-3xl overflow-hidden rounded-xl bg-white shadow-sm">
@@ -113,7 +113,7 @@
       </div>
     </div>
   @else
-    @include('mahasiswa.minta-penguji.upload-laporan')
+    @include('mahasiswa.bimbingan.minta-penguji.upload-laporan')
   @endif
 
 @endsection

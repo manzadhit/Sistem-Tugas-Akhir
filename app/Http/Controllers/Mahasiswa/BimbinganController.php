@@ -95,7 +95,7 @@ class BimbinganController extends Controller
             ->whereJsonContains('data->action_url', route('mahasiswa.bimbingan.bimbingan', ['jenis' => $jenis]))
             ->update(['read_at' => now()]);
 
-        return view('mahasiswa.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'ujianSelesai'));
+        return view('mahasiswa.bimbingan.bimbingan', compact('pembimbing', 'allSubmission', 'latestPerPembimbing', 'hasTwoAccPembimbing', 'tugasAkhir', 'jenis', 'ujianSelesai'));
     }
 
     public function createSubmission(StoreSubmissionRequest $request, string $jenis)
@@ -162,7 +162,7 @@ class BimbinganController extends Controller
             ->where('status', 'selesai')
             ->exists();
 
-        return view('mahasiswa.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'dosenPenguji', 'ujianSelesai'));
+        return view('mahasiswa.bimbingan.minta-penguji', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'dosenPenguji', 'ujianSelesai'));
     }
 
     public function persetujuanKajur(Request $request, string $jenis)
@@ -188,7 +188,7 @@ class BimbinganController extends Controller
             ->where('status', 'selesai')
             ->exists();
 
-        return view('mahasiswa.persetujuan-kajur', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'ujianSelesai'));
+        return view('mahasiswa.bimbingan.persetujuan-kajur', compact('kajur', 'jenis', 'kajurSubmission', 'tugasAkhir', 'ujianSelesai'));
     }
 
     public function selesai(Request $request, string $jenis)
@@ -203,6 +203,6 @@ class BimbinganController extends Controller
 
         abort_unless($ujianSelesai, 403, 'Ujian belum selesai.');
 
-        return view('mahasiswa.bimbingan-selesai', compact('jenis', 'tugasAkhir'));
+        return view('mahasiswa.bimbingan.bimbingan-selesai', compact('jenis', 'tugasAkhir'));
     }
 }
