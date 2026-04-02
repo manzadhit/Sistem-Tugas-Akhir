@@ -94,12 +94,7 @@
             <i class="fas fa-history text-blue-600"></i> Riwayat Bimbingan
           </h3>
           @php
-            $bimbinganRoute = match ($tugasAkhir->tahapan) {
-                'proposal' => route('mahasiswa.bimbingan.index', ['jenis' => 'proposal']),
-                'hasil' => route('mahasiswa.bimbingan.index', ['jenis' => 'hasil']),
-                'skripsi' => route('mahasiswa.bimbingan.index', ['jenis' => 'skripsi']),
-                default => '#',
-            };
+            $bimbinganRoute = route('mahasiswa.bimbingan.riwayat');
           @endphp
           <a href="{{ $bimbinganRoute }}" class="text-sm text-blue-600 hover:underline">Lihat Semua →</a>
         </div>

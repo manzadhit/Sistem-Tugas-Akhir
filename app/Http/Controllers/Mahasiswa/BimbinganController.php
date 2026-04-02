@@ -15,6 +15,7 @@ use App\Notifications\PengujiAssigned;
 use App\Notifications\SubmissionReviewed;
 use App\Services\SubmissionService;
 use Illuminate\Http\Request;
+use App\Models\Submission;
 
 class BimbinganController extends Controller
 {
@@ -137,7 +138,7 @@ class BimbinganController extends Controller
 
         $kajurSubmission = KajurSubmission::with('kajurSubmissionFiles')
             ->where('tugas_akhir_id', $tugasAkhir->id)
-            ->where('tahapan', $jenis)
+            ->where('tahapan', 'proposal')
             ->latest()
             ->first();
 
@@ -205,5 +206,24 @@ class BimbinganController extends Controller
         abort_unless($ujianSelesai, 403, 'Ujian belum selesai.');
 
         return view('mahasiswa.bimbingan.bimbingan-selesai', compact('jenis', 'tugasAkhir'));
+    }
+
+    public function history(Request $request)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+        $tugasAkhir = $mahasiswa->tugasAkhir;
+
+        abort_unless($tugasAkhir, 404, 'Tugas akhir tidak ditemukan.');
+
+        $tahapanOrder = ['skripsi', 'hasil', 'proposal'];
+
+        $submissionsByTahapan = Submission::with(['submissionFiles', 'dosenPembimbing.dosen'])
+            ->where('tugas_akhir_id', $tugasAkhir->id)
+            ->whereIn('tahapan', $tahapanOrder)
+            ->latest()
+            ->get()
+            ->groupBy('tahapan');
+
+        return view('mahasiswa.bimbingan.history', compact('tugasAkhir', 'tahapanOrder', 'submissionsByTahapan'));
     }
 }

@@ -20,6 +20,8 @@ Route::middleware(['auth', 'role:mahasiswa', 'mahasiswa.aktif'])->prefix('mahasi
   Route::middleware('has.pembimbing')->group(function () {
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
+    Route::get('/bimbingan/riwayat', [BimbinganController::class, 'history'])->name('bimbingan.riwayat');
+
     Route::middleware('bimbingan.sequence')
       ->prefix('bimbingan')
       ->where(['jenis' => 'proposal|hasil|skripsi'])
