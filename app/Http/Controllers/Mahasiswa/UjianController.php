@@ -33,8 +33,7 @@ class UjianController extends Controller
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
 
         return match ($ujian->status) {
-            'draft', 'revisi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
-            'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
+            'draft', 'revisi_syarat', 'menunggu_verifikasi_syarat' => redirect()->route('mahasiswa.ujian.pengajuan', ['jenis' => $jenis]),
             'menunggu_undangan' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'menunggu_nilai' => redirect()->route('mahasiswa.ujian.undangan', ['jenis' => $jenis]),
             'menunggu_hasil' => $jenis === 'skripsi'
@@ -53,6 +52,10 @@ class UjianController extends Controller
 
         $daftarSyarat = collect(config("ujian.{$jenis}"));
         $ujian = $this->ujianService->getOrCreateUjian($tugasAkhirId, $jenis);
+
+        if (!in_array($ujian->status, ['draft', 'revisi_syarat', 'menunggu_verifikasi_syarat'])) {
+            return redirect()->route('mahasiswa.ujian', ['jenis' => $jenis]);
+        }
 
         $isRevisi = $ujian->status === 'revisi_syarat';
         $rejectedDokumen = collect();
@@ -170,6 +173,10 @@ class UjianController extends Controller
         if ($ujian->status === 'menunggu_nilai') {
             return redirect()->route('mahasiswa.ujian.penilaian', ['jenis' => $jenis])
                 ->with('warning', 'Silakan tunggu hingga semua penguji menginput nilai.');
+        }
+
+        if (!in_array($ujian->status, ['menunggu_hasil', 'revisi_hasil', 'menunggu_verifikasi_hasil'])) {
+            return redirect()->route('mahasiswa.ujian', ['jenis' => $jenis]);
         }
 
         $daftarSyarat = collect(config("pasca_ujian.{$jenis}"));

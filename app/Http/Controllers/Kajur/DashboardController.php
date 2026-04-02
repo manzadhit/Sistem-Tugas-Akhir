@@ -21,13 +21,12 @@ class DashboardController extends Controller
             ->count();
 
         $menungguPenguji = KajurSubmission::whereIn('status', ['pending', 'acc'])
-        ->where('tahapan', 'proposal')
+            ->where('tahapan', 'proposal')
             ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
             ->count();
 
         $menungguPersetujuan = KajurSubmission::where('status', 'pending')
-        ->whereIn('tahapan', ['proposal', 'hasil'])
-            ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
+            ->whereIn('tahapan', ['hasil', 'skripsi'])
             ->count();
 
         // Data Dosen (berdasarkan profil dosen kajur yang login)
@@ -43,18 +42,18 @@ class DashboardController extends Controller
 
         $mahasiswaBimbingan = $dosenId
             ? DosenPembimbing::with(['mahasiswa.tugasAkhir'])
-                ->where('dosen_id', $dosenId)
-                ->where('status_aktif', true)
-                ->latest()
-                ->limit(5)
-                ->get()
+            ->where('dosen_id', $dosenId)
+            ->where('status_aktif', true)
+            ->latest()
+            ->limit(5)
+            ->get()
             : collect();
 
         $publikasiTerbaru = $dosenId
             ? PublikasiDosen::where('dosen_id', $dosenId)
-                ->latest()
-                ->limit(5)
-                ->get()
+            ->latest()
+            ->limit(5)
+            ->get()
             : collect();
 
         return view('kajur.dashboard', compact(
