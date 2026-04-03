@@ -35,7 +35,7 @@ class TugasAkhir extends Model
 
     public function kajurSubmissions()
     {
-        return $this->hasMany(Submission::class, 'tugas_akhir_id');
+        return $this->hasMany(KajurSubmission::class, 'tugas_akhir_id');
     }
 
     public function ujian()
