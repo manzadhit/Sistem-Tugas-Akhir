@@ -99,13 +99,6 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Program Studi <span
-                  class="text-red-500">*</span></label>
-                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-              @enderror
-            </div>
-
-            <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Jabatan Fungsional</label>
               <input type="text" name="jabatan_fungsional"
                 value="{{ old('jabatan_fungsional', $profile->jabatan_fungsional) }}"

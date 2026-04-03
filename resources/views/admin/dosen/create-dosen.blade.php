@@ -123,16 +123,6 @@
             @enderror
           </div>
 
-          {{-- Program Studi --}}
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              Program Studi <span class="text-red-500">*</span>
-            </label>
-              required placeholder="S1 Teknik Informatika"
-              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-
           {{-- Keahlian --}}
           <div class="sm:col-span-2">
             <label class="block text-xs font-medium text-gray-600 mb-1.5">
