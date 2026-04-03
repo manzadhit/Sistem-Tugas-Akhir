@@ -31,7 +31,6 @@
             <div class="mt-2 flex flex-wrap gap-2">
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-                {{ $mhs->program_studi }}
               </span>
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">
@@ -100,7 +99,6 @@
           </div>
           <div class="min-w-0">
             <div class="text-xs text-gray-400 mb-0.5">Program Studi</div>
-            <div class="text-sm font-medium text-gray-800 break-words">{{ $mhs->program_studi }}</div>
           </div>
         </div>
 

@@ -13,14 +13,14 @@ class MahasiswaController extends Controller
 {
     public function index(Request $request)
     {
-        $search = $request->get("search");
+        $search = $request->get('search');
         $status = $request->get('status');
         $angkatan = $request->get('angkatan');
 
         $daftarMahasiswa = ProfileMahasiswa::query()
-            ->when($search, fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")->orWhere('nim', 'like', "%{$search}%"))
-            ->when($status, fn($q) => $q->where('status_akademik', $status))
-            ->when($angkatan, fn($q) => $q->where('angkatan', $angkatan))
+            ->when($search, fn ($q) => $q->where('nama_lengkap', 'like', "%{$search}%")->orWhere('nim', 'like', "%{$search}%"))
+            ->when($status, fn ($q) => $q->where('status_akademik', $status))
+            ->when($angkatan, fn ($q) => $q->where('angkatan', $angkatan))
             ->latest()
             ->paginate(5)
             ->withQueryString();
@@ -55,7 +55,6 @@ class MahasiswaController extends Controller
             'nim' => $request->nim,
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
-            'program_studi' => $request->program_studi,
             'angkatan' => $request->angkatan,
             'ipk' => $request->ipk,
             'no_telp' => $request->no_telp,
@@ -69,7 +68,7 @@ class MahasiswaController extends Controller
     public function show($id)
     {
         $mhs = ProfileMahasiswa::with([
-            'dosenPembimbing' => fn($q) => $q->with('dosen')->orderBy('jenis_pembimbing', 'asc'),
+            'dosenPembimbing' => fn ($q) => $q->with('dosen')->orderBy('jenis_pembimbing', 'asc'),
             'tugasAkhir.ujian.jadwalUjian',
         ])->findOrFail($id);
 
@@ -83,6 +82,7 @@ class MahasiswaController extends Controller
     public function edit($id)
     {
         $mhs = ProfileMahasiswa::findOrFail($id);
+
         return view('admin.mahasiswa.edit-mahasiswa', compact('mhs'));
     }
 
@@ -94,7 +94,6 @@ class MahasiswaController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'angkatan' => $request->angkatan,
             'jurusan' => $request->jurusan,
-            'program_studi' => $request->program_studi,
             'ipk' => $request->ipk,
             'no_telp' => $request->no_telp,
             'status_akademik' => $request->status_akademik,

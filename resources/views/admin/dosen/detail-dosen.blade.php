@@ -44,7 +44,6 @@
             <div class="mt-2 flex flex-wrap gap-2">
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-                {{ $dosen->program_studi }}
               </span>
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border {{ $statusColor }}">
@@ -106,7 +105,6 @@
           </div>
           <div class="min-w-0">
             <div class="text-xs text-gray-400 mb-0.5">Program Studi</div>
-            <div class="text-sm font-medium text-gray-800 break-words">{{ $dosen->program_studi }}</div>
           </div>
         </div>
 
@@ -229,7 +227,6 @@
 
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-gray-800 truncate">{{ $mhs->nama_lengkap }}</div>
-                <div class="text-xs text-gray-400">NIM {{ $mhs->nim }} · {{ $mhs->program_studi }}</div>
               </div>
 
               <div class="shrink-0 flex items-center gap-2">
@@ -290,7 +287,6 @@
 
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-gray-800 truncate">{{ $mhs->nama_lengkap }}</div>
-                <div class="text-xs text-gray-400">NIM {{ $mhs->nim }} · {{ $mhs->program_studi }}</div>
               </div>
 
               <div class="shrink-0 flex items-center gap-2">

@@ -4,7 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
@@ -16,7 +17,6 @@ return new class extends Migration {
             $table->string('nidn')->unique();
             $table->string('nama_lengkap');
             $table->string('jurusan');
-            $table->string('program_studi');
             $table->string('keahlian');
             $table->string('jabatan_fungsional');
             $table->enum('status', ['aktif', 'cuti', 'nonaktif', 'pensiun'])->default('aktif');

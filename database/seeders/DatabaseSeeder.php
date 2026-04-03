@@ -3,15 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\DosenPembimbing;
-use App\Models\PublikasiDosen;
-use App\Models\User;
+use App\Models\DosenPenguji;
 use App\Models\ProfileDosen;
-use Illuminate\Database\Seeder;
 use App\Models\ProfileMahasiswa;
+use App\Models\PublikasiDosen;
 use App\Models\Submission;
 use App\Models\SubmissionFile;
 use App\Models\TugasAkhir;
-use App\Models\DosenPenguji;
+use App\Models\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -45,7 +45,6 @@ class DatabaseSeeder extends Seeder
             'nidn' => '0012345601',
             'nama_lengkap' => 'Dr. Ahmad Fauzi, M.Kom.',
             'jurusan' => 'Informatika',
-            'program_studi' => 'S1',
             'keahlian' => 'Rekayasa Perangkat Lunak',
             'jabatan_fungsional' => 'Lektor Kepala',
             'foto' => null,
@@ -64,7 +63,6 @@ class DatabaseSeeder extends Seeder
             'nidn' => '0098765402',
             'nama_lengkap' => 'Ir. Siti Rahayu, M.T.',
             'jurusan' => 'Informatika',
-            'program_studi' => 'S1',
             'keahlian' => 'Sistem Informasi',
             'jabatan_fungsional' => 'Lektor',
             'foto' => null,

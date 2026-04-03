@@ -104,9 +104,6 @@
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Program Studi <span
                   class="text-red-500">*</span></label>
-              <input type="text" name="program_studi" value="{{ old('program_studi', $profile->program_studi) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('program_studi') border-red-500 @enderror">
-              @error('program_studi')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
             </div>

@@ -22,14 +22,13 @@ class DosenController extends Controller
         $daftarDosen = ProfileDosen::query()
             ->with('pembimbingMahasiswa')
             ->withCount('publikasi')
-            ->when($search, fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")
+            ->when($search, fn ($q) => $q->where('nama_lengkap', 'like', "%{$search}%")
                 ->orWhere('nidn', 'like', "%{$search}%"))
-            ->when($jabatan, fn($q) => $q->where('jabatan_fungsional', $jabatan))
-            ->when($status, fn($q) => $q->where('status', $status))
+            ->when($jabatan, fn ($q) => $q->where('jabatan_fungsional', $jabatan))
+            ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()
             ->paginate(10)
             ->withQueryString();
-
 
         $stats = [
             'total' => ProfileDosen::count(),
@@ -60,7 +59,6 @@ class DosenController extends Controller
             'nidn' => $request->nidn,
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
-            'program_studi' => $request->program_studi,
             'keahlian' => $request->keahlian,
             'jabatan_fungsional' => $request->jabatan_fungsional,
             'status' => $request->status,
@@ -100,7 +98,6 @@ class DosenController extends Controller
         $dosen->update([
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
-            'program_studi' => $request->program_studi,
             'keahlian' => $request->keahlian,
             'jabatan_fungsional' => $request->jabatan_fungsional,
             'status' => $request->status,

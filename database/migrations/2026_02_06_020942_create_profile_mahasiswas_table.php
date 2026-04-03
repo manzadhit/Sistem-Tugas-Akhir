@@ -17,12 +17,11 @@ return new class extends Migration
             $table->string('nim')->unique();
             $table->string('nama_lengkap');
             $table->string('jurusan');
-            $table->string('program_studi');
             $table->string('angkatan');
             $table->decimal('ipk', 3, 2);
             $table->string('no_telp')->nullable();
             $table->string('foto')->nullable();
-            $table->enum('status_akademik', ['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout']);     
+            $table->enum('status_akademik', ['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout']);
             $table->timestamps();
         });
     }

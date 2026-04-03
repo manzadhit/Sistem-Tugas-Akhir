@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -18,12 +17,11 @@ class ProfileDosen extends Model
         'nidn',
         'nama_lengkap',
         'jurusan',
-        'program_studi',
         'keahlian',
         'jabatan_fungsional',
         'status',
         'foto',
-        'no_telp'
+        'no_telp',
     ];
 
     protected $appends = [
@@ -63,7 +61,7 @@ class ProfileDosen extends Model
     public function getInitialsAttribute()
     {
         return substr(collect(explode(' ', $this->nama_lengkap))
-            ->map(fn($w) => strtoupper($w[0]))
+            ->map(fn ($w) => strtoupper($w[0]))
             ->implode(''), 0, 2);
     }
 }

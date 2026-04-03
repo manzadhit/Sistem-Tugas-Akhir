@@ -40,7 +40,6 @@ class ProfileController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'nim' => $request->nim,
             'jurusan' => $request->jurusan,
-            'program_studi' => $request->program_studi,
             'angkatan' => $request->angkatan,
             'ipk' => $request->ipk,
             'no_telp' => $request->no_telp,

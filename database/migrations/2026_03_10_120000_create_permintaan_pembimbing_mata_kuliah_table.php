@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('permintaan_pembimbing_mata_kuliah', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('permintaan_pembimbing_id')
-                ->constrained('permintaan_pembimbing')
+            $table->foreignId('pp_id')
+                ->constrained('permintaan_pembimbing', 'id', 'pp_mk_pp_id_fk')
                 ->cascadeOnDelete();
-            $table->foreignId('mata_kuliah_id')
-                ->constrained('mata_kuliah')
+            $table->foreignId('mk_id')
+                ->constrained('mata_kuliah', 'id', 'pp_mk_mk_id_fk')
                 ->cascadeOnDelete();
             $table->timestamps();
 
             $table->unique(
-                ['permintaan_pembimbing_id', 'mata_kuliah_id'],
+                ['pp_id', 'mk_id'],
                 'pp_mk_unique'
             );
         });

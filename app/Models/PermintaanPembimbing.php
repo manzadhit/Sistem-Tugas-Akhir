@@ -35,8 +35,8 @@ class PermintaanPembimbing extends Model
         return $this->belongsToMany(
             MataKuliah::class,
             'permintaan_pembimbing_mata_kuliah',
-            'permintaan_pembimbing_id',
-            'mata_kuliah_id'
+            'pp_id',
+            'mk_id'
         )->withTimestamps();
     }
 }

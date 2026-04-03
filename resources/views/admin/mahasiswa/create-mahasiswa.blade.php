@@ -118,10 +118,7 @@
             <label class="block text-xs font-medium text-gray-600 mb-1.5">
               Program Studi <span class="text-red-500">*</span>
             </label>
-            <input type="text" name="program_studi" value="{{ old('program_studi', 'S1 Teknik Informatika') }}"
               required placeholder="S1 Teknik Informatika"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('program_studi') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
-            @error('program_studi')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
           </div>
