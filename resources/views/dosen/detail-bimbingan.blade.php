@@ -114,7 +114,7 @@
             <h3 class="font-semibold text-gray-900">Form Review</h3>
           </div>
           <div class="px-6">
-            <form action="{{ route('dosen.bimbingan.review', ['submission' => $submission->id]) }}" method="POST"
+            <form x-data="{ showConfirmModal: false }" action="{{ route('dosen.bimbingan.review', ['submission' => $submission->id]) }}" method="POST"
               enctype="multipart/form-data" class="space-y-5">
               @method('PUT')
               @csrf
@@ -175,16 +175,25 @@
 
               <!-- Submit Button -->
               <div class="pt-2 flex justify-end">
-                <button type="submit"
+                <button type="button" @click="showConfirmModal = true"
                   class="bg-blue-600 text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2">
                   <i class="fas fa-paper-plane mr-2"></i>Kirim Review
                 </button>
               </div>
+
+              <!-- Confirmation Modal -->
+              <x-modal-confirm title="Kirim Review?" model="showConfirmModal" confirmText="Ya, Kirim" theme="blue">
+                <p>Apakah Anda yakin ingin mengirim review ini?</p>
+                <p class="mt-1">Pastikan catatan dan status sudah benar.</p>
+              </x-modal-confirm>
             </form>
           </div>
-        </div>
-      @endif
+        @endif
 
+        <!-- Success Modal -->
+        @if (session('show_modal'))
+          <x-result-modal :status="session('show_modal')"  href="{{ route('dosen.bimbingan.index') }}" />
+        @endif
+      </div>
     </div>
-  </div>
-@endsection
+  @endsection

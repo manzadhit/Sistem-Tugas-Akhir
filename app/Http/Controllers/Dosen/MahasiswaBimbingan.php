@@ -83,10 +83,12 @@ class MahasiswaBimbingan extends Controller
                 files: $request->file('files', [])
             );
 
+            $status = $request->status;
+
             $request->user()->unreadNotifications()->where('type', NewSubmission::class)
             ->whereJsonContains('data->submission_id', $submission->id)->update(['read_at' => now()]);
 
-            return back()->with('success', 'Review berhasil diberikan.');
+            return back()->with('show_modal', $status);
         } catch (\Exception $e) {
             return back()->with('error', "Review gagal diberikan. Silahkan coba lagi");
         }
