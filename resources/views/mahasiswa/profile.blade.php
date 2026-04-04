@@ -54,6 +54,8 @@
 
             <p class="text-xs text-slate-500 text-center">Format: JPG, PNG, WEBP<br>Maks. 2MB</p>
 
+            <p id="error-foto" class="text-xs text-red-600 hidden"></p>
+
             @error('foto')
               <p class="text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -183,7 +185,16 @@
 
   <script>
     function previewFoto(input) {
+      const error = document.getElementById('error-foto');
+      error.classList.add('hidden');
       if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          error.textContent = `Ukuran file ${file.name} melebihi 2MB.`;
+          error.classList.remove('hidden');
+          input.value = '';
+          return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById('foto-preview').src = e.target.result;

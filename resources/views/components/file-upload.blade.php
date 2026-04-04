@@ -69,4 +69,5 @@
       </div>
     </template>
   </div>
+  <p id="error-file" class="text-xs text-red-600 hidden"></p>
 </div>

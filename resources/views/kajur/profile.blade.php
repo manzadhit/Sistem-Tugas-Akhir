@@ -50,6 +50,9 @@
             <input type="file" id="foto" name="foto" accept="image/*" class="hidden"
               onchange="previewFoto(this)">
             <p class="text-xs text-slate-500 text-center">Format: JPG, PNG, WEBP<br>Maks. 2MB</p>
+
+            <p id="error-foto" class="text-xs text-red-600 hidden"></p>
+
             @error('foto')
               <p class="text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -73,8 +76,8 @@
                   class="text-red-500">*</span></label>
               <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profile->nama_lengkap) }}"
                 @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('nama_lengkap'),
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('nama_lengkap'),
                 ])>
               @error('nama_lengkap')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -84,11 +87,10 @@
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">NIDN <span
                   class="text-red-500">*</span></label>
-              <input type="text" name="nidn" value="{{ old('nidn', $profile->nidn) }}"
-                @class([
+              <input type="text" name="nidn" value="{{ old('nidn', $profile->nidn) }}" @class([
                   'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
                   'border-red-500' => $errors->has('nidn'),
-                ])>
+              ])>
               @error('nidn')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -99,8 +101,8 @@
                   class="text-red-500">*</span></label>
               <input type="text" name="jurusan" value="{{ old('jurusan', $profile->jurusan) }}"
                 @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('jurusan'),
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('jurusan'),
                 ])>
               @error('jurusan')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -110,10 +112,9 @@
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Jabatan Fungsional</label>
               <input type="text" name="jabatan_fungsional"
-                value="{{ old('jabatan_fungsional', $profile->jabatan_fungsional) }}"
-                @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('jabatan_fungsional'),
+                value="{{ old('jabatan_fungsional', $profile->jabatan_fungsional) }}" @class([
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('jabatan_fungsional'),
                 ])>
               @error('jabatan_fungsional')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -124,8 +125,8 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
               <input type="text" name="no_telp" value="{{ old('no_telp', $profile->no_telp) }}"
                 @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('no_telp'),
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('no_telp'),
                 ])>
               @error('no_telp')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -135,10 +136,9 @@
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">Keahlian</label>
               <input type="text" name="keahlian" value="{{ old('keahlian', $profile->keahlian) }}"
-                placeholder="Contoh: Machine Learning, Web Development"
-                @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('keahlian'),
+                placeholder="Contoh: Machine Learning, Web Development" @class([
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('keahlian'),
                 ])>
               @error('keahlian')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -147,8 +147,7 @@
 
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">Mata Kuliah yang Diampu</label>
-              <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions"
-                :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn ($id) => (string) $id)->all())"
+              <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions" :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn($id) => (string) $id)->all())"
                 placeholder="Pilih mata kuliah yang diampu..." search-placeholder="Cari mata kuliah..."
                 empty-text="Mata kuliah tidak ditemukan." />
               <p class="mt-2 text-xs text-slate-500">Bisa pilih lebih dari satu mata kuliah.</p>
@@ -173,11 +172,10 @@
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">Email <span
                   class="text-red-500">*</span></label>
-              <input type="email" name="email" value="{{ old('email', $user->email) }}"
-                @class([
+              <input type="email" name="email" value="{{ old('email', $user->email) }}" @class([
                   'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
                   'border-red-500' => $errors->has('email'),
-                ])>
+              ])>
               @error('email')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -186,10 +184,9 @@
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
               <input type="password" name="password" autocomplete="new-password"
-                placeholder="Kosongkan jika tidak diubah"
-                @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('password'),
+                placeholder="Kosongkan jika tidak diubah" @class([
+                    'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
+                    'border-red-500' => $errors->has('password'),
                 ])>
               @error('password')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -218,7 +215,16 @@
   </form>
   <script>
     function previewFoto(input) {
+      const error = document.getElementById('error-foto');
+      error.classList.add('hidden');
       if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          error.textContent = `Ukuran file ${file.name} melebihi 2MB.`;
+          error.classList.remove('hidden');
+          input.value = '';
+          return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById('foto-preview').src = e.target.result;

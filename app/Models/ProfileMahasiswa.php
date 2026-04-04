@@ -51,4 +51,11 @@ class ProfileMahasiswa extends Model
     {
         return $this->hasOne(PermintaanPembimbing::class, 'mahasiswa_id');
     }
+
+    public function getInitialsAttribute()
+    {
+        return substr(collect(explode(' ', $this->nama_lengkap))
+            ->map(fn ($w) => strtoupper($w[0]))
+            ->implode(''), 0, 2);
+    }
 }

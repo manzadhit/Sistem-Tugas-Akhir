@@ -50,6 +50,9 @@
             <input type="file" id="foto" name="foto" accept="image/*" class="hidden"
               onchange="previewFoto(this)">
             <p class="text-xs text-slate-500 text-center">Format: JPG, PNG, WEBP<br>Maks. 2MB</p>
+
+            <p id="error-foto" class="text-xs text-red-600 hidden"></p>
+
             @error('foto')
               <p class="text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -129,8 +132,7 @@
 
             <div class="sm:col-span-2">
               <label class="block text-sm font-medium text-slate-700 mb-1">Mata Kuliah yang Diampu</label>
-              <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions"
-                :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn ($id) => (string) $id)->all())"
+              <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions" :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn($id) => (string) $id)->all())"
                 placeholder="Pilih mata kuliah yang diampu..." search-placeholder="Cari mata kuliah..."
                 empty-text="Mata kuliah tidak ditemukan." />
               <p class="mt-2 text-xs text-slate-500">Bisa pilih lebih dari satu mata kuliah.</p>
@@ -194,7 +196,16 @@
   </form>
   <script>
     function previewFoto(input) {
+      const error = document.getElementById('error-foto');
+      error.classList.add('hidden');
       if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          error.textContent = `Ukuran file ${file.name} melebihi 2MB.`;
+          error.classList.remove('hidden');
+          input.value = '';
+          return;
+        }
         const reader = new FileReader();
         reader.onload = function(e) {
           document.getElementById('foto-preview').src = e.target.result;

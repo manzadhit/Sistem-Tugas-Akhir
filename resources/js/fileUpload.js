@@ -24,18 +24,26 @@ export function fileUpload(options = {}) {
         multiple,
 
         handleFiles(fileList) {
+            const error = document.getElementById("error-file");
+            error.textContent = "";
+            error.classList.add("hidden");
+
             Array.from(fileList).forEach((file) => {
                 if (!this.multiple && this.files.length >= 1) {
                     return;
                 }
 
                 if (file.size > this.maxBytes) {
-                    alert(`File ${file.name} terlalu besar. Maksimal 10MB`);
+                    const error = document.getElementById("error-file");
+                    error.textContent = `File ${file.name} terlalu besar. Maksimal 10MB`;
+                    error.classList.remove("hidden");
                     return;
                 }
 
                 if (!isAllowedExtension(file.name)) {
-                    alert(`File ${file.name} format tidak didukung.`);
+                    const error = document.getElementById("error-file");
+                    error.textContent = `File ${file.name} format tidak didukung.`;
+                    error.classList.remove("hidden");
                     return;
                 }
 
