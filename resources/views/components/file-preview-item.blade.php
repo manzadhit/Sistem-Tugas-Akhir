@@ -1,7 +1,5 @@
 @props([
     'path' => null,
-    'viewUrl' => null,
-    'downloadUrl' => null,
     'uploadedAt' => null,
 ])
 
@@ -17,10 +15,7 @@
       default => ['fa-file', 'text-gray-400'],
   };
 
-  // URL handling
-  $storageUrl = $path ? Storage::url($path) : '#';
-  $viewUrl = $viewUrl ?: $storageUrl;
-  $downloadUrl = $downloadUrl ?: ($path ? route('storage.download', ['path' => $path]) : '#');
+  $fileUrl = $path ? Storage::url($path) : '#';
 @endphp
 
 <div
@@ -41,12 +36,12 @@
   </div>
 
   <div class="flex w-full gap-2 sm:w-auto sm:justify-end">
-    <a href="{{ $viewUrl }}"
+    <a href="{{ $fileUrl }}"
       class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-blue-600 hover:underline">
       <i class="fas fa-eye"></i> View
     </a>
 
-    <a href="{{ $downloadUrl }}" download
+    <a href="{{ $fileUrl }}" download
       class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-green-600 hover:underline">
       <i class="fas fa-download"></i> Download
     </a>
