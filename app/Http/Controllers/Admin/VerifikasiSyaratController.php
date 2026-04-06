@@ -191,9 +191,11 @@ class VerifikasiSyaratController extends Controller
         ],
       ]);
 
+      $nim = $ujian->tugasAkhir->mahasiswa->nim;
+      $namaLengkap = $ujian->tugasAkhir->mahasiswa->nama_lengkap;
       $pdf = $this->pdfService->generate($data);
-      $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $ujian->tugasAkhir->mahasiswa->nim . '_' . $ujian->tugasAkhir->mahasiswa->nama_lengkap . '.pdf';
-      $filePath = 'undangan/' . $fileName;
+      $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $nim . '_' . $namaLengkap . '.pdf';
+      $filePath = "undangan/{$nim}/{$fileName}";
       Storage::put($filePath, $pdf->output());
 
       UndanganUjian::updateOrCreate(

@@ -32,7 +32,7 @@ class PermintaanPembimbingController extends Controller
 
         $mataKuliahOptions = MataKuliah::orderBy('nama')
             ->get(['id', 'kode', 'nama'])
-            ->map(fn ($mataKuliah) => [
+            ->map(fn($mataKuliah) => [
                 'id' => (string) $mataKuliah->id,
                 'label' => "{$mataKuliah->kode} - {$mataKuliah->nama}",
             ])
@@ -76,8 +76,8 @@ class PermintaanPembimbingController extends Controller
         }
 
         $file = $request->file('bukti_acc');
-        $filename = "{$mahasiswa->nim}_bukti_acc_judul.{$file->extension()}";
-        $path = $file->storeAs('bukti-acc', $filename);
+        $filename = "{$mahasiswa->nim}_bukti_acc_judul_{time()}.{$file->extension()}";
+        $path = $file->storeAs('bukti-acc/' . $mahasiswa->nim, $filename);
 
         $permintaanPembimbing = PermintaanPembimbing::updateOrCreate(
             ['mahasiswa_id' => $mahasiswa->id],

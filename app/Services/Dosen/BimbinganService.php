@@ -56,7 +56,8 @@ class BimbinganService
 
   public function reviewSubmission(Submission $submission, array $payload, array $files = [])
   {
-    $reviewed = DB::transaction(function () use ($submission, $payload, $files) {
+    $mahasiswaNim = $submission->tugasAkhir->mahasiswa->nim;
+    $reviewed = DB::transaction(function () use ($submission, $payload, $files, $mahasiswaNim) {
       $submission->update([
         'review' => $payload['review'] ?? null,
         'status' => $payload['status'],
@@ -64,8 +65,7 @@ class BimbinganService
 
       /** @var UploadedFile $file */
       foreach ($files as $file) {
-        $filename = $file->getClientOriginalName();
-        $path = $file->storeAs('submission-file', $filename);
+        $path = $file->storeAs('submission-files/' . $mahasiswaNim, $this->createFileName($file));
 
         SubmissionFile::create([
           'submission_id' => $submission->id,
@@ -81,5 +81,12 @@ class BimbinganService
     $mahasiswa->notify(new SubmissionReviewed($reviewed, $payload['status']));
 
     return $reviewed;
+  }
+
+  private function createFileName($file)
+  {
+    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    $extention = $file->getClientOriginalExtension();
+    return $originalName . '_' . time() . '.' . $extention;
   }
 }

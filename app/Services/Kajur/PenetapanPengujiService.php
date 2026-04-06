@@ -11,7 +11,9 @@ class PenetapanPengujiService
 {
   public function verifyLaporan(KajurSubmission $kajurSubmission, array $payload, ?array $files)
   {
-    return DB::transaction(function () use ($kajurSubmission, $payload, $files) {
+    $mahasiswaNim = $kajurSubmission->tugasAkhir->mahasiswa->nim;
+
+    return DB::transaction(function () use ($kajurSubmission, $payload, $files, $mahasiswaNim) {
       $kajurSubmission->update([
         'status' => $payload['status'],
         'review' => $payload['review'] ?? null,
@@ -19,8 +21,7 @@ class PenetapanPengujiService
 
       if ($files) {
         foreach ($files as $file) {
-          $filename = $file->getClientOriginalName();
-          $path = $file->storeAs('kajur-submission-file', $filename);
+          $path = $file->storeAs('kajur-submission-file/' . $mahasiswaNim, $this->createFileName($file));
 
           KajurSubmissionFile::create([
             'kajur_submission_id' => $kajurSubmission->id,
@@ -58,5 +59,12 @@ class PenetapanPengujiService
         $q->where('periode_akademik_id', $periodeAktifId);
       });
     };
+  }
+
+  private function createFileName($file)
+  {
+    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    $extention = $file->getClientOriginalExtension();
+    return $originalName . '_' . time() . '.' . $extention;
   }
 }
