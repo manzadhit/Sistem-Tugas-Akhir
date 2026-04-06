@@ -56,6 +56,8 @@ class MahasiswaBimbingan extends Controller
 
     public function riwayatBimbingan(DosenPembimbing $dosenPembimbing)
     {
+        $this->authorize('view', $dosenPembimbing);
+
         $dosenPembimbing->loadMissing([
             'mahasiswa.tugasAkhir',
             'submissions' => fn($q) => $q->latest(),
@@ -66,6 +68,8 @@ class MahasiswaBimbingan extends Controller
 
     public function getDetail(Submission $submission)
     {
+        $this->authorize('view', $submission);
+
         $submission->loadMissing([
             'tugasAkhir.mahasiswa',
             'submissionFiles' => fn($query) => $query->where('uploaded_by', 'mahasiswa')
@@ -76,6 +80,8 @@ class MahasiswaBimbingan extends Controller
 
     public function review(ReviewSubmissionRequest $request, Submission $submission)
     {
+        $this->authorize('review', $submission);
+
         try {
             $this->bimbinganService->reviewSubmission(
                 submission: $submission,
