@@ -46,6 +46,25 @@ class InputNilaiController extends Controller
             'nilai' => ['required', 'numeric', 'min:0', 'max:100'],
         ]);
 
+        $currentDosenId = $request->user()->profileDosen?->id;
+
+        abort_if(!$currentDosenId, 403, 'Profil dosen tidak ditemukan.');
+
+        $isSameDosen = (int) $dosenPenguji->dosen_id === (int) $currentDosenId;
+
+        $isAssignedAsPenguji = $dosenPenguji->mahasiswa()
+            ->whereHas('dosenPenguji', function ($query) use ($currentDosenId, $dosenPenguji) {
+                $query->whereKey($dosenPenguji->id)
+                    ->where('dosen_id', $currentDosenId);
+            })
+            ->exists();
+
+        abort_unless(
+            $isSameDosen && $isAssignedAsPenguji,
+            403,
+            'Anda tidak berwenang menginput nilai untuk penguji ini.'
+        );
+
         $dosenPenguji->update(['nilai' => $request->nilai]);
 
         $mahasiswaId = $dosenPenguji->mahasiswa_id;
