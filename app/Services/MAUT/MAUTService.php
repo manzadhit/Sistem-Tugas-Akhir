@@ -40,13 +40,13 @@ class MAUTService
     return $matrix;
   }
 
-  public function normalizeDecisionMatrix($decisionMatrix, $context = 'pembimbing')
+  public function normalizeDecisionMatrix($decisionMatrix, $context = 'pembimbing', $criteria = null)
   {
     if (empty($decisionMatrix)) {
       return [];
     }
 
-    $criteria = $this->getActiveCriteria($context);
+    $criteria = $criteria ?? $this->getActiveCriteria($context);
 
     $normalizedMatrix = [];
 
@@ -85,9 +85,9 @@ class MAUTService
     return $result;
   }
 
-  public function calculateAll($normalizedMatrix, $context = 'pembimbing')
+  public function calculateAll($normalizedMatrix, $context = 'pembimbing', $criteria = null)
   {
-    $criteria = $this->getActiveCriteria($context);
+    $criteria = $criteria ?? $this->getActiveCriteria($context);
 
     $result = [];
 
@@ -105,9 +105,9 @@ class MAUTService
     }
 
     $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context, $mahasiswa);
-    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context);
     $criteria = $this->getActiveCriteria($context);
-    $scores = $this->calculateAll($normalizedMatrix, $context);
+    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context, $criteria);
+    $scores = $this->calculateAll($normalizedMatrix, $context, $criteria);
 
     arsort($scores);
 
