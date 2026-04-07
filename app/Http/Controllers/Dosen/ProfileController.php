@@ -26,6 +26,7 @@ class ProfileController extends Controller
     {
         $user = $request->user();
         $profile = $user->profileDosen;
+        $validated = $request->validated();
 
         // Update foto jika ada
         $fotoPath = $profile->foto;
@@ -38,25 +39,25 @@ class ProfileController extends Controller
 
         // Update profile dosen
         $profile->update([
-            'nama_lengkap' => $request->nama_lengkap,
-            'nidn' => $request->nidn,
-            'jurusan' => $request->jurusan,
-            'keahlian' => $request->keahlian,
-            'jabatan_fungsional' => $request->jabatan_fungsional,
-            'no_telp' => $request->no_telp,
+            'nama_lengkap' => $validated['nama_lengkap'],
+            'nidn' => $validated['nidn'],
+            'jurusan' => $validated['jurusan'],
+            'keahlian' => $validated['keahlian'] ?? null,
+            'jabatan_fungsional' => $validated['jabatan_fungsional'] ?? null,
+            'no_telp' => $validated['no_telp'] ?? null,
             'foto' => $fotoPath,
         ]);
 
-        $profile->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
+        $profile->mataKuliah()->sync($validated['mata_kuliah_ids'] ?? []);
 
         // Update email
-        if ($user->email !== $request->email) {
-            $user->email = $request->email;
+        if ($user->email !== $validated['email']) {
+            $user->email = $validated['email'];
         }
 
         // Update password jika diisi
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+        if (! empty($validated['password'])) {
+            $user->password = Hash::make($validated['password']);
         }
 
         $user->save();
