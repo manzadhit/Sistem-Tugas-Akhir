@@ -182,7 +182,9 @@
                     <i class="fas fa-edit text-xs"></i>
                   </a>
                   <button type="button"
-                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $pub->id }}, judul: '{{ addslashes(Str::limit($pub->judul, 60)) }}' } }))"
+                    data-id="{{ $pub->id }}"
+                    data-judul="{{ Str::limit($pub->judul, 60) }}"
+                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: this.dataset.id, judul: this.dataset.judul } }))"
                     class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
                     title="Hapus">
                     <i class="fas fa-trash text-xs"></i>
@@ -232,7 +234,9 @@
                 <i class="fas fa-edit text-xs"></i>
               </a>
               <button type="button"
-                onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $pub->id }}, judul: '{{ addslashes(Str::limit($pub->judul, 60)) }}' } }))"
+                data-id="{{ $pub->id }}"
+                data-judul="{{ Str::limit($pub->judul, 60) }}"
+                onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: this.dataset.id, judul: this.dataset.judul } }))"
                 class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors">
                 <i class="fas fa-trash text-xs"></i>
               </button>

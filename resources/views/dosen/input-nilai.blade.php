@@ -140,7 +140,11 @@
                 </td>
                 <td class="px-6 py-4 border-b">
                   <button type="button"
-                    @click="nama = '{{ $mhs->nama_lengkap }}'; nim = '{{ $mhs->nim }}'; nilai = '{{ $penguji->nilai ?? '' }}'; actionUrl = '{{ route('dosen.nilai.store', $penguji->id) }}'; open = true"
+                    data-nama="{{ $mhs->nama_lengkap }}"
+                    data-nim="{{ $mhs->nim }}"
+                    data-nilai="{{ $penguji->nilai ?? '' }}"
+                    data-action-url="{{ route('dosen.nilai.store', $penguji->id) }}"
+                    @click="nama = $el.dataset.nama; nim = $el.dataset.nim; nilai = $el.dataset.nilai; actionUrl = $el.dataset.actionUrl; open = true"
                     class="px-3 py-2 {{ $sudah ? 'bg-gray-500 hover:bg-gray-600' : 'bg-blue-600 hover:bg-blue-700' }} text-white rounded-md text-sm transition-colors">
                     {{ $sudah ? 'Edit Nilai' : 'Input Nilai' }}
                   </button>

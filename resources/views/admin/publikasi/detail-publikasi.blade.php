@@ -31,7 +31,9 @@
             <i class="fas fa-edit text-xs"></i> Edit
           </a>
           <button type="button"
-            onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $publikasi->id }}, judul: '{{ addslashes(Str::limit($publikasi->judul, 60)) }}' } }))"
+            data-id="{{ $publikasi->id }}"
+            data-judul="{{ Str::limit($publikasi->judul, 60) }}"
+            onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: this.dataset.id, judul: this.dataset.judul } }))"
             class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 transition-colors">
             <i class="fas fa-trash text-xs"></i> Hapus
           </button>
