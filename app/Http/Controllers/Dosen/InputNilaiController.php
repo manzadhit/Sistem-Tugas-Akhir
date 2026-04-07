@@ -14,28 +14,34 @@ class InputNilaiController extends Controller
     {
         $dosenId = $request->user()->profileDosen->id;
 
-        $semua = DosenPenguji::with(['mahasiswa.tugasAkhir.ujian.jadwalUjian'])
+        $baseQuery = DosenPenguji::query()
             ->where('dosen_id', $dosenId)
-            ->whereHas('mahasiswa.tugasAkhir.ujian', fn($q) => $q->where('jenis_ujian', 'skripsi'))
-            ->get();
+            ->whereHas('mahasiswa.tugasAkhir.ujian', fn($q) => $q->where('jenis_ujian', 'skripsi'));
 
-        $sudahDinilai = $semua->whereNotNull('nilai')->count();
-        $menunggu     = $semua->whereNull('nilai')->count();
+        $sudahDinilai = (clone $baseQuery)->whereNotNull('nilai')->count();
+        $menunggu     = (clone $baseQuery)->whereNull('nilai')->count();
 
-        $pengujiList = $semua
-            ->when($request->filled('search'), function ($col) use ($request) {
-                $search = strtolower($request->search);
-                return $col->filter(
-                    fn($p) => str_contains(strtolower($p->mahasiswa->nama_lengkap), $search)
-                           || str_contains($p->mahasiswa->nim, $request->search)
-                );
+        $pengujiList = (clone $baseQuery)
+            ->with(['mahasiswa.tugasAkhir.ujian.jadwalUjian'])
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $search = $request->search;
+
+                $query->whereHas('mahasiswa', function ($query) use ($search) {
+                    $query->where(function ($query) use ($search) {
+                        $query->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
+                });
             })
-            ->when($request->filled('peran'), fn($col) => $col->where('jenis_penguji', $request->peran))
-            ->values()
-            ->each(function ($penguji) {
-                $ujian = $penguji->mahasiswa->tugasAkhir?->ujian->firstWhere('jenis_ujian', 'skripsi');
-                $penguji->jadwal = $ujian?->jadwalUjian;
-            });
+            ->when($request->filled('peran'), fn($query) => $query->where('jenis_penguji', $request->peran))
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        $pengujiList->getCollection()->each(function ($penguji) {
+            $ujian = $penguji->mahasiswa->tugasAkhir?->ujian->firstWhere('jenis_ujian', 'skripsi');
+            $penguji->jadwal = $ujian?->jadwalUjian;
+        });
 
         return view('dosen.input-nilai', compact('pengujiList', 'sudahDinilai', 'menunggu'));
     }

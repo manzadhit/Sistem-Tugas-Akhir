@@ -117,9 +117,13 @@
                   <span class="text-gray-500 text-xs">{{ $mhs->nim }}</span>
                 </td>
                 <td class="px-6 py-4 border-b text-sm whitespace-nowrap">
-                  <span class="block text-gray-800">{{ $jadwal->tanggal_ujian->translatedFormat('d M Y') }}</span>
-                  <span class="text-gray-500 text-xs">{{ $jadwal->jam_mulai->format('H:i') }} –
-                    {{ $jadwal->jam_selesai->format('H:i') }}</span>
+                  @if ($jadwal)
+                    <span class="block text-gray-800">{{ $jadwal->tanggal_ujian->translatedFormat('d M Y') }}</span>
+                    <span class="text-gray-500 text-xs">{{ $jadwal->jam_mulai->format('H:i') }} –
+                      {{ $jadwal->jam_selesai->format('H:i') }}</span>
+                  @else
+                    <span class="text-gray-400 text-xs">Belum dijadwalkan</span>
+                  @endif
                 </td>
                 <td class="px-6 py-4 border-b text-sm">{{ $labelPeran }}</td>
                 <td class="px-6 py-4 border-b">
@@ -153,6 +157,12 @@
           </tbody>
         </table>
       </div>
+
+      @if ($pengujiList->hasPages())
+        <div class="px-5 py-4 border-t border-gray-100">
+          {{ $pengujiList->links() }}
+        </div>
+      @endif
 
       {{-- Modal --}}
       <div x-show="open" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
