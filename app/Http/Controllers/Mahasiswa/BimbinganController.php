@@ -13,9 +13,10 @@ use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewSubmission;
 use App\Notifications\PengujiAssigned;
 use App\Notifications\SubmissionReviewed;
-use App\Services\SubmissionService;
+use App\Services\Mahasiswa\SubmissionService;
 use Illuminate\Http\Request;
 use App\Models\Submission;
+use Illuminate\Support\Facades\Log;
 
 class BimbinganController extends Controller
 {
@@ -125,7 +126,15 @@ class BimbinganController extends Controller
 
             return back()->with('success', 'Submission berhasil dikirim');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengirim submission: ' . $e->getMessage());
+            Log::error('Gagal mengirim submission bimbingan.', [
+                'user_id' => $request->user()?->id,
+                'jenis' => $jenis,
+                'mahasiswa_id' => $mahasiswa?->id,
+                'dosen_pembimbing_id' => $dosenPembimbingId,
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'Gagal mengirim submission. Silakan coba lagi.');
         }
     }
 

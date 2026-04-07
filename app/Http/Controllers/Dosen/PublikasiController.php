@@ -41,7 +41,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,buku,haki',
             'tahun'           => 'required|integer|min:1900|max:' . date('Y'),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         $validated['dosen_id'] = Auth::user()->profileDosen->id;
@@ -75,7 +75,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,buku,haki',
             'tahun'           => 'required|integer|min:1900|max:' . date('Y'),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         $publikasi->update($validated);

@@ -11,7 +11,7 @@ class kajurSubmissionService
 {
   public function createKajurSubmission(int $mahasiswaId, string $jenis, ?string $catatan, string $abstrak, string $kataKunci, array $files): KajurSubmission
   {
-    $tugasAkhir = TugasAkhir::where('mahasiswa_id', $mahasiswaId)->first();
+    $tugasAkhir = TugasAkhir::with('mahasiswa')->where('mahasiswa_id', $mahasiswaId)->first();
 
     return DB::transaction(function () use ($tugasAkhir, $jenis, $catatan, $abstrak, $kataKunci, $files) {
       $tugasAkhir->update([
@@ -26,8 +26,7 @@ class kajurSubmissionService
       ]);
 
       foreach ($files as $file) {
-        $fileName = $file->getClientOriginalName();
-        $file_path = $file->storeAs('kajur-submission-file', $fileName);
+        $file_path = $file->storeAs('kajur-submission-file/' . $tugasAkhir->mahasiswa->nim, $this->createFileName($file), 'local');
 
         KajurSubmissionFile::create([
           'kajur_submission_id' => $kajurSubmission->id,
@@ -38,5 +37,12 @@ class kajurSubmissionService
 
       return $kajurSubmission;
     });
+  }
+
+  private function createFileName($file)
+  {
+    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+    $extention = $file->getClientOriginalExtension();
+    return $originalName . '_' . time() . '.' . $extention;
   }
 }

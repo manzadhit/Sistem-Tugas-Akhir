@@ -1,4 +1,5 @@
 export function fileUpload(options = {}) {
+    const maxMb = Number(options.maxMb ?? 10);
     const maxBytes = Number(options.maxBytes ?? 10 * 1024 * 1024);
     const accept = String(options.accept ?? ".pdf,.doc,.docx");
     const multiple = Boolean(options.multiple ?? true);
@@ -19,14 +20,14 @@ export function fileUpload(options = {}) {
     return {
         files: [],
         dragging: false,
+        errorMessage: "",
+        maxMb,
         maxBytes,
         accept,
         multiple,
 
         handleFiles(fileList) {
-            const error = document.getElementById("error-file");
-            error.textContent = "";
-            error.classList.add("hidden");
+            this.errorMessage = "";
 
             Array.from(fileList).forEach((file) => {
                 if (!this.multiple && this.files.length >= 1) {
@@ -34,16 +35,12 @@ export function fileUpload(options = {}) {
                 }
 
                 if (file.size > this.maxBytes) {
-                    const error = document.getElementById("error-file");
-                    error.textContent = `File ${file.name} terlalu besar. Maksimal 10MB`;
-                    error.classList.remove("hidden");
+                    this.errorMessage = `File ${file.name} terlalu besar. Maksimal ${this.maxMb}MB`;
                     return;
                 }
 
                 if (!isAllowedExtension(file.name)) {
-                    const error = document.getElementById("error-file");
-                    error.textContent = `File ${file.name} format tidak didukung.`;
-                    error.classList.remove("hidden");
+                    this.errorMessage = `File ${file.name} format tidak didukung.`;
                     return;
                 }
 
@@ -77,6 +74,7 @@ export function fileUpload(options = {}) {
         viewFile(file) {
             const url = URL.createObjectURL(file);
             window.open(url, "_blank");
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
         },
 
         getFileIcon(filename) {

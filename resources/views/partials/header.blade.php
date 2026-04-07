@@ -15,17 +15,13 @@
 
   <div class="flex items-center gap-x-4">
     {{-- Notification Bell --}}
-    @php
-      $notifications = auth()->user()->notifications()->latest()->limit(3)->get();
-      $unreadNotifications = auth()->user()->unreadNotifications;
-    @endphp
     <div class="relative" x-cloak x-data="{ open: false }" @click.outside="open = false">
       <button type="button" @click="open = !open"
         class="relative border py-1.5 px-3 rounded-xl cursor-pointer hover:text-slate-600 transition">
         <i class="fa-regular fa-bell"></i>
-        @if ($unreadNotifications->isNotEmpty())
+        @if ($unreadNotificationsCount > 0)
           <span
-            class="absolute -top-2 -right-2 w-4 h-4 flex items-center justify-center text-[10px] bg-red-500 rounded-full text-white leading-none">{{ $unreadNotifications->count() }}</span>
+            class="absolute -top-2 -right-2 w-4 h-4 flex items-center justify-center text-[10px] bg-red-500 rounded-full text-white leading-none">{{ $unreadNotificationsCount }}</span>
         @endif
       </button>
 
@@ -35,9 +31,9 @@
         {{-- Header --}}
         <div class="flex items-center justify-between px-4 py-3 border-b border-slate-100">
           <p class="text-sm font-semibold text-slate-900">Notifikasi</p>
-          @if ($unreadNotifications->isNotEmpty())
+          @if ($unreadNotificationsCount > 0)
             <span
-              class="text-xs bg-red-100 text-red-600 font-medium px-2 py-0.5 rounded-full">{{ $unreadNotifications->count() }}
+              class="text-xs bg-red-100 text-red-600 font-medium px-2 py-0.5 rounded-full">{{ $unreadNotificationsCount }}
               baru</span>
           @endif
         </div>

@@ -7,6 +7,7 @@ use App\Http\Requests\Mahasiswa\StoreKajurSubmissionRequest;
 use App\Models\User;
 use App\Notifications\NewPengujiRequest;
 use App\Services\Mahasiswa\KajurSubmissionService;
+use Illuminate\Support\Facades\Log;
 
 class KajurSubmissionController extends Controller
 {
@@ -34,7 +35,13 @@ class KajurSubmissionController extends Controller
 
             return back()->with('success', 'Berhasil mengirim laporan ke Ketua Jurusan');
         } catch (\Exception $e) {
-            return back()->with('error', 'Gagal mengirim laporan ke Ketua Jurusan.' . $e->getMessage());
+            Log::error('Gagal mengirim laporan ke Ketua Jurusan.', [
+                'user_id' => $request->user()?->id,
+                'jenis' => $request->route('jenis'),
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'Gagal mengirim laporan ke Ketua Jurusan. Silakan coba lagi.');
         }
     }
 }

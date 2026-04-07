@@ -25,7 +25,7 @@
           <p class="text-xs font-semibold uppercase tracking-wide {{ $isRevisi ? 'text-amber-700' : 'text-red-700' }}">
             File dari Kajur:</p>
           @foreach ($kajurFiles as $file)
-            <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+            <x-file-preview-item :path="$file->file_path" type="kajur-submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" />
           @endforeach
         </div>
       @endif

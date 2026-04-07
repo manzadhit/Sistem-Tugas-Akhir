@@ -29,7 +29,7 @@ class ProfileMahasiswaFactory extends Factory
             'ipk' => fake()->randomFloat(2, 2.00, 4.00),
             'no_telp' => fake()->optional()->phoneNumber(),
             'foto' => null,
-            'status_akademik' => fake()-> randomElement(['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout'])
+            'status_akademik' => 'aktif'
         ];
     }
 }

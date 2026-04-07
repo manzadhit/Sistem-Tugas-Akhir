@@ -18,9 +18,14 @@ class MahasiswaController extends Controller
         $angkatan = $request->get('angkatan');
 
         $daftarMahasiswa = ProfileMahasiswa::query()
-            ->when($search, fn ($q) => $q->where('nama_lengkap', 'like', "%{$search}%")->orWhere('nim', 'like', "%{$search}%"))
-            ->when($status, fn ($q) => $q->where('status_akademik', $status))
-            ->when($angkatan, fn ($q) => $q->where('angkatan', $angkatan))
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('nama_lengkap', 'like', "%{$search}%")
+                        ->orWhere('nim', 'like', "%{$search}%");
+                });
+            })
+            ->when($status, fn($q) => $q->where('status_akademik', $status))
+            ->when($angkatan, fn($q) => $q->where('angkatan', $angkatan))
             ->latest()
             ->paginate(5)
             ->withQueryString();
@@ -68,7 +73,7 @@ class MahasiswaController extends Controller
     public function show($id)
     {
         $mhs = ProfileMahasiswa::with([
-            'dosenPembimbing' => fn ($q) => $q->with('dosen')->orderBy('jenis_pembimbing', 'asc'),
+            'dosenPembimbing' => fn($q) => $q->with('dosen')->orderBy('jenis_pembimbing', 'asc'),
             'tugasAkhir.ujian.jadwalUjian',
         ])->findOrFail($id);
 

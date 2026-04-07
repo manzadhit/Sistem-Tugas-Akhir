@@ -13,6 +13,7 @@ use App\Notifications\UjianInvitationSent;
 use App\Notifications\UjianSyaratReviewed;
 use App\Services\Admin\UndanganPdfService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class VerifikasiSyaratController extends Controller
@@ -57,8 +58,10 @@ class VerifikasiSyaratController extends Controller
     if ($request->filled('search')) {
       $search = $request->search;
       $query->whereHas('tugasAkhir.mahasiswa', function ($q) use ($search) {
-        $q->where('nama_lengkap', 'like', "%{$search}%")
-          ->orWhere('nim', 'like', "%{$search}%");
+        $q->where(function ($q) use ($search) {
+          $q->where('nama_lengkap', 'like', "%{$search}%")
+            ->orWhere('nim', 'like', "%{$search}%");
+        });
       });
     }
 
@@ -191,10 +194,12 @@ class VerifikasiSyaratController extends Controller
         ],
       ]);
 
+      $nim = $ujian->tugasAkhir->mahasiswa->nim;
+      $namaLengkap = $ujian->tugasAkhir->mahasiswa->nama_lengkap;
       $pdf = $this->pdfService->generate($data);
-      $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $ujian->tugasAkhir->mahasiswa->nim . '_' . $ujian->tugasAkhir->mahasiswa->nama_lengkap . '.pdf';
-      $filePath = 'undangan/' . $fileName;
-      Storage::put($filePath, $pdf->output());
+      $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $nim . '_' . $namaLengkap . '.pdf';
+      $filePath = "undangan/{$nim}/{$fileName}";
+      Storage::disk('local')->put($filePath, $pdf->output());
 
       UndanganUjian::updateOrCreate(
         ['ujian_id' => $ujian->id],
@@ -215,7 +220,12 @@ class VerifikasiSyaratController extends Controller
         ->route('admin.ujian.syarat.undangan', $id)
         ->with('success', 'Undangan berhasil di-generate');
     } catch (\Throwable $th) {
-      return back()->with('error', $th->getMessage());
+      Log::error('Gagal generate undangan ujian.', [
+        'ujian_id' => $id,
+        'error' => $th->getMessage(),
+      ]);
+
+      return back()->with('error', 'Gagal membuat undangan. Silakan coba lagi.');
     }
   }
 

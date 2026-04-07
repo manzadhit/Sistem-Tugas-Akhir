@@ -79,7 +79,7 @@
           <div class="space-y-3">
             <!-- File 1 -->
             @foreach ($submission->submissionFiles as $file)
-              <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+              <x-file-preview-item :path="$file->file_path" type="submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" />
             @endforeach
           </div>
 

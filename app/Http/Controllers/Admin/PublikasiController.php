@@ -17,8 +17,12 @@ class PublikasiController extends Controller
         $dosenId  = $request->get('dosen_id');
 
         $daftarPublikasi = PublikasiDosen::with('dosen')
-            ->when($search, fn($q) => $q->where('judul', 'like', "%{$search}%")
-                ->orWhereHas('dosen', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")))
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('judul', 'like', "%{$search}%")
+                        ->orWhereHas('dosen', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%"));
+                });
+            })
             ->when($kategori, fn($q) => $q->where('jenis_publikasi', $kategori))
             ->when($tahun, fn($q) => $q->where('tahun', $tahun))
             ->when($dosenId, fn($q) => $q->where('dosen_id', $dosenId))
@@ -53,7 +57,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,haki,buku',
             'tahun'           => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         PublikasiDosen::create($validated);
@@ -87,7 +91,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,haki,buku',
             'tahun'           => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         $publikasi->update($validated);

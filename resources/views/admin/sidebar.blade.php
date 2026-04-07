@@ -34,6 +34,12 @@
           'active' => request()->is('admin/dosen*'),
       ],
       [
+          'href' => route('admin.mata-kuliah.index'),
+          'icon' => 'fas fa-book-open',
+          'label' => 'Kelola Mata Kuliah',
+          'active' => request()->is('admin/mata-kuliah*'),
+      ],
+      [
           'href' => route('admin.publikasi.index'),
           'icon' => 'fas fa-book',
           'label' => 'Kelola Publikasi Dosen',

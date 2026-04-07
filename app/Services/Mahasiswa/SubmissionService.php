@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Mahasiswa;
 
 use App\Models\Submission;
 use App\Models\SubmissionFile;
@@ -8,7 +8,6 @@ use App\Models\TugasAkhir;
 use App\Models\ProfileMahasiswa;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class SubmissionService
 {
@@ -27,7 +26,7 @@ class SubmissionService
             ]);
 
             foreach ($files as $file) {
-                $path = $file->storeAs('submission-files/' . $mahasiswa->nim, $this->createFileName($file));
+                $path = $file->storeAs('submission-files/' . $mahasiswa->nim, $this->createFileName($file), 'local');
 
                 SubmissionFile::create([
                     'submission_id' => $submission->id,

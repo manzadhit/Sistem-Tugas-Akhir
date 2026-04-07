@@ -162,7 +162,10 @@
                     <i class="fas fa-edit text-xs"></i>
                   </a>
                   <button type="button"
-                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $mhs->id }}, nama: '{{ addslashes($mhs->nama_lengkap) }}', nim: '{{ $mhs->nim }}' } }))"
+                    data-id="{{ $mhs->id }}"
+                    data-nama="{{ $mhs->nama_lengkap }}"
+                    data-nim="{{ $mhs->nim }}"
+                    onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: this.dataset.id, nama: this.dataset.nama, nim: this.dataset.nim } }))"
                     class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
                     title="Hapus">
                     <i class="fas fa-trash text-xs"></i>
@@ -222,7 +225,10 @@
               <i class="fas fa-edit text-xs"></i>
             </a>
             <button type="button"
-              onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: {{ $mhs->id }}, nama: '{{ addslashes($mhs->nama_lengkap) }}', nim: '{{ $mhs->nim }}' } }))"
+              data-id="{{ $mhs->id }}"
+              data-nama="{{ $mhs->nama_lengkap }}"
+              data-nim="{{ $mhs->nim }}"
+              onclick="window.dispatchEvent(new CustomEvent('open-delete-modal', { detail: { id: this.dataset.id, nama: this.dataset.nama, nim: this.dataset.nim } }))"
               class="w-8 h-8 rounded-md bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors">
               <i class="fas fa-trash text-xs"></i>
             </button>

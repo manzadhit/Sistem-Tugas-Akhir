@@ -32,8 +32,10 @@ class PengujiController extends Controller
             ->whereDoesntHave('tugasAkhir.mahasiswa.dosenPenguji')
             ->when($search !== '', function ($query) use ($search) {
                 $query->whereHas('tugasAkhir.mahasiswa', function ($mahasiswaQuery) use ($search) {
-                    $mahasiswaQuery->where('nama_lengkap', 'like', "%{$search}%")
-                        ->orWhere('nim', 'like', "%{$search}%");
+                    $mahasiswaQuery->where(function ($mahasiswaQuery) use ($search) {
+                        $mahasiswaQuery->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
                 });
             })
             ->oldest()

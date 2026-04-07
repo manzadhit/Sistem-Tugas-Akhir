@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DosenController;
+use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\PeriodeAkademikController;
 use App\Http\Controllers\Admin\VerifikasiSyaratController;
@@ -46,6 +47,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');
   Route::put('/dosen/{id}', [DosenController::class, 'update'])->name('dosen.update');
   Route::delete('/dosen/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
+
+  // Manajemen Mata Kuliah
+  Route::get('/mata-kuliah', [MataKuliahController::class, 'index'])->name('mata-kuliah.index');
+  Route::post('/mata-kuliah', [MataKuliahController::class, 'store'])->name('mata-kuliah.store');
+  Route::put('/mata-kuliah/{mataKuliah}', [MataKuliahController::class, 'update'])->name('mata-kuliah.update');
+  Route::delete('/mata-kuliah/{mataKuliah}', [MataKuliahController::class, 'destroy'])->name('mata-kuliah.destroy');
 
   // Manajemen Publikasi
   Route::get('/publikasi', [PublikasiController::class, 'index'])->name('publikasi.index');

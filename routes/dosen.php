@@ -3,7 +3,7 @@
 use App\Http\Controllers\Dosen\DashboardController;
 use App\Http\Controllers\Dosen\InputNilaiController;
 use App\Http\Controllers\Dosen\JadwalController;
-use App\Http\Controllers\Dosen\MahasiswaBimbingan;
+use App\Http\Controllers\Dosen\MahasiswaBimbinganController;
 use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
 use App\Http\Controllers\Dosen\PublikasiController;
 use App\Http\Controllers\Dosen\UndanganController;
@@ -15,12 +15,12 @@ Route::middleware(['auth', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('d
   Route::get('/profile', [DosenProfileController::class, 'edit'])->name('profile.edit');
   Route::put('/profile', [DosenProfileController::class, 'update'])->name('profile.update');
 
-  Route::get('/bimbingan', [MahasiswaBimbingan::class, 'index'])->name('bimbingan.index');
-  Route::get('/bimbingan/mahasiswa', [MahasiswaBimbingan::class, 'mahasiswaList'])->name('bimbingan.mahasiswa');
-  Route::get('/bimbingan/mahasiswa-lulus', [MahasiswaBimbingan::class, 'mahasiswaLulusList'])->name('bimbingan.mahasiswa-lulus');
-  Route::get('/bimbingan/mahasiswa/{dosenPembimbing}/riwayat', [MahasiswaBimbingan::class, 'riwayatBimbingan'])->name('bimbingan.riwayat');
-  Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbingan::class, 'getDetail'])->name('bimbingan.detail');
-  Route::put('/bimbingan/{submission}/review', [MahasiswaBimbingan::class, 'review'])->name('bimbingan.review');
+  Route::get('/bimbingan', [MahasiswaBimbinganController::class, 'index'])->name('bimbingan.index');
+  Route::get('/bimbingan/mahasiswa', [MahasiswaBimbinganController::class, 'mahasiswaList'])->name('bimbingan.mahasiswa');
+  Route::get('/bimbingan/mahasiswa-lulus', [MahasiswaBimbinganController::class, 'mahasiswaLulusList'])->name('bimbingan.mahasiswa-lulus');
+  Route::get('/bimbingan/mahasiswa/{dosenPembimbing}/riwayat', [MahasiswaBimbinganController::class, 'riwayatBimbingan'])->name('bimbingan.riwayat');
+  Route::get('/bimbingan/{submission}/detail', [MahasiswaBimbinganController::class, 'getDetail'])->name('bimbingan.detail');
+  Route::put('/bimbingan/{submission}/review', [MahasiswaBimbinganController::class, 'review'])->name('bimbingan.review');
 
   Route::get('/undangan', [UndanganController::class, 'index'])->name('undangan.index');
   Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');

@@ -16,7 +16,7 @@
       " (Maks {$maxMb}MB)";
 @endphp
 
-<div x-data="fileUpload({ maxBytes: {{ $maxBytes }}, accept: @js($accept), multiple: @js($multiple) })" {{ $attributes->class(['space-y-3']) }}>
+<div x-data="fileUpload({ maxMb: {{ $maxMb }}, maxBytes: {{ $maxBytes }}, accept: @js($accept), multiple: @js($multiple) })" {{ $attributes->class(['space-y-3']) }}>
   @if ($label !== '')
     <label class="block text-sm font-medium text-gray-700">
       {{ $label }}
@@ -69,5 +69,5 @@
       </div>
     </template>
   </div>
-  <p id="error-file" class="text-xs text-red-600 hidden"></p>
+  <p x-show="errorMessage" x-text="errorMessage" class="text-xs text-red-600" x-cloak></p>
 </div>

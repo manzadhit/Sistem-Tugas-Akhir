@@ -95,7 +95,7 @@
                 @if ($fileDosen->isNotEmpty())
                   <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files dari Dosen:</div>
                   @foreach ($fileDosen as $file)
-                    <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                    <x-file-preview-item :path="$file->file_path" type="submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" />
                   @endforeach
                 @endif
 
@@ -109,7 +109,7 @@
                 @if ($fileMahasiswa->isNotEmpty())
                   <div class="text-[0.8rem] font-medium text-gray-500 mb-3">Files Mahasiswa:</div>
                   @foreach ($fileMahasiswa as $file)
-                    <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" />
+                    <x-file-preview-item :path="$file->file_path" type="submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" />
                   @endforeach
                 @endif
 
