@@ -20,7 +20,6 @@ class DosenController extends Controller
         $status = $request->get('status');
 
         $daftarDosen = ProfileDosen::query()
-            ->with('pembimbingMahasiswa')
             ->withCount('publikasi')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($q) use ($search) {
