@@ -13,6 +13,7 @@ use App\Notifications\UjianHasilReviewed;
 use App\Notifications\UjianSyaratReviewed;
 use App\Services\Mahasiswa\UjianService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UjianController extends Controller
 {
@@ -123,7 +124,13 @@ class UjianController extends Controller
             return back()->with('success', 'Berhasil mengajukan ujian. Menunggu verifikasi dari admin.');
 
         } catch (\Throwable $th) {
-            return back()->with('error', 'Gagal memproses pengajuan: ' . $th->getMessage())->withInput();
+            Log::error('Gagal memproses pengajuan ujian.', [
+                'user_id' => $request->user()?->id,
+                'jenis' => $jenis,
+                'error' => $th->getMessage(),
+            ]);
+
+            return back()->with('error', 'Gagal memproses pengajuan. Silakan coba lagi.')->withInput();
         }
     }
 
@@ -237,7 +244,13 @@ class UjianController extends Controller
             return back()->with('success', 'Berhasil mengajukan hasil ujian. Menunggu verifikasi dari admin.');
 
         } catch (\Throwable $th) {
-            return back()->with('error', 'Gagal memproses pengajuan hasil ujian: ' . $th->getMessage())->withInput();
+            Log::error('Gagal memproses pengajuan hasil ujian.', [
+                'user_id' => $request->user()?->id,
+                'jenis' => $jenis,
+                'error' => $th->getMessage(),
+            ]);
+
+            return back()->with('error', 'Gagal memproses pengajuan hasil ujian. Silakan coba lagi.')->withInput();
         }
     }
 

@@ -13,6 +13,7 @@ use App\Notifications\UjianInvitationSent;
 use App\Notifications\UjianSyaratReviewed;
 use App\Services\Admin\UndanganPdfService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class VerifikasiSyaratController extends Controller
@@ -217,7 +218,12 @@ class VerifikasiSyaratController extends Controller
         ->route('admin.ujian.syarat.undangan', $id)
         ->with('success', 'Undangan berhasil di-generate');
     } catch (\Throwable $th) {
-      return back()->with('error', $th->getMessage());
+      Log::error('Gagal generate undangan ujian.', [
+        'ujian_id' => $id,
+        'error' => $th->getMessage(),
+      ]);
+
+      return back()->with('error', 'Gagal membuat undangan. Silakan coba lagi.');
     }
   }
 
