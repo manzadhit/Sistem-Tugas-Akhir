@@ -22,8 +22,12 @@ class DosenController extends Controller
         $daftarDosen = ProfileDosen::query()
             ->with('pembimbingMahasiswa')
             ->withCount('publikasi')
-            ->when($search, fn ($q) => $q->where('nama_lengkap', 'like', "%{$search}%")
-                ->orWhere('nidn', 'like', "%{$search}%"))
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('nama_lengkap', 'like', "%{$search}%")
+                        ->orWhere('nidn', 'like', "%{$search}%");
+                });
+            })
             ->when($jabatan, fn ($q) => $q->where('jabatan_fungsional', $jabatan))
             ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()

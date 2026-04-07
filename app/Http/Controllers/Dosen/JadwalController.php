@@ -18,12 +18,14 @@ class JadwalController extends Controller
             'ujian.tugasAkhir.mahasiswa.dosenPenguji',
         ])
             ->whereHas('ujian.tugasAkhir.mahasiswa', function ($q) use ($dosenId) {
-                $q->whereHas('dosenPembimbing', function ($q2) use ($dosenId) {
-                    $q2->where('dosen_id', $dosenId)->where('status_aktif', true);
-                })
-                    ->orWhereHas('dosenPenguji', function ($q2) use ($dosenId) {
-                        $q2->where('dosen_id', $dosenId);
-                    });
+                $q->where(function ($q) use ($dosenId) {
+                    $q->whereHas('dosenPembimbing', function ($q2) use ($dosenId) {
+                        $q2->where('dosen_id', $dosenId)->where('status_aktif', true);
+                    })
+                        ->orWhereHas('dosenPenguji', function ($q2) use ($dosenId) {
+                            $q2->where('dosen_id', $dosenId);
+                        });
+                });
             })
             ->orderBy('tanggal_ujian', 'asc')
             ->orderBy('jam_mulai', 'asc')

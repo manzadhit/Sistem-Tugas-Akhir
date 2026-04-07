@@ -17,8 +17,12 @@ class PublikasiController extends Controller
         $dosenId  = $request->get('dosen_id');
 
         $daftarPublikasi = PublikasiDosen::with('dosen')
-            ->when($search, fn($q) => $q->where('judul', 'like', "%{$search}%")
-                ->orWhereHas('dosen', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%")))
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($q) use ($search) {
+                    $q->where('judul', 'like', "%{$search}%")
+                        ->orWhereHas('dosen', fn($q) => $q->where('nama_lengkap', 'like', "%{$search}%"));
+                });
+            })
             ->when($kategori, fn($q) => $q->where('jenis_publikasi', $kategori))
             ->when($tahun, fn($q) => $q->where('tahun', $tahun))
             ->when($dosenId, fn($q) => $q->where('dosen_id', $dosenId))

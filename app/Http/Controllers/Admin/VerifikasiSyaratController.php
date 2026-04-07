@@ -58,8 +58,10 @@ class VerifikasiSyaratController extends Controller
     if ($request->filled('search')) {
       $search = $request->search;
       $query->whereHas('tugasAkhir.mahasiswa', function ($q) use ($search) {
-        $q->where('nama_lengkap', 'like', "%{$search}%")
-          ->orWhere('nim', 'like', "%{$search}%");
+        $q->where(function ($q) use ($search) {
+          $q->where('nama_lengkap', 'like', "%{$search}%")
+            ->orWhere('nim', 'like', "%{$search}%");
+        });
       });
     }
 
