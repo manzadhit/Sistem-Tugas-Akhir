@@ -98,7 +98,7 @@ class CriteriaDataService
         $query->where('periode_akademik_id', $periodeAkademik->id);
       })->selectRaw('dosen_id, COUNT(*) as total')
       ->groupBy('dosen_id')
-      ->pluck('total', 'dosen_id');;
+      ->pluck('total', 'dosen_id');
 
 
     $result = [];

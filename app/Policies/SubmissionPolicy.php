@@ -12,14 +12,11 @@ class SubmissionPolicy
     {
         $currentDosenId = $user->profileDosen?->id;
 
-        if(!$currentDosenId) {
+        if (!$currentDosenId) {
             return Response::deny('Profile dosen tidak ditemukan.');
         }
 
-        $allowed =  $submission->dosenPembimbing?->dosen_id === $currentDosenId && $submission->tugasAkhir()->whereHas('mahasiswa.dosenPembimbing', function ($query) use ($currentDosenId, $submission) {
-            $query->whereKey($submission->dosen_pembimbing_id)
-                ->where('dosen_id', $currentDosenId);
-        })->exists();
+        $allowed = (int) $submission->dosenPembimbing?->dosen_id === (int) $currentDosenId;
 
         return $allowed ? Response::allow() : Response::deny('Anda tidak berwenang untuk mengakses submission ini.');
     }

@@ -16,13 +16,7 @@ class DosenPengujiPolicy
             return Response::deny('Profile dosen tidak ditemukan.');
         }
 
-        $allowed = $dosenPenguji->dosen_id === $currentDosenId
-            && $dosenPenguji->mahasiswa()
-            ->whereHas('dosenPenguji', function ($query) use ($currentDosenId, $dosenPenguji) {
-                $query->whereKey($dosenPenguji->id)
-                    ->where('dosen_id', $currentDosenId);
-            })
-            ->exists();
+        $allowed = (int) $dosenPenguji->dosen_id === (int) $currentDosenId;
 
         return $allowed ? Response::allow() : Response::deny('Anda tidak berwenang menginput nilai untuk penguji ini.');
     }

@@ -16,14 +16,7 @@ class DosenPembimbingPolicy
             return Response::deny('Profil dosen tidak ditemukan.');
         }
 
-        $isSameDosen = (int) $dosenPembimbing->dosen_id === (int) $currentDosenId;
-
-        $allowed = $dosenPembimbing->mahasiswa()
-            ->whereHas('dosenPembimbing', function ($query) use ($currentDosenId, $dosenPembimbing) {
-                $query->whereKey($dosenPembimbing->id)
-                    ->where('dosen_id', $currentDosenId);
-            })
-            ->exists();
+        $allowed = (int) $dosenPembimbing->dosen_id === (int) $currentDosenId;
 
         return $allowed ? Response::allow() : Response::deny('Anda tidak berwenang mengakses data bimbingan ini.');
     }
