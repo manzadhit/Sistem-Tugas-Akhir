@@ -21,7 +21,7 @@ class PenetapanPengujiService
 
       if ($files) {
         foreach ($files as $file) {
-          $path = $file->storeAs('kajur-submission-file/' . $mahasiswaNim, $this->createFileName($file));
+          $path = $file->storeAs('kajur-submission-file/' . $mahasiswaNim, $this->createFileName($file), 'local');
 
           KajurSubmissionFile::create([
             'kajur_submission_id' => $kajurSubmission->id,

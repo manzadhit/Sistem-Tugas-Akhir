@@ -137,13 +137,13 @@ class DatabaseSeeder extends Seeder
             SubmissionFile::create([
                 'submission_id' => $submission1->id,
                 'uploaded_by' => 'mahasiswa',
-                'file_path' => 'submission-file/Nyoman_CV_2025.pdf',
+                'file_path' => 'submission-files/Nyoman_CV_2025.pdf',
             ]);
 
             SubmissionFile::create([
                 'submission_id' => $submission2->id,
                 'uploaded_by' => 'mahasiswa',
-                'file_path' => 'submission-file/Nyoman_CV_2025.pdf',
+                'file_path' => 'submission-files/Nyoman_CV_2025.pdf',
             ]);
 
             // Tambahkan dosen penguji untuk mhs1 dan mhs2

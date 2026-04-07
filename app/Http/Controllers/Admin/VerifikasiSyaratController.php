@@ -196,7 +196,7 @@ class VerifikasiSyaratController extends Controller
       $pdf = $this->pdfService->generate($data);
       $fileName = 'undangan_seminar_' . $ujian->jenis_ujian . '_' . $nim . '_' . $namaLengkap . '.pdf';
       $filePath = "undangan/{$nim}/{$fileName}";
-      Storage::put($filePath, $pdf->output());
+      Storage::disk('local')->put($filePath, $pdf->output());
 
       UndanganUjian::updateOrCreate(
         ['ujian_id' => $ujian->id],

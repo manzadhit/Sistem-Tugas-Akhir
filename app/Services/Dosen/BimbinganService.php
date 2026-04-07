@@ -65,7 +65,7 @@ class BimbinganService
 
       /** @var UploadedFile $file */
       foreach ($files as $file) {
-        $path = $file->storeAs('submission-files/' . $mahasiswaNim, $this->createFileName($file));
+        $path = $file->storeAs('submission-files/' . $mahasiswaNim, $this->createFileName($file), 'local');
 
         SubmissionFile::create([
           'submission_id' => $submission->id,

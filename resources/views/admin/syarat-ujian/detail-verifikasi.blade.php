@@ -181,7 +181,7 @@
                       {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
 
                     {{-- File Preview using Component --}}
-                    <x-file-preview-item :path="$dokumen->file_path" :uploadedAt="$dokumen->created_at" class="border-green-200 shadow-sm mb-0" />
+                    <x-file-preview-item :path="$dokumen->file_path" type="dokumen-ujian" :file-id="$dokumen->id" :uploadedAt="$dokumen->created_at" class="border-green-200 shadow-sm mb-0" />
                   </div>
                 </div>
               @endforeach
@@ -202,7 +202,7 @@
                     {{ $dokumen->nama_dokumen ?? basename($dokumen->file_path) }}</div>
 
                   {{-- File Preview using Component --}}
-                  <x-file-preview-item :path="$dokumen->file_path" :uploadedAt="$dokumen->created_at" class="mb-3 border-yellow-200 shadow-sm" />
+                  <x-file-preview-item :path="$dokumen->file_path" type="dokumen-ujian" :file-id="$dokumen->id" :uploadedAt="$dokumen->created_at" class="mb-3 border-yellow-200 shadow-sm" />
 
                   {{-- ACC / Tolak --}}
                   <div class="flex gap-4 mb-2">

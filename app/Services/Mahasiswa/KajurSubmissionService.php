@@ -26,7 +26,7 @@ class kajurSubmissionService
       ]);
 
       foreach ($files as $file) {
-        $file_path = $file->storeAs('kajur-submission-file/' . $tugasAkhir->mahasiswa->nim, $this->createFileName($file));
+        $file_path = $file->storeAs('kajur-submission-file/' . $tugasAkhir->mahasiswa->nim, $this->createFileName($file), 'local');
 
         KajurSubmissionFile::create([
           'kajur_submission_id' => $kajurSubmission->id,

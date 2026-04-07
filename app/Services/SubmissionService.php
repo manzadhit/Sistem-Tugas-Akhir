@@ -27,7 +27,7 @@ class SubmissionService
             ]);
 
             foreach ($files as $file) {
-                $path = $file->storeAs('submission-files/' . $mahasiswa->nim, $this->createFileName($file));
+                $path = $file->storeAs('submission-files/' . $mahasiswa->nim, $this->createFileName($file), 'local');
 
                 SubmissionFile::create([
                     'submission_id' => $submission->id,

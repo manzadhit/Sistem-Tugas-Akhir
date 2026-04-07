@@ -145,7 +145,7 @@
             @endif
 
             @foreach ($permintaan->kajurSubmissionFiles as $file)
-              <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" class="rounded-lg mb-3" />
+              <x-file-preview-item :path="$file->file_path" type="kajur-submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" class="rounded-lg mb-3" />
             @endforeach
 
             {{-- Satu form untuk semua aksi (acc / revisi / reject) --}}
@@ -249,7 +249,7 @@
                   <p class="text-sm text-gray-700 leading-relaxed">{{ $permintaan->review }}</p>
                 @endif
                 @foreach ($permintaan->kajurSubmissionFiles->where('uploaded_by', 'kajur') as $reviewFile)
-                  <x-file-preview-item :path="$reviewFile->file_path" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
+                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
                 @endforeach
               </div>
             @elseif ($permintaan->status === 'reject')
@@ -261,7 +261,7 @@
                   <p class="text-sm text-gray-700 leading-relaxed">{{ $permintaan->review }}</p>
                 @endif
                 @foreach ($permintaan->kajurSubmissionFiles->where('uploaded_by', 'kajur') as $reviewFile)
-                  <x-file-preview-item :path="$reviewFile->file_path" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
+                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
                 @endforeach
               </div>
             @endif

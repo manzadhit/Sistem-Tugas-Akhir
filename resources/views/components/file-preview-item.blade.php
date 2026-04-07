@@ -1,9 +1,13 @@
 @props([
     'path' => null,
     'uploadedAt' => null,
+    'type' => null,
+    'fileId' => null,
+    'id' => null,
 ])
 
 @php
+  $fileId = $fileId ?? $id;
   $filename = basename($path ?? '');
   $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
@@ -15,7 +19,8 @@
       default => ['fa-file', 'text-gray-400'],
   };
 
-  $fileUrl = $path ? Storage::url($path) : '#';
+  $viewUrl = $type && $fileId ? route('files.view', ['type' => $type, 'id' => $fileId]) : '#';
+  $downloadUrl = $type && $fileId ? route('files.download', ['type' => $type, 'id' => $fileId]) : '#';
 @endphp
 
 <div
@@ -31,17 +36,19 @@
       <div class="truncate text-sm font-medium text-gray-900">
         {{ $filename ?: '-' }}
       </div>
-      <div class="text-xs text-gray-500">Diupload {{ $uploadedAt->translatedFormat('d M Y') }}</div>
+      @if ($uploadedAt)
+        <div class="text-xs text-gray-500">Diupload {{ $uploadedAt->translatedFormat('d M Y') }}</div>
+      @endif
     </div>
   </div>
 
   <div class="flex w-full gap-2 sm:w-auto sm:justify-end">
-    <a href="{{ $fileUrl }}"
+    <a href="{{ $viewUrl }}"
       class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-blue-600 hover:underline">
       <i class="fas fa-eye"></i> View
     </a>
 
-    <a href="{{ $fileUrl }}" download
+    <a href="{{ $downloadUrl }}"
       class="text-xs sm:text-[0.8rem] no-underline flex items-center gap-1 text-green-600 hover:underline">
       <i class="fas fa-download"></i> Download
     </a>

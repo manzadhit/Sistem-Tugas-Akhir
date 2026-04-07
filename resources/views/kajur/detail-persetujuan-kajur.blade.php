@@ -113,7 +113,7 @@
           @endif
 
           @foreach ($persetujuan->kajurSubmissionFiles->where('uploaded_by', 'mahasiswa') as $file)
-            <x-file-preview-item :path="$file->file_path" :uploaded-at="$file->created_at" class="rounded-lg mb-3" />
+            <x-file-preview-item :path="$file->file_path" type="kajur-submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" class="rounded-lg mb-3" />
           @endforeach
 
           {{-- Form Verifikasi (hanya tampil saat pending) --}}
@@ -212,7 +212,7 @@
                 <p class="text-sm text-gray-700 leading-relaxed">{{ $persetujuan->review }}</p>
               @endif
               @foreach ($persetujuan->kajurSubmissionFiles->where('uploaded_by', 'kajur') as $reviewFile)
-                <x-file-preview-item :path="$reviewFile->file_path" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
+                <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
               @endforeach
             </div>
           @elseif ($persetujuan->status === 'reject')

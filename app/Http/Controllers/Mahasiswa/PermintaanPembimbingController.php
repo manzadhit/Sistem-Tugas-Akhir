@@ -71,13 +71,13 @@ class PermintaanPembimbingController extends Controller
         $validated = $request->validated();
 
         $existing = PermintaanPembimbing::where('mahasiswa_id', $mahasiswa->id)->first();
-        if ($existing?->bukti_acc_path && Storage::exists($existing->bukti_acc_path)) {
-            Storage::delete($existing->bukti_acc_path);
+        if ($existing?->bukti_acc_path && Storage::disk('local')->exists($existing->bukti_acc_path)) {
+            Storage::disk('local')->delete($existing->bukti_acc_path);
         }
 
         $file = $request->file('bukti_acc');
-        $filename = "{$mahasiswa->nim}_bukti_acc_judul_{time()}.{$file->extension()}";
-        $path = $file->storeAs('bukti-acc/' . $mahasiswa->nim, $filename);
+        $filename = $mahasiswa->nim . '_bukti_acc_judul_' . time() . '.' . $file->extension();
+        $path = $file->storeAs('bukti-acc/' . $mahasiswa->nim, $filename, 'local');
 
         $permintaanPembimbing = PermintaanPembimbing::updateOrCreate(
             ['mahasiswa_id' => $mahasiswa->id],
