@@ -51,25 +51,32 @@ class PembimbingController extends Controller
             ->where('data->permintaan_pembimbing_id', $permintaan->id)
             ->update(['read_at' => now()]);
 
-        $similarityScores = $cbfService->getTopN($permintaan->id, 5);
-        $mautResult = $mautService->rankWithDetails($similarityScores, 'pembimbing', $permintaan->mahasiswa);
-
-        $rankedIds = array_keys($mautResult);
         $activeBimbinganCount = [
             'pembimbingMahasiswa as total_bimbingan_aktif' => fn($q) => $q
                 ->where('status_aktif', true)
                 ->whereHas('mahasiswa', fn($m) => $m->where('status_akademik', 'aktif')),
         ];
 
-        $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
-            ->withCount($activeBimbinganCount)
-            ->get()
-            ->sortBy(fn($item) => array_search($item->id, $rankedIds))
-            ->values();
+        $similarityScores = [];
+        $mautResult = [];
+        $rankedDosens = collect();
+        $unrankedDosens = collect();
 
-        $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
-            ->withCount($activeBimbinganCount)
-            ->get();
+        if ($permintaan->status === 'pending' && $permintaan->status_verifikasi_bukti === 'disetujui') {
+            $similarityScores = $cbfService->getTopN($permintaan->id, 5);
+            $mautResult = $mautService->rankWithDetails($similarityScores, 'pembimbing', $permintaan->mahasiswa);
+            $rankedIds = array_keys($mautResult);
+
+            $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
+                ->withCount($activeBimbinganCount)
+                ->get()
+                ->sortBy(fn($item) => array_search($item->id, $rankedIds))
+                ->values();
+
+            $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
+                ->withCount($activeBimbinganCount)
+                ->get();
+        }
 
         return view('kajur.penetapan-pembimbing', compact(
             'permintaan',
