@@ -10,7 +10,7 @@ use App\Notifications\NewSubmission;
 use App\Services\Dosen\BimbinganService;
 use Illuminate\Http\Request;
 
-class MahasiswaBimbingan extends Controller
+class MahasiswaBimbinganController extends Controller
 {
     public function __construct(protected BimbinganService $bimbinganService) {}
 

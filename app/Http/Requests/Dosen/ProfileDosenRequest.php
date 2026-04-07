@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Dosen;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class ProfileMahasiswaRequest extends FormRequest
+class ProfileDosenRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -16,10 +16,12 @@ class ProfileMahasiswaRequest extends FormRequest
     {
         return [
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'nim' => ['required', 'string', 'max:20'],
+            'nidn' => ['required', 'string', 'max:20'],
             'jurusan' => ['required', 'string', 'max:100'],
-            'angkatan' => ['required', 'digits:4', 'integer'],
-            'ipk' => ['nullable', 'numeric', 'min:0', 'max:4'],
+            'keahlian' => ['nullable', 'string', 'max:255'],
+            'jabatan_fungsional' => ['nullable', 'string', 'max:100'],
+            'mata_kuliah_ids' => ['nullable', 'array'],
+            'mata_kuliah_ids.*' => ['integer', 'distinct', 'exists:mata_kuliah,id'],
             'no_telp' => ['nullable', 'string', 'max:20'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'email' => [
@@ -37,10 +39,11 @@ class ProfileMahasiswaRequest extends FormRequest
     {
         return [
             'nama_lengkap' => 'Nama Lengkap',
-            'nim' => 'NIM',
+            'nidn' => 'NIDN',
             'jurusan' => 'Jurusan',
-            'angkatan' => 'Angkatan',
-            'ipk' => 'IPK',
+            'keahlian' => 'Keahlian',
+            'jabatan_fungsional' => 'Jabatan Fungsional',
+            'mata_kuliah_ids' => 'Mata Kuliah yang Diampu',
             'no_telp' => 'No. Telepon',
             'foto' => 'Foto Profil',
             'email' => 'Email',
@@ -54,19 +57,15 @@ class ProfileMahasiswaRequest extends FormRequest
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
             'nama_lengkap.max' => 'Nama lengkap maksimal 255 karakter.',
 
-            'nim.required' => 'NIM wajib diisi.',
-            'nim.max' => 'NIM maksimal 20 karakter.',
+            'nidn.required' => 'NIDN wajib diisi.',
+            'nidn.max' => 'NIDN maksimal 20 karakter.',
 
             'jurusan.required' => 'Jurusan wajib diisi.',
             'jurusan.max' => 'Jurusan maksimal 100 karakter.',
 
-            'angkatan.required' => 'Angkatan wajib diisi.',
-            'angkatan.digits' => 'Angkatan harus terdiri dari 4 digit.',
-            'angkatan.integer' => 'Angkatan harus berupa angka.',
+            'keahlian.max' => 'Keahlian maksimal 255 karakter.',
 
-            'ipk.numeric' => 'IPK harus berupa angka.',
-            'ipk.min' => 'IPK minimal 0.',
-            'ipk.max' => 'IPK maksimal 4.',
+            'jabatan_fungsional.max' => 'Jabatan fungsional maksimal 100 karakter.',
 
             'no_telp.max' => 'No. telepon maksimal 20 karakter.',
 

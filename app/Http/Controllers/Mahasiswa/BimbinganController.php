@@ -13,7 +13,7 @@ use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewSubmission;
 use App\Notifications\PengujiAssigned;
 use App\Notifications\SubmissionReviewed;
-use App\Services\SubmissionService;
+use App\Services\Mahasiswa\SubmissionService;
 use Illuminate\Http\Request;
 use App\Models\Submission;
 use Illuminate\Support\Facades\Log;

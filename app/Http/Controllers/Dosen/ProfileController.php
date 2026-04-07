@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ProfileDosenRequest;
+use App\Http\Requests\Dosen\ProfileDosenRequest;
 use App\Models\MataKuliah;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
