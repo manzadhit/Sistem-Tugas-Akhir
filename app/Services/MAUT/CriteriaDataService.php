@@ -94,11 +94,12 @@ class CriteriaDataService
       ->sole();
 
     $counts = DosenPenguji::query()
-      ->whereIn('dosen_id', $dosenIds)
-      ->where('periode_akademik_id', $periodeAkademik->id)
-      ->selectRaw('dosen_id, COUNT(*) as total')
+      ->whereIn('dosen_id', $dosenIds)->whereHas('mahasiswa.tugasAkhir.ujian', function ($query) use ($periodeAkademik) {
+        $query->where('periode_akademik_id', $periodeAkademik->id);
+      })->selectRaw('dosen_id, COUNT(*) as total')
       ->groupBy('dosen_id')
-      ->pluck('total', 'dosen_id');
+      ->pluck('total', 'dosen_id');;
+
 
     $result = [];
 
