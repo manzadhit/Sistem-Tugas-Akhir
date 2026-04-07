@@ -263,7 +263,7 @@
     <tr>
       <td class="label">Judul Tugas Akhir</td>
       <td class="sep">:</td>
-      <td style="line-height:1.5">{!! $mahasiswa['judul'] !!}</td>
+      <td style="line-height:1.5">{{ $mahasiswa['judul'] }}</td>
     </tr>
   </table>
 

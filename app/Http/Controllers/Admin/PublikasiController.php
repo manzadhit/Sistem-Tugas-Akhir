@@ -57,7 +57,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,haki,buku',
             'tahun'           => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         PublikasiDosen::create($validated);
@@ -91,7 +91,7 @@ class PublikasiController extends Controller
             'jenis_publikasi' => 'required|in:jurnal,haki,buku',
             'tahun'           => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
             'penerbit'        => 'nullable|string|max:255',
-            'url'             => 'nullable|url|max:500',
+            'url'             => 'nullable|url:http,https|max:500',
         ]);
 
         $publikasi->update($validated);
