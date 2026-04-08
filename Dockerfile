@@ -1,5 +1,7 @@
 FROM dunglas/frankenphp
 
+ENV SERVER_NAME=:80
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
