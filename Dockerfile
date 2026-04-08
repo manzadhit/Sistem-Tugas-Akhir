@@ -6,6 +6,8 @@ ENV SERVER_NAME=:80
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
+    libzip-dev \
+    && docker-php-ext-install pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
 # Install composer
