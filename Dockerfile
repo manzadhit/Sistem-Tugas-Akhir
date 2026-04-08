@@ -11,7 +11,7 @@ COPY vite.config.js postcss.config.js tailwind.config.js ./
 
 RUN npm run build
 
-FROM dunglas/frankenphp
+FROM dunglas/frankenphp:php8.3
 
 ENV SERVER_NAME=:80 \
     COMPOSER_ALLOW_SUPERUSER=1
