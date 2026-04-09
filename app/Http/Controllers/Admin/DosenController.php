@@ -27,8 +27,8 @@ class DosenController extends Controller
                         ->orWhere('nidn', 'like', "%{$search}%");
                 });
             })
-            ->when($jabatan, fn ($q) => $q->where('jabatan_fungsional', $jabatan))
-            ->when($status, fn ($q) => $q->where('status', $status))
+            ->when($jabatan, fn($q) => $q->where('jabatan_fungsional', $jabatan))
+            ->when($status, fn($q) => $q->where('status', $status))
             ->latest()
             ->paginate(10)
             ->withQueryString();
@@ -45,8 +45,10 @@ class DosenController extends Controller
     public function create()
     {
         $mataKuliahOptions = $this->mataKuliahOptions();
+        $kajurExists = User::where('role', 'kajur')->exists();
+        $sekjurExists = User::where('role', 'sekjur')->exists();
 
-        return view('admin.dosen.create-dosen', compact('mataKuliahOptions'));
+        return view('admin.dosen.create-dosen', compact('mataKuliahOptions', 'kajurExists', 'sekjurExists'));
     }
 
     public function store(StoreDosenRequest $request)
@@ -55,7 +57,7 @@ class DosenController extends Controller
             'username' => $request->nidn,
             'email' => null,
             'password' => bcrypt($request->nidn),
-            'role' => 'dosen',
+            'role' => $request->role,
         ]);
 
         $user->profileDosen()->create([
@@ -71,7 +73,7 @@ class DosenController extends Controller
         $user->profileDosen->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
 
         return redirect()->route('admin.dosen.index')
-            ->with('success', "Akun dosen {$request->nama_lengkap} (NIDN: {$request->nidn}) berhasil dibuat. Password default: NIDN.");
+            ->with('success', "Akun {$request->role} {$request->nama_lengkap} (NIDN: {$request->nidn}) berhasil dibuat. Password default: NIDN.");
     }
 
     public function show($id)
@@ -117,7 +119,7 @@ class DosenController extends Controller
     {
         return MataKuliah::orderBy('nama')
             ->get(['id', 'kode', 'nama'])
-            ->map(fn ($mataKuliah) => [
+            ->map(fn($mataKuliah) => [
                 'id' => (string) $mataKuliah->id,
                 'label' => "{$mataKuliah->kode} - {$mataKuliah->nama}",
             ])

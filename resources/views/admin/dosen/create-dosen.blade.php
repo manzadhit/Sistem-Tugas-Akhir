@@ -16,7 +16,7 @@
   </div>
 
   {{-- Banner --}}
-  <div class="bg-gradient-to-br from-emerald-700 to-teal-500 rounded-2xl p-5 sm:p-8 mb-6 text-white">
+  <div class="bg-gradient-to-br from-blue-800 to-blue-500 rounded-2xl p-5 sm:p-8 mb-6 text-white">
     <h1 class="text-xl sm:text-2xl font-bold mb-1">
       <i class="fas fa-chalkboard-teacher mr-2"></i>Tambah Dosen
     </h1>
@@ -43,19 +43,21 @@
     <div class="space-y-5">
 
       {{-- Info akun otomatis --}}
-      <div class="flex items-start gap-3 bg-teal-50 border border-teal-200 rounded-xl px-5 py-4">
-        <i class="fas fa-circle-info text-teal-500 mt-0.5"></i>
-        <div class="text-sm text-teal-800">
+      <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-5 py-4">
+        <i class="fas fa-circle-info text-blue-500 mt-0.5"></i>
+        <div class="text-sm text-blue-800">
           <p class="font-semibold mb-0.5">Akun login dibuat otomatis</p>
-          <p class="text-xs text-teal-600">Username: <strong>NIDN dosen</strong> · Password default: <strong>NIDN
+          <p class="text-xs text-blue-600">Username: <strong>NIDN dosen</strong> · Password default: <strong>NIDN
               dosen</strong> · Dosen wajib ganti password setelah login pertama.</p>
+          <p class="text-xs text-blue-600 mt-1">Role <strong>Kajur</strong> dan <strong>Sekjur</strong> masing-masing
+            hanya boleh 1 akun.</p>
         </div>
       </div>
 
       {{-- ██ Data Pribadi --}}
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-          <i class="fas fa-id-card text-teal-500 text-sm"></i>
+          <i class="fas fa-id-card text-blue-500 text-sm"></i>
           <h2 class="text-sm font-semibold text-gray-800">Data Pribadi</h2>
         </div>
         <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -67,7 +69,7 @@
             </label>
             <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required
               placeholder="Nama sesuai SK / ijazah"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('nama_lengkap') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('nama_lengkap') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
             @error('nama_lengkap')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
@@ -80,8 +82,29 @@
             </label>
             <input type="text" name="nidn" value="{{ old('nidn') }}" required
               placeholder="Nomor Induk Dosen Nasional"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('nidn') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('nidn') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
             @error('nidn')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- Role --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Role <span class="text-red-500">*</span>
+            </label>
+            <select name="role" required
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('role') border-red-400 bg-red-50 @enderror">
+              <option value="dosen" {{ old('role', 'dosen') === 'dosen' ? 'selected' : '' }}>Dosen</option>
+              <option value="kajur" {{ old('role') === 'kajur' ? 'selected' : '' }} {{ $kajurExists ? 'disabled' : '' }}>
+                Kajur {{ $kajurExists ? '(sudah terisi)' : '' }}
+              </option>
+              <option value="sekjur" {{ old('role') === 'sekjur' ? 'selected' : '' }}
+                {{ $sekjurExists ? 'disabled' : '' }}>
+                Sekjur {{ $sekjurExists ? '(sudah terisi)' : '' }}
+              </option>
+            </select>
+            @error('role')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
           </div>
@@ -92,7 +115,7 @@
             <div class="relative">
               <i class="fas fa-phone absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
               <input type="text" name="no_telp" value="{{ old('no_telp') }}" placeholder="08xxxxxxxxxx"
-                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('no_telp') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('no_telp') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
             </div>
             @error('no_telp')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
@@ -105,7 +128,7 @@
       {{-- ██ Data Akademik --}}
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-          <i class="fas fa-graduation-cap text-teal-500 text-sm"></i>
+          <i class="fas fa-graduation-cap text-blue-500 text-sm"></i>
           <h2 class="text-sm font-semibold text-gray-800">Data Akademik</h2>
         </div>
         <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -117,7 +140,7 @@
             </label>
             <input type="text" name="jurusan" value="{{ old('jurusan', 'Teknik Informatika') }}" required
               placeholder="Teknik Informatika"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('jurusan') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jurusan') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
             @error('jurusan')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
@@ -130,7 +153,7 @@
             </label>
             <input type="text" name="keahlian" value="{{ old('keahlian') }}" required
               placeholder="cth. Kecerdasan Buatan, Jaringan Komputer, Rekayasa Perangkat Lunak"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('keahlian') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('keahlian') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
             @error('keahlian')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
@@ -158,7 +181,7 @@
               Jabatan Fungsional <span class="text-red-500">*</span>
             </label>
             <select name="jabatan_fungsional" required
-              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('jabatan_fungsional') border-red-400 bg-red-50 @enderror">
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jabatan_fungsional') border-red-400 bg-red-50 @enderror">
               <option value="" disabled {{ old('jabatan_fungsional') ? '' : 'selected' }}>-- Pilih jabatan --
               </option>
               @foreach (['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar', 'Tenaga Pendidik'] as $jabatan)
@@ -177,7 +200,7 @@
               Status <span class="text-red-500">*</span>
             </label>
             <select name="status" required
-              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition-all @error('status') border-red-400 bg-red-50 @enderror">
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('status') border-red-400 bg-red-50 @enderror">
               @foreach (['aktif' => 'Aktif', 'cuti' => 'Cuti', 'nonaktif' => 'Non-aktif', 'pensiun' => 'Pensiun'] as $val => $lbl)
                 <option value="{{ $val }}" {{ old('status', 'aktif') === $val ? 'selected' : '' }}>
                   {{ $lbl }}</option>
@@ -198,7 +221,7 @@
           <i class="fas fa-arrow-left text-xs"></i> Batal
         </a>
         <button type="submit"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-teal-600 text-white hover:bg-teal-700 transition-all shadow-sm">
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold bg-blue-600 text-white hover:bg-blue-700 transition-all shadow-sm">
           <i class="fas fa-chalkboard-teacher text-xs"></i> Simpan Dosen
         </button>
       </div>

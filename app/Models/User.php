@@ -61,7 +61,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'mahasiswa' => $this->profileMahasiswa?->nama_lengkap ?? $this->username,
-            'dosen', 'kajur' => $this->profileDosen?->nama_lengkap ?? $this->username,
+            'dosen', 'kajur', 'sekjur' => $this->profileDosen?->nama_lengkap ?? $this->username,
             'admin' => $this->username,
             default => $this->username,
         };
@@ -71,7 +71,7 @@ class User extends Authenticatable
     {
         return match ($this->role) {
             'mahasiswa' => $this->profileMahasiswa?->nim,
-            'dosen', 'kajur' => $this->profileDosen?->nidn,
+            'dosen', 'kajur', 'sekjur' => $this->profileDosen?->nidn,
             'admin' => $this->email,
             default => null,
         };
