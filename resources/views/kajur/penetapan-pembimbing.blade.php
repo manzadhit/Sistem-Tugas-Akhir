@@ -538,6 +538,12 @@
       desc="Dosen pembimbing telah ditetapkan dan mahasiswa akan mendapatkan notifikasi." :href="route('kajur.permintaan-pembimbing')" />
   @endif
 
+  @if (session('show_result_modal'))
+    <x-result-modal :status="session('show_result_modal')" title="Bukti ACC Ditolak!"
+      desc="Penolakan bukti ACC berhasil disimpan dan mahasiswa akan mendapatkan notifikasi."
+      :href="route('kajur.permintaan-pembimbing')" />
+  @endif
+
 @endsection
 
 @push('scripts')

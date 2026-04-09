@@ -105,6 +105,11 @@ class PembimbingController extends Controller
 
         $permintaan->mahasiswa?->user?->notify(new PembimbingRequestReviewed($permintaan));
 
+        if ($data['status'] === 'ditolak') {
+            return back()
+                ->with('show_result_modal', 'reject');
+        }
+
         return back()->with('success', 'Verifikasi bukti berhasil disimpan.');
     }
 
