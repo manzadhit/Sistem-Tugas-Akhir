@@ -17,6 +17,9 @@ Route::middleware(['auth', 'password.changed', 'role:mahasiswa', 'mahasiswa.akti
   Route::get('/permintaan-pembimbing', [PermintaanPembimbingController::class, 'create'])->name('permintaan-pembimbing.create');
   Route::post('/permintaan-pembimbing', [PermintaanPembimbingController::class, 'store'])->name('permintaan-pembimbing.store');
 
+  Route::get('/hasil-penetapan', [PermintaanPembimbingController::class, 'hasilPenetapan'])->name('hasil-penetapan');
+  Route::post('/hasil-penetapan/konfirmasi', [PermintaanPembimbingController::class, 'konfirmasiPenetapan'])->name('hasil-penetapan.konfirmasi');
+
   Route::middleware('has.pembimbing')->group(function () {
     Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 

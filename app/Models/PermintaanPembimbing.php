@@ -19,10 +19,12 @@ class PermintaanPembimbing extends Model
         'status_verifikasi_bukti',
         'catatan',
         'diproses_pada',
+        'penetapan_dilihat',
     ];
 
     protected $casts = [
         'diproses_pada' => 'datetime',
+        'penetapan_dilihat' => 'boolean',
     ];
 
     public function mahasiswa()

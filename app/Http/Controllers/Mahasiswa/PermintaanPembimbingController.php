@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Mahasiswa\StorePermintaanPembimbingRequest;
+use App\Models\DosenPembimbing;
 use App\Models\MataKuliah;
 use App\Models\PermintaanPembimbing;
 use App\Models\User;
 use App\Notifications\NewPembimbingRequest;
+use App\Notifications\PembimbingAssigned;
 use App\Notifications\PembimbingRequestReviewed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -27,6 +29,10 @@ class PermintaanPembimbingController extends Controller
             ->update(['read_at' => now()]);
 
         if ($mahasiswa->dosenPembimbing()->exists()) {
+            $permintaan = $mahasiswa->permintaanPembimbing;
+            if ($permintaan && !$permintaan->penetapan_dilihat) {
+                return redirect()->route('mahasiswa.hasil-penetapan');
+            }
             return redirect()->route('mahasiswa.dashboard');
         }
 
@@ -109,4 +115,54 @@ class PermintaanPembimbingController extends Controller
             ->route('mahasiswa.permintaan-pembimbing.create')
             ->with('success', 'Permintaan pembimbing berhasil dikirim. Menunggu penetapan pembimbing dari jurusan.');
     }
+
+    public function hasilPenetapan(Request $request)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+
+        if (!$mahasiswa) {
+            abort(403, 'Profile mahasiswa belum lengkap.');
+        }
+
+        $permintaan = $mahasiswa->permintaanPembimbing;
+
+        // Jika belum ada pembimbing, kembali ke form
+        if (!$mahasiswa->dosenPembimbing()->exists()) {
+            return redirect()->route('mahasiswa.permintaan-pembimbing.create');
+        }
+
+        // Jika sudah pernah dilihat, langsung ke dashboard
+        if (!$permintaan || $permintaan->penetapan_dilihat) {
+            return redirect()->route('mahasiswa.dashboard');
+        }
+
+        $request->user()->unreadNotifications()
+            ->where('type', PembimbingAssigned::class)
+            ->update(['read_at' => now()]);
+
+        $dosenPembimbing = DosenPembimbing::with('dosen')
+            ->where('mahasiswa_id', $mahasiswa->id)
+            ->orderBy('jenis_pembimbing')->get();
+
+        return view('mahasiswa.hasil-penetapan-pembimbing', compact('permintaan', 'dosenPembimbing'));
+    }
+
+    public function konfirmasiPenetapan(Request $request)
+    {
+        $mahasiswa = $request->user()->profileMahasiswa;
+
+        if (!$mahasiswa) {
+            abort(403, 'Profile mahasiswa belum lengkap.');
+        }
+
+        $permintaan = $mahasiswa->permintaanPembimbing;
+
+        if ($permintaan) {
+            $permintaan->update(['penetapan_dilihat' => true]);
+        }
+
+        return redirect()->route('mahasiswa.dashboard')
+            ->with('success', 'Selamat! Pembimbing telah ditetapkan. Silakan mulai proses bimbingan.');
+    }
 }
+

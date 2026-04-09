@@ -18,10 +18,17 @@ class EnsureMahasiswaHasPembimbing
         $user = $request->user();
 
         if($user?->role === 'mahasiswa') {
-            $hasPembimbing = $user->profileMahasiswa?->dosenPembimbing()->exists();
+            $mahasiswa = $user->profileMahasiswa;
+            $hasPembimbing = $mahasiswa?->dosenPembimbing()->exists();
 
             if(!$hasPembimbing) {
                 return redirect()->route('mahasiswa.permintaan-pembimbing.create')->with('warning', 'Silahkan ajukan pembimbing terlebih dahulu.');
+            }
+
+            // Cek apakah mahasiswa sudah melihat halaman hasil penetapan pembimbing
+            $permintaan = $mahasiswa->permintaanPembimbing;
+            if ($permintaan && !$permintaan->penetapan_dilihat) {
+                return redirect()->route('mahasiswa.hasil-penetapan');
             }
         }
 

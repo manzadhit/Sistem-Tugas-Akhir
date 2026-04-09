@@ -27,7 +27,7 @@ class PembimbingAssigned extends Notification implements ShouldQueue
         return [
             'title' => 'Pembimbing Telah Ditetapkan',
             'message' => 'Dosen pembimbing Anda telah ditetapkan. Silakan cek dashboard untuk melanjutkan proses bimbingan.',
-            'action_url' => route('mahasiswa.dashboard'),
+            'action_url' => route('mahasiswa.hasil-penetapan'),
             'permintaan_pembimbing_id' => $this->permintaanPembimbing->id,
             'icon' => 'fas fa-user-check',
             'icon_bg' => 'bg-blue-100',
