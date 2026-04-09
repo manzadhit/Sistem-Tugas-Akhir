@@ -183,11 +183,11 @@
 
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Password Baru</label>
-              <input type="password" name="password" autocomplete="new-password"
+              <x-password-input name="password" autocomplete="new-password"
                 placeholder="Kosongkan jika tidak diubah" @class([
                     'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
                     'border-red-500' => $errors->has('password'),
-                ])>
+                ]) />
               @error('password')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
@@ -195,9 +195,9 @@
 
             <div>
               <label class="block text-sm font-medium text-slate-700 mb-1">Konfirmasi Password</label>
-              <input type="password" name="password_confirmation" autocomplete="new-password"
+              <x-password-input name="password_confirmation" autocomplete="new-password"
                 placeholder="Ulangi password baru"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500">
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500" />
             </div>
           </div>
         </div>
