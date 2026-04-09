@@ -21,7 +21,7 @@
       <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900">
         Pengajuan Dosen Pembimbing
       </h1>
-      <p class="text-slate-500 mt-1 text-xs sm:text-sm">Isi judul & unggah bukti ACC (maks. 2MB)</p>
+      <p class="text-slate-500 mt-1 text-xs sm:text-sm">Lengkapi IPK, judul, dan unggah bukti ACC (maks. 2MB)</p>
     </div>
 
     <span
@@ -42,12 +42,31 @@
 
     <div class="p-6">
       <x-alert-info>
-        <strong>Penting:</strong> Judul harus sudah ACC. File: PDF/JPG/PNG (maks. 2MB).
+        <strong>Penting:</strong> IPK akan digunakan sebagai salah satu faktor pertimbangan rekomendasi dosen
+        pembimbing. Judul harus sudah ACC. File: PDF/JPG/PNG (maks. 2MB).
       </x-alert-info>
 
       <form method="POST" action="{{ route('mahasiswa.permintaan-pembimbing.store') }}" enctype="multipart/form-data"
         class="mt-5" x-data="{ judul_ta: @js(old('judul_ta', $permintaanPembimbing?->judul_ta ?? '')) }">
         @csrf
+
+        <div class="mb-5 max-w-sm">
+          <label class="flex items-center gap-2 font-bold text-slate-900 mb-2">
+            <i class="fas fa-chart-line"></i>
+            IPK <span class="text-red-500">*</span>
+          </label>
+
+          <input type="number" name="ipk" value="{{ old('ipk', $mahasiswa->ipk) }}" required step="0.01" min="0"
+            max="4.00" placeholder="0.00 - 4.00"
+            class="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm focus:outline-none focus:ring-4 focus:ring-blue-100 focus:border-blue-400 @error('ipk') border-red-300 focus:ring-red-100 focus:border-red-400 @enderror">
+
+          <p class="mt-2 text-xs text-slate-500">Masukkan IPK terbaru yang akan digunakan untuk rekomendasi
+            pembimbing.</p>
+
+          @error('ipk')
+            <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+          @enderror
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
           <div>

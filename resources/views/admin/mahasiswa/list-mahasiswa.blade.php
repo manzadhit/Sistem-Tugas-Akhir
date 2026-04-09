@@ -142,7 +142,7 @@
                 </div>
               </td>
               <td class="px-5 py-4 text-sm text-gray-700">{{ $mhs->angkatan }}</td>
-              <td class="px-5 py-4 text-sm font-semibold text-gray-900">{{ $mhs->ipk }}</td>
+              <td class="px-5 py-4 text-sm font-semibold text-gray-900">{{ $mhs->ipk ?? '-' }}</td>
               <td class="px-5 py-4">
                 <span
                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
@@ -216,7 +216,7 @@
           <div class="flex-1 min-w-0">
             <div class="font-medium text-gray-900 text-sm truncate">{{ $mhs->nama_lengkap }}</div>
             <div class="text-xs text-gray-500">{{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }} · IPK
-              {{ $mhs->ipk }}</div>
+              {{ $mhs->ipk ?? '-' }}</div>
             <div class="mt-1">
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
                 {{ ucfirst($mhs->status_akademik) }}

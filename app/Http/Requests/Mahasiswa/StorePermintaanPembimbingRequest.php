@@ -22,6 +22,7 @@ class StorePermintaanPembimbingRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'ipk' => ['required', 'numeric', 'min:0', 'max:4'],
             'judul_ta' => ['required', 'string', 'max:500'],
             'bukti_acc' => ['required', 'file', 'mimes:pdf,png,jpg,jpeg', 'max:2048'],
             'mata_kuliah_ids' => ['required', 'array', 'min:1'],

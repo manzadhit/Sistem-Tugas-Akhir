@@ -47,7 +47,8 @@ class PermintaanPembimbingController extends Controller
             if ($isRejected) {
                 return view('mahasiswa.permintaan-pembimbing-form', compact(
                     'permintaanPembimbing',
-                    'mataKuliahOptions'
+                    'mataKuliahOptions',
+                    'mahasiswa',
                 ));
             }
 
@@ -55,6 +56,7 @@ class PermintaanPembimbingController extends Controller
         }
 
         return view('mahasiswa.permintaan-pembimbing-form', [
+            'mahasiswa' => $mahasiswa,
             'mataKuliahOptions' => $mataKuliahOptions,
             'permintaanPembimbing' => null,
         ]);
@@ -69,6 +71,10 @@ class PermintaanPembimbingController extends Controller
         }
 
         $validated = $request->validated();
+
+        $mahasiswa->update([
+            'ipk' => $validated['ipk'],
+        ]);
 
         $existing = PermintaanPembimbing::where('mahasiswa_id', $mahasiswa->id)->first();
         if ($existing?->bukti_acc_path && Storage::disk('local')->exists($existing->bukti_acc_path)) {

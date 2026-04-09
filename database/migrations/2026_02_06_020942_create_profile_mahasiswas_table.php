@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nama_lengkap');
             $table->string('jurusan');
             $table->string('angkatan');
-            $table->decimal('ipk', 3, 2);
+            $table->decimal('ipk', 3, 2)->nullable();
             $table->string('no_telp')->nullable();
             $table->string('foto')->nullable();
             $table->enum('status_akademik', ['aktif', 'cuti', 'nonaktif', 'lulus', 'dropout']);

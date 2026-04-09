@@ -63,7 +63,7 @@ class MahasiswaController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
             'angkatan' => $request->angkatan,
-            'ipk' => $request->ipk,
+            'ipk' => null,
             'no_telp' => $request->no_telp,
             'status_akademik' => $request->status_akademik,
         ]);
