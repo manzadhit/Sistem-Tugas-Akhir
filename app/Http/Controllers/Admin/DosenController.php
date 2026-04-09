@@ -58,6 +58,7 @@ class DosenController extends Controller
             'username' => $request->nidn,
             'email' => null,
             'password' => bcrypt($request->nidn),
+            'must_change_password' => true,
             'role' => $request->role,
         ]);
 
@@ -127,6 +128,7 @@ class DosenController extends Controller
 
         $dosen->user->update([
             'password' => Hash::make($dosen->nidn),
+            'must_change_password' => true,
         ]);
 
         return redirect()->route('admin.dosen.index')

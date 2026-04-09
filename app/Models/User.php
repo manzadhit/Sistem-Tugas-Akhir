@@ -21,7 +21,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'role'
+        'must_change_password',
+        'role',
     ];
 
 
@@ -44,6 +45,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'must_change_password' => 'boolean',
         ];
     }
 
@@ -81,5 +83,11 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function requiresPasswordChange(): bool
+    {
+        return $this->must_change_password
+            && in_array($this->role, ['mahasiswa', 'dosen', 'kajur', 'sekjur'], true);
     }
 }

@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'username' => fake()->unique()->userName(),
             'password' => static::$password ??= Hash::make('1'),
             'email' => fake()->email(),
+            'must_change_password' => false,
             'role' => fake()->randomElement(['mahasiswa', 'dosen', 'kajur', 'admin']),
             'remember_token' => Str::random(10),
         ];

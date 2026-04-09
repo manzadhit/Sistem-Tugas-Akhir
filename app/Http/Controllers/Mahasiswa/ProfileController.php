@@ -55,6 +55,7 @@ class ProfileController extends Controller
         // Update password jika diisi
         if (! empty($validated['password'])) {
             $user->password = Hash::make($validated['password']);
+            $user->must_change_password = false;
         }
 
         $user->save();

@@ -3,6 +3,7 @@
 use App\Http\Middleware\EnsureBimbinganSequence;
 use App\Http\Middleware\EnsureMahasiswaAktif;
 use App\Http\Middleware\EnsureMahasiswaHasPembimbing;
+use App\Http\Middleware\EnsurePasswordChanged;
 use App\Http\Middleware\EnsureRole;
 use App\Http\Middleware\EnsureUjianSequence;
 use Illuminate\Foundation\Application;
@@ -18,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'role' => EnsureRole::class,
+            'password.changed' => EnsurePasswordChanged::class,
             'mahasiswa.aktif' => EnsureMahasiswaAktif::class,
             'has.pembimbing' => EnsureMahasiswaHasPembimbing::class,
             'ujian.sequence' => EnsureUjianSequence::class,

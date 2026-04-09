@@ -8,7 +8,7 @@ use App\Http\Controllers\Mahasiswa\ProfileController as MahasiswaProfileControll
 use App\Http\Controllers\Mahasiswa\UjianController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:mahasiswa', 'mahasiswa.aktif'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
+Route::middleware(['auth', 'password.changed', 'role:mahasiswa', 'mahasiswa.aktif'])->prefix('mahasiswa')->name('mahasiswa.')->group(function () {
   // Profile
   Route::get('/profile', [MahasiswaProfileController::class, 'edit'])->name('profile.edit');
   Route::put('/profile', [MahasiswaProfileController::class, 'update'])->name('profile.update');

@@ -7,7 +7,7 @@ use App\Http\Controllers\Kajur\PersetujuanKajurController;
 use App\Http\Controllers\Kajur\ProfileController as KajurProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:kajur'])->prefix('kajur')->name('kajur.')->group(function () {
+Route::middleware(['auth', 'password.changed', 'role:kajur'])->prefix('kajur')->name('kajur.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
   Route::get('/profile', [KajurProfileController::class, 'edit'])->name('profile.edit');

@@ -54,6 +54,7 @@ class MahasiswaController extends Controller
             'username' => $request->nim,
             'email' => null,
             'password' => bcrypt($request->nim),
+            'must_change_password' => true,
             'role' => 'mahasiswa',
         ]);
 
@@ -119,6 +120,7 @@ class MahasiswaController extends Controller
 
         $mhs->user->update([
             'password' => Hash::make($mhs->nim),
+            'must_change_password' => true,
         ]);
 
         return redirect()->route('admin.mahasiswa.index')

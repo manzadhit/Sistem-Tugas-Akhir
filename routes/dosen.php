@@ -9,7 +9,7 @@ use App\Http\Controllers\Dosen\PublikasiController;
 use App\Http\Controllers\Dosen\UndanganController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('dosen.')->group(function () {
+Route::middleware(['auth', 'password.changed', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('dosen.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
 
   Route::get('/profile', [DosenProfileController::class, 'edit'])->name('profile.edit');

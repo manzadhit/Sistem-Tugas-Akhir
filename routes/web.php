@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-Route::middleware("auth")->get('/', function () {
+Route::middleware(['auth', 'password.changed'])->get('/', function () {
     $user = Auth::user();
 
     if (!$user) {
@@ -16,7 +16,7 @@ Route::middleware("auth")->get('/', function () {
     return redirect()->route("dashboard");
 });
 
-Route::middleware('auth')->get("/dashboard", function () {
+Route::middleware(['auth', 'password.changed'])->get("/dashboard", function () {
     $user = Auth::user();
 
     return match ($user->role) {
@@ -29,12 +29,12 @@ Route::middleware('auth')->get("/dashboard", function () {
     };
 })->name('dashboard');
 
-Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
+Route::middleware(['auth', 'password.changed'])->prefix('notifications')->name('notifications.')->group(function () {
     Route::get('/', [NotificationController::class, 'index'])->name('index');
     Route::post('/mark-all-read', [NotificationController::class, 'markAllRead'])->name('markAllRead');
 });
 
-Route::middleware('auth')
+Route::middleware(['auth', 'password.changed'])
     ->prefix('files/{type}/{id}')
     ->where('type', 'submission-file|kajur-submission-file|dokumen-ujian|undangan-ujian|permintaan-pembimbing')
     ->whereNumber('id')
