@@ -10,6 +10,7 @@ use App\Models\ProfileDosen;
 use App\Models\PublikasiDosen;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DosenController extends Controller
 {
@@ -113,6 +114,23 @@ class DosenController extends Controller
 
         return redirect()->route('admin.dosen.index')
             ->with('success', "Data dosen {$dosen->nama_lengkap} berhasil diperbarui.");
+    }
+
+    public function resetPassword($id)
+    {
+        $dosen = ProfileDosen::with('user')->findOrFail($id);
+
+        if (! $dosen->user) {
+            return redirect()->route('admin.dosen.index')
+                ->with('error', "Akun login untuk dosen {$dosen->nama_lengkap} tidak ditemukan.");
+        }
+
+        $dosen->user->update([
+            'password' => Hash::make($dosen->nidn),
+        ]);
+
+        return redirect()->route('admin.dosen.index')
+            ->with('success', "Password dosen {$dosen->nama_lengkap} berhasil direset ke NIDN.");
     }
 
     protected function mataKuliahOptions(): array
