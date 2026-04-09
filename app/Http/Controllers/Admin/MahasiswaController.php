@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateMahasiswaRequest;
 use App\Models\ProfileMahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MahasiswaController extends Controller
 {
@@ -105,6 +106,23 @@ class MahasiswaController extends Controller
         ]);
 
         return redirect()->route('admin.mahasiswa.index')->with('success', "Data mahasiswa {$mhs->nama_lengkap} berhasil diperbarui.");
+    }
+
+    public function resetPassword($id)
+    {
+        $mhs = ProfileMahasiswa::with('user')->findOrFail($id);
+
+        if (! $mhs->user) {
+            return redirect()->route('admin.mahasiswa.index')
+                ->with('error', "Akun login untuk mahasiswa {$mhs->nama_lengkap} tidak ditemukan.");
+        }
+
+        $mhs->user->update([
+            'password' => Hash::make($mhs->nim),
+        ]);
+
+        return redirect()->route('admin.mahasiswa.index')
+            ->with('success', "Password mahasiswa {$mhs->nama_lengkap} berhasil direset ke NIM.");
     }
 
     public function destroy($id)

@@ -161,6 +161,15 @@
                     title="Edit">
                     <i class="fas fa-edit text-xs"></i>
                   </a>
+                  <form method="POST" action="{{ route('admin.mahasiswa.reset-password', $mhs->id) }}"
+                    onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke NIM {{ $mhs->nim }}?')">
+                    @csrf
+                    <button type="submit"
+                      class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors"
+                      title="Reset Password ke NIM">
+                      <i class="fas fa-key text-xs"></i>
+                    </button>
+                  </form>
                   <button type="button"
                     data-id="{{ $mhs->id }}"
                     data-nama="{{ $mhs->nama_lengkap }}"
@@ -224,6 +233,14 @@
               class="w-8 h-8 rounded-md bg-amber-100 text-amber-700 flex items-center justify-center hover:bg-amber-200 transition-colors">
               <i class="fas fa-edit text-xs"></i>
             </a>
+            <form method="POST" action="{{ route('admin.mahasiswa.reset-password', $mhs->id) }}"
+              onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke NIM {{ $mhs->nim }}?')">
+              @csrf
+              <button type="submit"
+                class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors">
+                <i class="fas fa-key text-xs"></i>
+              </button>
+            </form>
             <button type="button"
               data-id="{{ $mhs->id }}"
               data-nama="{{ $mhs->nama_lengkap }}"
