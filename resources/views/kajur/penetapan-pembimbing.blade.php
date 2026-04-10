@@ -287,7 +287,10 @@
                         <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h4>
                         <div class="text-xs text-gray-600">
                           <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
-                          <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
+                          <span class="mr-3"><i class="fas fa-award"></i> <span
+                              x-text="dosen.jabatan_fungsional"></span></span>
+                          <span><i class="fas fa-chart-line"></i> SINTA 3Yr <span
+                              x-text="formatScore(dosen.sinta_score_3y)"></span></span>
                         </div>
                       </div>
                     </div>
@@ -458,6 +461,8 @@
                         </p>
                         <p class="text-[0.7rem] text-gray-500 truncate">
                           <span x-text="dosen.keahlian"></span> <span>·</span>
+                          <span>SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span></span>
+                          <span>·</span>
                           <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                         </p>
                       </div>
@@ -492,6 +497,8 @@
                           </p>
                           <p class="text-[0.7rem] text-gray-500">
                             <span x-text="dosen.keahlian"></span> <span>·</span>
+                            <span>SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span></span>
+                            <span>·</span>
                             <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                           </p>
                         </div>

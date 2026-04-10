@@ -13,6 +13,7 @@ class CriteriaDataService
   {
     $jabatan = $this->getJabatanFungsional($dosenIds);
     $jumlahPublikasi = $this->getJumlahPublikasi($dosenIds);
+    $sintaScore3y = $this->getSintaScore3y($dosenIds);
     $beban = $this->getBebanByContext($dosenIds, $context);
 
     $pemerataanIpk = $context == 'pembimbing' ? $this->getPemerataanIpk($dosenIds, $mahasiswa) : [];
@@ -23,6 +24,7 @@ class CriteriaDataService
       $row = [
         'jabatan_fungsional' => $jabatan[$id] ?? 0,
         'jumlah_publikasi' => $jumlahPublikasi[$id] ?? 0,
+        'sinta_score_3y' => $sintaScore3y[$id] ?? 0,
       ];
 
       if ($context === 'penguji') {
@@ -64,6 +66,21 @@ class CriteriaDataService
 
     foreach ($dosens as $dosen) {
       $result[$dosen->id] = $dosen->publikasi_count;
+    }
+
+    return $result;
+  }
+
+  public function getSintaScore3y($dosenIds)
+  {
+    $dosens = ProfileDosen::whereIn('id', $dosenIds)
+      ->select('id', 'sinta_score_3y')
+      ->get();
+
+    $result = [];
+
+    foreach ($dosens as $dosen) {
+      $result[$dosen->id] = (float) ($dosen->sinta_score_3y ?? 0);
     }
 
     return $result;

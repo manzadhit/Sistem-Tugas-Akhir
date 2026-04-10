@@ -24,6 +24,7 @@ class ProfileDosenFactory extends Factory
             'jurusan' => fake()->randomElement(['Informatika', 'Sistem Informasi', 'Teknik Komputer']),
             'keahlian' => fake()->randomElement(['Rekayasa Perangkat Lunak', 'Artificial Intelligence', 'Jaringan']),
             'jabatan_fungsional' => fake()->randomElement(['Tenaga Pendidik', 'Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar']),
+            'sinta_score_3y' => fake()->randomFloat(2, 0, 500),
             'status' => fake()->randomElement(['aktif', 'cuti', 'nonaktif', 'pensiun']),
             'foto' => null,
             'no_telp' => fake()->optional()->phoneNumber()

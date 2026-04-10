@@ -115,6 +115,7 @@
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Keahlian</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Publikasi</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">SINTA 3Yr</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Aksi</th>
           </tr>
         </thead>
@@ -174,6 +175,9 @@
                   {{ $dosen->publikasi_count }}
                 </span>
               </td>
+              <td class="px-5 py-4 text-sm text-gray-700">
+                {{ number_format((float) ($dosen->sinta_score_3y ?? 0), 2) }}
+              </td>
               <td class="px-5 py-4">
                 <div class="flex gap-2">
                   <a href="{{ route('admin.dosen.show', $dosen->id) }}"
@@ -209,7 +213,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="7" class="px-5 py-12 text-center text-gray-400">
+              <td colspan="8" class="px-5 py-12 text-center text-gray-400">
                 <i class="fas fa-chalkboard-teacher text-3xl mb-3 block opacity-30"></i>
                 Tidak ada data dosen.
               </td>
@@ -262,6 +266,11 @@
                 class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
                 <i class="fas fa-book-open text-[10px]"></i>
                 {{ $dosen->publikasi_count }} publikasi
+              </span>
+              <span
+                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-100 text-sky-700">
+                <i class="fas fa-chart-line text-[10px]"></i>
+                SINTA 3Yr {{ number_format((float) ($dosen->sinta_score_3y ?? 0), 2) }}
               </span>
             </div>
           </div>

@@ -47,6 +47,7 @@ class DatabaseSeeder extends Seeder
             'jurusan' => 'Informatika',
             'keahlian' => 'Rekayasa Perangkat Lunak',
             'jabatan_fungsional' => 'Lektor Kepala',
+            'sinta_score_3y' => 185.50,
             'foto' => null,
             'no_telp' => '081234567890',
         ]);
@@ -65,6 +66,7 @@ class DatabaseSeeder extends Seeder
             'jurusan' => 'Informatika',
             'keahlian' => 'Sistem Informasi',
             'jabatan_fungsional' => 'Lektor',
+            'sinta_score_3y' => 120.75,
             'foto' => null,
             'no_telp' => '089876543210',
         ]);

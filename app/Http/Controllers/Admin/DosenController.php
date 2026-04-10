@@ -68,6 +68,7 @@ class DosenController extends Controller
             'jurusan' => $request->jurusan,
             'keahlian' => $request->keahlian,
             'jabatan_fungsional' => $request->jabatan_fungsional,
+            'sinta_score_3y' => $request->validated('sinta_score_3y') ?? 0,
             'status' => $request->status,
             'no_telp' => $request->no_telp,
         ]);
@@ -107,6 +108,7 @@ class DosenController extends Controller
             'jurusan' => $request->jurusan,
             'keahlian' => $request->keahlian,
             'jabatan_fungsional' => $request->jabatan_fungsional,
+            'sinta_score_3y' => $request->validated('sinta_score_3y') ?? 0,
             'status' => $request->status,
             'no_telp' => $request->no_telp,
         ]);

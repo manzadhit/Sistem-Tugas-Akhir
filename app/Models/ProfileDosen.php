@@ -19,9 +19,14 @@ class ProfileDosen extends Model
         'jurusan',
         'keahlian',
         'jabatan_fungsional',
+        'sinta_score_3y',
         'status',
         'foto',
         'no_telp',
+    ];
+
+    protected $casts = [
+        'sinta_score_3y' => 'float',
     ];
 
     protected $appends = [

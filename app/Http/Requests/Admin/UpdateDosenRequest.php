@@ -18,6 +18,7 @@ class UpdateDosenRequest extends FormRequest
             'jurusan' => ['required', 'string', 'max:255'],
             'keahlian' => ['required', 'string', 'max:255'],
             'jabatan_fungsional' => ['required', 'string', 'max:255'],
+            'sinta_score_3y' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
             'status' => ['required', 'in:aktif,cuti,nonaktif,pensiun'],
             'mata_kuliah_ids' => ['nullable', 'array'],
             'mata_kuliah_ids.*' => ['integer', 'distinct', 'exists:mata_kuliah,id'],

@@ -25,6 +25,7 @@ class MAUTService
         'similarity' => $similarityScores[$dosenId] ?? 0,
         'jabatan_fungsional' => $criteriaData[$dosenId]['jabatan_fungsional'] ?? 0,
         'jumlah_publikasi' => $criteriaData[$dosenId]['jumlah_publikasi'] ?? 0,
+        'sinta_score_3y' => $criteriaData[$dosenId]['sinta_score_3y'] ?? 0,
       ];
 
       if ($context === 'penguji') {

@@ -349,7 +349,10 @@
                         <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h4>
                         <div class="text-xs text-gray-600">
                           <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
-                          <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
+                          <span class="mr-3"><i class="fas fa-award"></i> <span
+                              x-text="dosen.jabatan_fungsional"></span></span>
+                          <span><i class="fas fa-chart-line"></i> SINTA 3Yr <span
+                              x-text="formatScore(dosen.sinta_score_3y)"></span></span>
                           <div class="flex items-center gap-2 mt-1.5 flex-wrap">
                             <span
                               class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
@@ -514,6 +517,10 @@
                             <span x-text="dosen.keahlian || 'Umum'"></span>
                           </span>
                           <span
+                            class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-sky-50 text-sky-700 border border-sky-100">
+                            SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span>
+                          </span>
+                          <span
                             class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">
                             <span x-text="dosen.total_pengujian_periode ?? 0"></span> Ujian
                           </span>
@@ -548,6 +555,10 @@
                             <span
                               class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-indigo-50 text-indigo-700 border border-indigo-100">
                               <span x-text="dosen.keahlian || 'Umum'"></span>
+                            </span>
+                            <span
+                              class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-sky-50 text-sky-700 border border-sky-100">
+                              SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span>
                             </span>
                             <span
                               class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[0.65rem] font-medium bg-amber-50 text-amber-700 border border-amber-100">

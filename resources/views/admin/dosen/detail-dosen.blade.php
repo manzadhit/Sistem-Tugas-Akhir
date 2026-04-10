@@ -132,6 +132,19 @@
           </div>
         </div>
 
+        <div class="flex items-start gap-3">
+          <div
+            class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="min-w-0">
+            <div class="text-xs text-gray-400 mb-0.5">SINTA Score 3Yr</div>
+            <div class="text-sm font-medium text-gray-800 break-words">
+              {{ number_format((float) ($dosen->sinta_score_3y ?? 0), 2) }}
+            </div>
+          </div>
+        </div>
+
         <div class="flex items-start gap-3 sm:col-span-2 lg:col-span-3">
           <div
             class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">

@@ -78,6 +78,10 @@
                     <span class="font-semibold text-slate-500">Jabatan:</span>
                     <span>{{ $pembimbing->dosen->jabatan_fungsional ?? '-' }}</span>
                   </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-slate-500">SINTA 3Yr:</span>
+                    <span>{{ number_format((float) ($pembimbing->dosen->sinta_score_3y ?? 0), 2) }}</span>
+                  </div>
                   @if ($pembimbing->dosen?->no_telp)
                     <div class="min-w-0">
                       <span class="font-semibold text-slate-500">No. Telp:</span>
