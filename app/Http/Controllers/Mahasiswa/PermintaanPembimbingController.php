@@ -47,25 +47,11 @@ class PermintaanPembimbingController extends Controller
 
         $permintaanPembimbing = $mahasiswa->permintaanPembimbing;
 
-        if ($permintaanPembimbing) {
-            $isRejected = $permintaanPembimbing->status_verifikasi_bukti === 'ditolak';
-
-            if ($isRejected) {
-                return view('mahasiswa.permintaan-pembimbing-form', compact(
-                    'permintaanPembimbing',
-                    'mataKuliahOptions',
-                    'mahasiswa',
-                ));
-            }
-
-            return view('mahasiswa.permintaan-pembimbing', compact('permintaanPembimbing'));
-        }
-
-        return view('mahasiswa.permintaan-pembimbing-form', [
-            'mahasiswa' => $mahasiswa,
-            'mataKuliahOptions' => $mataKuliahOptions,
-            'permintaanPembimbing' => null,
-        ]);
+        return view('mahasiswa.permintaan-pembimbing', compact(
+            'mahasiswa',
+            'mataKuliahOptions',
+            'permintaanPembimbing',
+        ));
     }
 
     public function store(StorePermintaanPembimbingRequest $request)
@@ -165,4 +151,3 @@ class PermintaanPembimbingController extends Controller
             ->with('success', 'Selamat! Pembimbing telah ditetapkan. Silakan mulai proses bimbingan.');
     }
 }
-
