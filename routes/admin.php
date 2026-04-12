@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DosenController;
 use App\Http\Controllers\Admin\MataKuliahController;
 use App\Http\Controllers\Admin\MahasiswaController;
 use App\Http\Controllers\Admin\PeriodeAkademikController;
+use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\VerifikasiSyaratController;
 use App\Http\Controllers\Admin\VerifikasiHasilController;
 use App\Http\Controllers\Admin\PublikasiController;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+  Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+  Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
   // Verifikasi Syarat Ujian
   Route::prefix('ujian/verifikasi-syarat')->name('ujian.syarat.')->group(function () {

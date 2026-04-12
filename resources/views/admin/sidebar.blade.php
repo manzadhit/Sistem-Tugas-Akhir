@@ -51,4 +51,12 @@
           'label' => 'Kelola Periode Akademik',
           'active' => request()->is('admin/periode*'),
       ],
+  
+      ['section' => 'Lainnya'],
+      [
+          'href' => route('admin.profile.edit'),
+          'icon' => 'fas fa-user-shield',
+          'label' => 'Profil Saya',
+          'active' => request()->routeIs('admin.profile.*'),
+      ],
   ]" />

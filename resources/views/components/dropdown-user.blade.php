@@ -25,6 +25,7 @@
           'mahasiswa' => route('mahasiswa.profile.edit'),
           'dosen' => route('dosen.profile.edit'),
           'kajur' => route('kajur.profile.edit'),
+          'admin' => route('admin.profile.edit'),
           default => '#',
       };
     @endphp
