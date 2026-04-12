@@ -31,10 +31,10 @@ class ProfileController extends Controller
         // Update foto jika ada
         $fotoPath = $profile->foto;
         if ($request->hasFile('foto')) {
-            if ($fotoPath && Storage::exists($fotoPath)) {
-                Storage::delete($fotoPath);
+            if ($fotoPath && Storage::disk('public')->exists($fotoPath)) {
+                Storage::disk('public')->delete($fotoPath);
             }
-            $fotoPath = $request->file('foto')->store('photos');
+            $fotoPath = $request->file('foto')->store('photos', 'public');
         }
 
         // Update profile dosen
