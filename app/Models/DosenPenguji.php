@@ -15,12 +15,10 @@ class DosenPenguji extends Model
         'mahasiswa_id',
         'dosen_id',
         'jenis_penguji',
-        'status_aktif',
         'nilai',
     ];
 
     protected $casts = [
-        'status_aktif' => 'boolean',
         'nilai' => 'decimal:2',
     ];
 
@@ -32,5 +30,15 @@ class DosenPenguji extends Model
     public function dosen() 
     {
         return $this->belongsTo(ProfileDosen::class, 'dosen_id');
+    }
+
+    public function getJenisPenguji()
+    {
+        return match ($this->jenis_penguji) {
+            'penguji_1' => 'Penguji 1',
+            'penguji_2' => 'Penguji 2',
+            'penguji_3' => 'Penguji 3',
+            default => 'Penguji',
+        };
     }
 }

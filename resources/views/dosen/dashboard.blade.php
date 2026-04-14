@@ -16,10 +16,16 @@
   </div>
 
   {{-- Stats --}}
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <x-stats label="Bimbingan Aktif" :total="$totalMahasiswaBimbingan" bg-color="bg-blue-100" text-color='text-blue-600'>
       <x-slot:icon>
         <i class="fas fa-users"></i>
+      </x-slot:icon>
+    </x-stats>
+
+    <x-stats label="Pengujian" :total="$totalPengujian" bg-color="bg-violet-100" text-color='text-violet-600'>
+      <x-slot:icon>
+        <i class="fas fa-gavel"></i>
       </x-slot:icon>
     </x-stats>
 
@@ -60,6 +66,40 @@
           </div>
         @empty
           <div class="px-6 py-8 text-center text-sm text-slate-500">Belum ada mahasiswa bimbingan.</div>
+        @endforelse
+      </div>
+    </div>
+
+    {{-- Daftar Pengujian --}}
+    <div class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
+      <div class="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div>
+          <h3 class="font-semibold text-slate-900">Daftar Pengujian</h3>
+          @if ($periodeAktif)
+            <p class="text-xs text-slate-400 mt-0.5">{{ $periodeAktif->tahun_ajaran }} — Semester {{ $periodeAktif->semester }}</p>
+          @endif
+        </div>
+        <a href="{{ route('dosen.pengujian.index') }}" class="text-sm text-violet-600 font-medium hover:underline">Lihat
+          Semua →</a>
+      </div>
+      <div class="divide-y divide-slate-100">
+        @forelse ($mahasiswaPengujian as $dp)
+          @php
+            $ujianAktif = $dp->mahasiswa?->tugasAkhir?->ujian?->first();
+          @endphp
+          <div class="flex items-center gap-3 px-6 py-3">
+            <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm shrink-0">
+              <i class="fas fa-gavel"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-slate-900 truncate">{{ $dp->mahasiswa->nama_lengkap }}</p>
+              <p class="text-xs text-slate-500">{{ $dp->mahasiswa->nim }} ·
+                {{ $ujianAktif ? ucfirst($ujianAktif->jenis_ujian) : '-' }}</p>
+            </div>
+            <span class="text-xs text-slate-400 shrink-0">{{ $dp->getJenisPenguji() }}</span>
+          </div>
+        @empty
+          <div class="px-6 py-8 text-center text-sm text-slate-500">Belum ada data pengujian.</div>
         @endforelse
       </div>
     </div>

@@ -6,11 +6,14 @@ use App\Http\Controllers\Dosen\JadwalController;
 use App\Http\Controllers\Dosen\MahasiswaBimbinganController;
 use App\Http\Controllers\Dosen\ProfileController as DosenProfileController;
 use App\Http\Controllers\Dosen\PublikasiController;
+use App\Http\Controllers\Dosen\PengujianController;
 use App\Http\Controllers\Dosen\UndanganController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'password.changed', 'role:dosen,kajur,sekjur'])->prefix('dosen')->name('dosen.')->group(function () {
   Route::get("/dashboard", [DashboardController::class, 'index'])->name("dashboard");
+
+  Route::get('/pengujian', [PengujianController::class, 'index'])->name('pengujian.index');
 
   Route::get('/profile', [DosenProfileController::class, 'edit'])->name('profile.edit');
   Route::put('/profile', [DosenProfileController::class, 'update'])->name('profile.update');
