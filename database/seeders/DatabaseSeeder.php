@@ -24,14 +24,7 @@ class DatabaseSeeder extends Seeder
         $this->call(MataKuliahSeeder::class);
         $this->call(BobotKriteriaSeeder::class);
         $this->call(PeriodeAkademikSeeder::class);
-
-        // ─── Admin ───
-        User::create([
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('1'),
-            'role' => 'admin',
-        ]);
+        $this->call(AdminSeeder::class);
 
         // ─── Kajur ───
         $kajurUser = User::create([
