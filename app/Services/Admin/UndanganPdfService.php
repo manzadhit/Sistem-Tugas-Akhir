@@ -54,9 +54,9 @@ class UndanganPdfService
           ? Carbon::parse($jadwal->tanggal_ujian)->locale('id')->isoFormat('dddd, D MMMM Y')
           : '-',
         'jam' => $jadwal
-          ? $jadwal->jam_mulai . ' - ' . $jadwal->jam_selesai . ' WITA'
+          ? $jadwal->jam_mulai->format('H:i') . ' - ' . $jadwal->jam_selesai->format('H:i') . ' WITA'
           : '-',
-        'tempat' => $jadwal->ruangan ?? '-',
+        'tempat' => $jadwal?->ruangan ?? '-',
       ],
 
       'panitia' => [

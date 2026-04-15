@@ -166,11 +166,11 @@
                 <select id="ruang_ujian" name="ruang_ujian" required
                   class="w-full px-3 py-3 text-sm text-gray-900 border border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 {{ $errors->has('ruang_ujian') ? 'border-red-500 ring-red-100 focus:border-red-500 focus:ring-red-100' : '' }}">
                   <option value="">Pilih ruangan</option>
-                  <option value="ruang-sidang-1" @selected(old('ruang_ujian') === 'ruang-sidang-1')>Ruang Sidang 1</option>
-                  <option value="ruang-sidang-2" @selected(old('ruang_ujian') === 'ruang-sidang-2')>Ruang Sidang 2</option>
-                  <option value="ruang-seminar" @selected(old('ruang_ujian') === 'ruang-seminar')>Ruang Seminar</option>
-                  <option value="lab-multimedia" @selected(old('ruang_ujian') === 'lab-multimedia')>Lab Multimedia</option>
-                  <option value="ruang-utama" @selected(old('ruang_ujian') === 'ruang-utama')>Ruang Utama</option>
+                  <option value="Ruang Sidang 1" @selected(old('ruang_ujian') === 'Ruang Sidang 1')>Ruang Sidang 1</option>
+                  <option value="Ruang Sidang 2" @selected(old('ruang_ujian') === 'Ruang Sidang 2')>Ruang Sidang 2</option>
+                  <option value="Ruang Seminar" @selected(old('ruang_ujian') === 'Ruang Seminar')>Ruang Seminar</option>
+                  <option value="Lab Multimedia" @selected(old('ruang_ujian') === 'Lab Multimedia')>Lab Multimedia</option>
+                  <option value="Ruang Utama" @selected(old('ruang_ujian') === 'Ruang Utama')>Ruang Utama</option>
                 </select>
                 @error('ruang_ujian')
                   <p class="mt-1.5 text-xs text-red-600"><i class="fas fa-exclamation-circle"></i> {{ $message }}
