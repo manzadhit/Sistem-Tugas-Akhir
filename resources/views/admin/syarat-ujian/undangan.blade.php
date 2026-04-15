@@ -82,7 +82,8 @@
           <div class="text-sm font-medium text-gray-900">{{ $ujian->tugasAkhir->mahasiswa->nim }}</div>
         </div>
         <div>
-          <div class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">Program Studi</div>
+          <div class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">Jurusan</div>
+          <div class="text-sm font-medium text-gray-900">{{ $ujian->tugasAkhir->mahasiswa->jurusan ?? '-' }}</div>
         </div>
         <div class="col-span-2 sm:col-span-1">
           <div class="mb-1 text-xs font-medium tracking-wider text-gray-400 uppercase">Jenis Ujian</div>

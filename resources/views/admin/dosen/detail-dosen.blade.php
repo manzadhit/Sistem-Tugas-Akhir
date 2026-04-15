@@ -97,14 +97,15 @@
           </div>
         </div>
 
-        {{-- Program Studi --}}
+        {{-- Jurusan --}}
         <div class="flex items-start gap-3">
           <div
             class="w-8 h-8 rounded-lg bg-blue-50 text-blue-500 flex items-center justify-center text-xs shrink-0 mt-0.5">
             <i class="fas fa-graduation-cap"></i>
           </div>
           <div class="min-w-0">
-            <div class="text-xs text-gray-400 mb-0.5">Program Studi</div>
+            <div class="text-xs text-gray-400 mb-0.5">Jurusan</div>
+            <div class="text-sm font-medium text-gray-800 break-words">{{ $dosen->jurusan }}</div>
           </div>
         </div>
 

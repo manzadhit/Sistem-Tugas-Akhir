@@ -98,7 +98,8 @@
             <i class="fas fa-graduation-cap"></i>
           </div>
           <div class="min-w-0">
-            <div class="text-xs text-gray-400 mb-0.5">Program Studi</div>
+            <div class="text-xs text-gray-400 mb-0.5">Jurusan</div>
+            <div class="text-sm font-medium text-gray-800 break-words">{{ $mhs->jurusan }}</div>
           </div>
         </div>
 
