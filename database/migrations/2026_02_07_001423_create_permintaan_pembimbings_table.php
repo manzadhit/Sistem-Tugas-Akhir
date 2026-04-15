@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status_verifikasi_bukti', ['pending', 'disetujui', 'ditolak'])->default('pending');
             $table->text('catatan')->nullable();
             $table->timestamp('diproses_pada')->nullable();
+            $table->boolean('penetapan_dilihat')->default(false);
             $table->timestamps();
 
             $table->unique('mahasiswa_id');
