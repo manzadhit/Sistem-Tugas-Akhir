@@ -66,41 +66,50 @@
 
   {{-- Filter Section --}}
   <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
-      <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
-        <input type="text"
-          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
-          placeholder="Nama atau NIM..." />
+    <form method="GET" action="{{ route('dosen.undangan.index') }}" id="filterForm">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
+          <input type="text" name="search" value="{{ request('search') }}"
+            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
+            placeholder="Nama atau NIM..."
+            onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('filterForm').submit()}" />
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-700">Jenis Ujian</label>
+          <select name="jenis"
+            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
+            onchange="document.getElementById('filterForm').submit()">
+            <option value="">Semua Jenis</option>
+            <option value="proposal" {{ request('jenis') === 'proposal' ? 'selected' : '' }}>Ujian Proposal</option>
+            <option value="hasil" {{ request('jenis') === 'hasil' ? 'selected' : '' }}>Ujian Hasil</option>
+            <option value="skripsi" {{ request('jenis') === 'skripsi' ? 'selected' : '' }}>Ujian Skripsi</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label class="text-sm font-medium text-gray-700">Peran</label>
+          <select name="peran"
+            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
+            onchange="document.getElementById('filterForm').submit()">
+            <option value="">Semua Peran</option>
+            <option value="pembimbing" {{ request('peran') === 'pembimbing' ? 'selected' : '' }}>Pembimbing</option>
+            <option value="penguji" {{ request('peran') === 'penguji' ? 'selected' : '' }}>Penguji</option>
+          </select>
+        </div>
+        <div class="flex gap-2">
+          @if (request()->hasAny(['search', 'jenis', 'peran']))
+            <a href="{{ route('dosen.undangan.index') }}"
+              class="inline-flex items-center justify-center px-3 py-2.5 rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+              title="Reset filter">
+              <i class="fas fa-times"></i>
+            </a>
+          @endif
+        </div>
       </div>
-      <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-700">Jenis Ujian</label>
-        <select
-          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
-          <option value="">Semua Jenis</option>
-          <option value="proposal">Ujian Proposal</option>
-          <option value="hasil">Ujian Hasil</option>
-          <option value="skripsi">Ujian Skripsi</option>
-        </select>
-      </div>
-      <div class="flex flex-col gap-2">
-        <label class="text-sm font-medium text-gray-700">Peran</label>
-        <select
-          class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
-          <option value="">Semua Peran</option>
-          <option value="pembimbing">Pembimbing</option>
-          <option value="penguji">Penguji</option>
-        </select>
-      </div>
-      <button
-        class="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-700 transition-all cursor-pointer">
-        <i class="fas fa-filter"></i>
-        Terapkan Filter
-      </button>
-    </div>
+    </form>
   </div>
 
-  {{-- Undangan List --}}
+  {{-- Undangan List --}} 
   <div class="space-y-4 sm:space-y-6">
     @forelse ($undangan as $item)
       @php

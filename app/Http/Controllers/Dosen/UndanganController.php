@@ -13,26 +13,53 @@ class UndanganController extends Controller
     public function index(Request $request)
     {
         $dosenId = $request->user()->profileDosen->id;
+        $search = trim((string) $request->input('search'));
+        $jenis = $request->input('jenis');
+        $peran = $request->input('peran');
 
         $undangan = UndanganUjian::with([
             'ujian.tugasAkhir.mahasiswa.dosenPembimbing',
             'ujian.tugasAkhir.mahasiswa.dosenPenguji',
             'ujian.jadwalUjian',
         ])
-            ->whereHas('ujian.tugasAkhir.mahasiswa', function ($q) use ($dosenId) {
-                $q->where(function ($q) use ($dosenId) {
+            ->whereHas('ujian.tugasAkhir.mahasiswa', function ($q) use ($dosenId, $search, $peran) {
+                $q->when($search !== '', function ($q) use ($search) {
+                    $q->where(function ($q) use ($search) {
+                        $q->where('nama_lengkap', 'like', "%{$search}%")
+                            ->orWhere('nim', 'like', "%{$search}%");
+                    });
+                });
+                $q->where(function ($q) use ($dosenId, $peran) {
+                    if ($peran === 'pembimbing') {
+                        $q->whereHas('dosenPembimbing', function ($q2) use ($dosenId) {
+                            $q2->where('dosen_id', $dosenId)
+                                ->where('status_aktif', true);
+                        });
+
+                        return;
+                    }
+
+                    if ($peran === 'penguji') {
+                        $q->whereHas('dosenPenguji', function ($q2) use ($dosenId) {
+                            $q2->where('dosen_id', $dosenId);
+                        });
+
+                        return;
+                    }
+
                     $q->whereHas('dosenPembimbing', function ($q2) use ($dosenId) {
                         $q2->where('dosen_id', $dosenId)
                             ->where('status_aktif', true);
-                    })
-                        ->orWhereHas('dosenPenguji', function ($q2) use ($dosenId) {
-                            $q2->where('dosen_id', $dosenId);
-                        });
+                    })->orWhereHas('dosenPenguji', function ($q2) use ($dosenId) {
+                        $q2->where('dosen_id', $dosenId);
+                    });
                 });
             })
+            ->when($jenis, fn($q) => $q->whereHas('ujian', fn($q) => $q->where('jenis_ujian', $jenis)))
             ->where('status', 'terkirim')
             ->latest()
-            ->paginate(10);
+            ->paginate(10)
+            ->withQueryString();
 
         // Sisipkan properti 'peran' ke setiap item tanpa query tambahan
         $undangan->getCollection()->transform(function ($item) use ($dosenId) {
