@@ -3,45 +3,33 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
-use App\Models\DosenPenguji;
 use App\Models\PeriodeAkademik;
+use App\Notifications\DosenDitetapkanPenguji;
+use App\Services\Dosen\PengujianService;
 use Illuminate\Http\Request;
 
 class PengujianController extends Controller
 {
+    public function __construct(protected PengujianService $pengujianService) {}
+
     public function index(Request $request)
     {
         $dosenId = $request->user()?->profileDosen->id;
+        $search = trim((string) $request->input('search'));
 
-        // All periode options for dropdown (newest first)
+        $request->user()->unreadNotifications()
+            ->where('type', DosenDitetapkanPenguji::class)
+            ->update(['read_at' => now()]);
+
         $semuaPeriode = PeriodeAkademik::orderByDesc('mulai_at')->get();
         $periodeAktif = PeriodeAkademik::aktif()->first();
-
-        // Use selected periode or default to active
         $selectedPeriodeId = $request->input('periode_akademik_id', $periodeAktif?->id);
         $selectedPeriode = $semuaPeriode->firstWhere('id', $selectedPeriodeId);
 
-        $query = DosenPenguji::with(['mahasiswa.tugasAkhir.ujian' => function ($q) use ($selectedPeriodeId) {
-                if ($selectedPeriodeId) {
-                    $q->where('periode_akademik_id', $selectedPeriodeId);
-                }
-            }])
-            ->where('dosen_id', $dosenId)
-            ->whereHas('mahasiswa.tugasAkhir.ujian', function ($q) use ($selectedPeriodeId) {
-                if ($selectedPeriodeId) {
-                    $q->where('periode_akademik_id', $selectedPeriodeId);
-                }
-            });
-
-        // Search filter
-        if ($search = $request->input('search')) {
-            $query->whereHas('mahasiswa', function ($q) use ($search) {
-                $q->where('nama_lengkap', 'like', "%{$search}%")
-                  ->orWhere('nim', 'like', "%{$search}%");
-            });
-        }
-
-        $daftarPengujian = $query->latest()->paginate(15)->withQueryString();
+        $daftarPengujian = $this->pengujianService
+            ->getQuery($dosenId, $selectedPeriode, $search)
+            ->paginate(15)
+            ->withQueryString();
 
         return view('dosen.daftar-pengujian', compact(
             'daftarPengujian',

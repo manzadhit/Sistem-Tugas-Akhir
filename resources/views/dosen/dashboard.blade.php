@@ -23,7 +23,7 @@
       </x-slot:icon>
     </x-stats>
 
-    <x-stats label="Pengujian" :total="$totalPengujian" bg-color="bg-violet-100" text-color='text-violet-600'>
+    <x-stats label="Mahasiswa Ujian" :total="$totalPengujian" bg-color="bg-violet-100" text-color='text-violet-600'>
       <x-slot:icon>
         <i class="fas fa-gavel"></i>
       </x-slot:icon>
@@ -83,20 +83,30 @@
           Semua →</a>
       </div>
       <div class="divide-y divide-slate-100">
-        @forelse ($mahasiswaPengujian as $dp)
-          @php
-            $ujianAktif = $dp->mahasiswa?->tugasAkhir?->ujian?->first();
-          @endphp
+        @forelse ($mahasiswaPengujian as $item)
+          @php($ujians = $item->mahasiswa?->tugasAkhir?->ujian ?? collect())
           <div class="flex items-center gap-3 px-6 py-3">
             <div class="w-8 h-8 rounded-full bg-violet-100 text-violet-600 flex items-center justify-center text-sm shrink-0">
               <i class="fas fa-gavel"></i>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-slate-900 truncate">{{ $dp->mahasiswa->nama_lengkap }}</p>
-              <p class="text-xs text-slate-500">{{ $dp->mahasiswa->nim }} ·
-                {{ $ujianAktif ? ucfirst($ujianAktif->jenis_ujian) : '-' }}</p>
+              <p class="text-sm font-medium text-slate-900 truncate">{{ $item->mahasiswa->nama_lengkap }}</p>
+              <div class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+                <span>{{ $item->mahasiswa->nim }}</span>
+                @if ($ujians->isNotEmpty())
+                  @foreach ($ujians as $ujian)
+                    <span class="inline-flex rounded-full bg-blue-100 px-2 py-0.5 font-semibold text-blue-800">
+                      {{ ucfirst($ujian->jenis_ujian) }}
+                    </span>
+                  @endforeach
+                @else
+                  <span class="inline-flex rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
+                    Belum Ujian
+                  </span>
+                @endif
+              </div>
             </div>
-            <span class="text-xs text-slate-400 shrink-0">{{ $dp->getJenisPenguji() }}</span>
+            <span class="text-xs text-slate-400 shrink-0">{{ $item->getJenisPenguji() }}</span>
           </div>
         @empty
           <div class="px-6 py-8 text-center text-sm text-slate-500">Belum ada data pengujian.</div>

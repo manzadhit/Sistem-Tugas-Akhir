@@ -4,13 +4,15 @@ namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
-use App\Models\DosenPenguji;
 use App\Models\PeriodeAkademik;
 use App\Models\PublikasiDosen;
+use App\Services\Dosen\PengujianService;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    public function __construct(protected PengujianService $pengujianService) {}
+
     public function index(Request $request)
     {
         $dosenId = $request->user()?->profileDosen->id;
@@ -28,7 +30,7 @@ class DashboardController extends Controller
             ->where('dosen_id', $dosenId)
             ->where('status_aktif', true)
             ->whereHas('mahasiswa', fn($q) => $q->where('status_akademik', 'aktif'))
-            ->latest()
+            ->orderByDesc('tanggal_mulai')
             ->limit(5)
             ->get();
 
@@ -48,25 +50,9 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        // === Pengujian (filtered by periode akademik aktif) ===
-        $pengujianQuery = DosenPenguji::with(['mahasiswa.tugasAkhir.ujian' => function ($q) use ($periodeAktif) {
-                if ($periodeAktif) {
-                    $q->where('periode_akademik_id', $periodeAktif->id);
-                }
-            }])
-            ->where('dosen_id', $dosenId)
-            ->whereHas('mahasiswa.tugasAkhir.ujian', function ($q) use ($periodeAktif) {
-                if ($periodeAktif) {
-                    $q->where('periode_akademik_id', $periodeAktif->id);
-                }
-            });
-
+        $pengujianQuery = $this->pengujianService->getQuery($dosenId, $periodeAktif);
         $totalPengujian = (clone $pengujianQuery)->count();
-
-        $mahasiswaPengujian = (clone $pengujianQuery)
-            ->latest()
-            ->limit(5)
-            ->get();
+        $mahasiswaPengujian = (clone $pengujianQuery)->limit(5)->get();
 
         return view('dosen.dashboard', compact(
             'totalMahasiswaBimbingan',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Dosen\ReviewSubmissionRequest;
 use App\Models\DosenPembimbing;
 use App\Models\Submission;
+use App\Notifications\DosenDitetapkanPembimbing;
 use App\Notifications\NewSubmission;
 use App\Services\Dosen\BimbinganService;
 use Illuminate\Http\Request;
@@ -38,6 +39,10 @@ class MahasiswaBimbinganController extends Controller
     {
         $dosenId = $request->user()?->profileDosen->id;
         $search  = $request->input('search');
+
+        $request->user()->unreadNotifications()
+            ->where('type', DosenDitetapkanPembimbing::class)
+            ->update(['read_at' => now()]);
 
         $mahasiswaBimbingan = $this->bimbinganService->getMahasiswaByStatus($dosenId, 'aktif', $search);
 

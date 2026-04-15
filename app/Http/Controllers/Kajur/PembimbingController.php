@@ -7,6 +7,7 @@ use App\Models\DosenPembimbing;
 use App\Models\PermintaanPembimbing;
 use App\Models\ProfileDosen;
 use App\Models\TugasAkhir;
+use App\Notifications\DosenDitetapkanPembimbing;
 use App\Notifications\NewPembimbingRequest;
 use App\Notifications\PembimbingAssigned;
 use App\Notifications\PembimbingRequestReviewed;
@@ -147,6 +148,14 @@ class PembimbingController extends Controller
         });
 
         $permintaan->loadMissing('mahasiswa.user');
+        $assignedPembimbing = DosenPembimbing::with(['dosen.user', 'mahasiswa'])
+            ->where('mahasiswa_id', $mahasiswaId)
+            ->whereIn('dosen_id', $dosenIds)
+            ->get();
+
+        foreach ($assignedPembimbing as $pembimbing) {
+            $pembimbing->dosen?->user?->notify(new DosenDitetapkanPembimbing($pembimbing));
+        }
 
         $permintaan->mahasiswa?->user?->notify(new PembimbingAssigned($permintaan));
 

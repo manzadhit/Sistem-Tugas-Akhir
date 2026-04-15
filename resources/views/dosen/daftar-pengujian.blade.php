@@ -67,36 +67,40 @@
 
   <!-- Mobile Cards -->
   <div class="space-y-3 lg:hidden">
-    @forelse ($daftarPengujian as $dp)
-      @php
-        $ujianAktif = $dp->mahasiswa?->tugasAkhir?->ujian?->first();
-      @endphp
+    @forelse ($daftarPengujian as $item)
+      @php($ujians = $item->mahasiswa?->tugasAkhir?->ujian ?? collect())
       <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
         <div class="flex items-start justify-between gap-3 mb-3">
           <div class="min-w-0">
-            <div class="text-sm font-semibold text-gray-900 truncate">{{ $dp->mahasiswa->nama_lengkap }}</div>
-            <div class="text-xs text-gray-500">NIM: {{ $dp->mahasiswa->nim }}</div>
+            <div class="text-sm font-semibold text-gray-900 truncate">{{ $item->mahasiswa->nama_lengkap }}</div>
+            <div class="text-xs text-gray-500">NIM: {{ $item->mahasiswa->nim }}</div>
           </div>
           <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-violet-100 text-violet-800 shrink-0">
-            {{ $dp->getJenisPenguji() }}
+            {{ $item->getJenisPenguji() }}
           </span>
         </div>
         <div class="space-y-1.5 text-xs sm:text-sm">
           <div>
-            <div class="text-xs text-gray-400">Jenis Ujian</div>
+            <div class="text-xs text-gray-400">Tahapan</div>
             <div class="text-gray-700">
-              @if ($ujianAktif)
-                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                  {{ ucfirst($ujianAktif->jenis_ujian) }}
-                </span>
+              @if ($ujians->isNotEmpty())
+                <div class="flex flex-wrap gap-1.5">
+                  @foreach ($ujians as $ujian)
+                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                      {{ ucfirst($ujian->jenis_ujian) }}
+                    </span>
+                  @endforeach
+                </div>
               @else
-                -
+                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                  Belum Ujian
+                </span>
               @endif
             </div>
           </div>
           <div>
             <div class="text-xs text-gray-400">Judul</div>
-            <div class="text-gray-700 leading-snug line-clamp-2">{{ $dp->mahasiswa->tugasAkhir?->judul ?? '-' }}</div>
+            <div class="text-gray-700 leading-snug line-clamp-2">{{ $item->mahasiswa?->tugasAkhir?->judul ?? '-' }}</div>
           </div>
         </div>
       </div>
@@ -134,33 +138,37 @@
         </tr>
       </thead>
       <tbody>
-        @forelse ($daftarPengujian as $dp)
-          @php
-            $ujianAktif = $dp->mahasiswa?->tugasAkhir?->ujian?->first();
-          @endphp
+        @forelse ($daftarPengujian as $item)
+          @php($ujians = $item->mahasiswa?->tugasAkhir?->ujian ?? collect())
           <tr class="hover:bg-gray-50 transition-colors">
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
               {{ $daftarPengujian->firstItem() + $loop->index }}</td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $dp->mahasiswa->nim }}</td>
-            <td class="p-4 text-sm font-medium text-gray-900 border-b border-gray-100">{{ $dp->mahasiswa->nama_lengkap }}
+            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $item->mahasiswa->nim }}</td>
+            <td class="p-4 text-sm font-medium text-gray-900 border-b border-gray-100">{{ $item->mahasiswa->nama_lengkap }}
             </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              @if ($ujianAktif)
-                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                  {{ ucfirst($ujianAktif->jenis_ujian) }}
-                </span>
+              @if ($ujians->isNotEmpty())
+                <div class="flex flex-wrap gap-1.5">
+                  @foreach ($ujians as $ujian)
+                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                      {{ ucfirst($ujian->jenis_ujian) }}
+                    </span>
+                  @endforeach
+                </div>
               @else
-                <span class="text-gray-400">-</span>
+                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
+                  Belum Ujian
+                </span>
               @endif
             </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
               <div class="max-w-[300px] whitespace-normal leading-snug">
-                {{ $dp->mahasiswa->tugasAkhir?->judul ?? '-' }}
+                {{ $item->mahasiswa?->tugasAkhir?->judul ?? '-' }}
               </div>
             </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
               <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-violet-100 text-violet-800">
-                {{ $dp->getJenisPenguji() }}
+                {{ $item->getJenisPenguji() }}
               </span>
             </td>
           </tr>

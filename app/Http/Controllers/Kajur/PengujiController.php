@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Kajur;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Kajur\TetapkanPengujiRequest;
 use App\Http\Requests\Kajur\VerifyLaporanRequest;
+use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\PeriodeAkademik;
 use App\Models\ProfileDosen;
+use App\Notifications\DosenDitetapkanPenguji;
 use App\Notifications\KajurSubmissionReviewed;
 use App\Notifications\NewPengujiRequest;
 use App\Notifications\PengujiAssigned;
@@ -122,6 +124,15 @@ class PengujiController extends Controller
 
         try {
             $this->penetapanPengujiService->tetapkanPenguji($mahasiswaId, $dosenIds);
+            $assignedPenguji = DosenPenguji::with(['dosen.user', 'mahasiswa'])
+                ->where('mahasiswa_id', $mahasiswaId)
+                ->whereIn('dosen_id', $dosenIds)
+                ->get();
+
+            foreach ($assignedPenguji as $penguji) {
+                $penguji->dosen?->user?->notify(new DosenDitetapkanPenguji($penguji));
+            }
+
             $permintaan->loadMissing('tugasAkhir.mahasiswa.user');
             $permintaan->tugasAkhir->mahasiswa?->user?->notify(new PengujiAssigned($permintaan));
 

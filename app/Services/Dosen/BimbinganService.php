@@ -50,6 +50,7 @@ class BimbinganService
             });
           });
       })
+      ->orderByDesc('tanggal_mulai')
       ->paginate(15)
       ->withQueryString();
   }
