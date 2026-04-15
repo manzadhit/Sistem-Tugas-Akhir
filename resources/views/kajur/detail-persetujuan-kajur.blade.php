@@ -39,7 +39,8 @@
           <span class="text-base text-gray-900">{{ $mahasiswa->nim }}</span>
         </div>
         <div class="flex flex-col gap-1">
-          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Program Studi</span>
+          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
+          <span class="text-base text-gray-900">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tahapan</span>

@@ -50,9 +50,10 @@
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</span>
           <span class="text-base text-gray-900">{{ $mahasiswa->nim }}</span>
         </div>
-        <!-- Prodi -->
+        <!-- Jurusan -->
         <div class="flex flex-col gap-1">
-          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Program Studi</span>
+          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
+          <span class="text-base text-gray-900">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
         <!-- Tahapan -->
         <div class="flex flex-col gap-1">

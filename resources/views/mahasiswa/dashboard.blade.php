@@ -61,8 +61,8 @@
         <p class="font-semibold text-slate-900">{{ auth()->user()->display_subtitle }}</p>
       </div>
       <div>
-        <p class="text-xs text-slate-500">Program Studi</p>
-        <p class="font-semibold text-slate-900">Teknik Informatika</p>
+        <p class="text-xs text-slate-500">Jurusan</p>
+        <p class="font-semibold text-slate-900">{{ auth()->user()->profileMahasiswa?->jurusan ?? '-' }}</p>
       </div>
       <div>
         <p class="text-xs text-slate-500">Angkatan</p>
