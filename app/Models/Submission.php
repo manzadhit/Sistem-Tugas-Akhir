@@ -8,14 +8,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Submission extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'tugas_akhir_id',
         'tahapan',
         'dosen_pembimbing_id',
         'catatan',
         'status',
-        'review'
+        'review',
+        'reminder_sent_at',
+    ];
+
+    protected $casts = [
+        'reminder_sent_at' => 'datetime',
     ];
 
     public function tugasAkhir()

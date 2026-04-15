@@ -8,6 +8,7 @@ use App\Models\DosenPembimbing;
 use App\Models\Submission;
 use App\Notifications\DosenDitetapkanPembimbing;
 use App\Notifications\NewSubmission;
+use App\Notifications\ReminderBimbinganDosen;
 use App\Services\Dosen\BimbinganService;
 use Illuminate\Http\Request;
 
@@ -96,8 +97,13 @@ class MahasiswaBimbinganController extends Controller
 
             $status = $request->status;
 
-            $request->user()->unreadNotifications()->where('type', NewSubmission::class)
-            ->whereJsonContains('data->submission_id', $submission->id)->update(['read_at' => now()]);
+            $request->user()->unreadNotifications()
+                ->whereIn('type', [
+                    NewSubmission::class,
+                    ReminderBimbinganDosen::class,
+                ])
+                ->whereJsonContains('data->submission_id', $submission->id)
+                ->update(['read_at' => now()]);
 
             return back()->with('show_modal', $status);
         } catch (\Exception $e) {

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('catatan')->nullable();
             $table->enum('status', ['pending', 'acc', 'revisi', 'reject'])->default('pending');
             $table->text('review')->nullable();
+            $table->timestamp('reminder_sent_at')->nullable();
             $table->timestamps();
         });
     }
