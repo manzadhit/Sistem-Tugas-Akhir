@@ -91,6 +91,7 @@ class CriteriaDataService
     $counts = DosenPembimbing::query()
       ->whereIn('dosen_id', $dosenIds)
       ->where('status_aktif', true)
+      ->whereHas('mahasiswa', fn($query) => $query->where('status_akademik', 'aktif'))
       ->selectRaw('dosen_id, COUNT(*) as total')
       ->groupBy('dosen_id')
       ->pluck('total', 'dosen_id');
@@ -134,6 +135,7 @@ class CriteriaDataService
     $data = DosenPembimbing::with('mahasiswa')
       ->whereIn('dosen_id', $dosenIds)
       ->where('status_aktif', true)
+      ->whereHas('mahasiswa', fn($query) => $query->where('status_akademik', 'aktif'))
       ->get()
       ->groupBy('dosen_id');
 
