@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\StoreMataKuliahRequest;
-use App\Http\Requests\Admin\UpdateMataKuliahRequest;
+use App\Imports\MataKuliahImport;
 use App\Models\MataKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MataKuliahController extends Controller
 {
@@ -74,5 +74,20 @@ class MataKuliahController extends Controller
 
         return redirect()->route('admin.mata-kuliah.index')
             ->with('success', "Mata kuliah {$namaMataKuliah} berhasil dihapus.");
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new MataKuliahImport, $validated['file']);
+
+            return back()->with('success', 'Import berhasil');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 }

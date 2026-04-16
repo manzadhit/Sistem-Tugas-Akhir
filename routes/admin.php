@@ -58,6 +58,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::post('/mata-kuliah', [MataKuliahController::class, 'store'])->name('mata-kuliah.store');
   Route::put('/mata-kuliah/{mataKuliah}', [MataKuliahController::class, 'update'])->name('mata-kuliah.update');
   Route::delete('/mata-kuliah/{mataKuliah}', [MataKuliahController::class, 'destroy'])->name('mata-kuliah.destroy');
+  Route::post('/mata-kuliah/import', [MataKuliahController::class, 'import'])->name('mata-kuliah.import');
+
 
   // Manajemen Publikasi
   Route::get('/publikasi', [PublikasiController::class, 'index'])->name('publikasi.index');
