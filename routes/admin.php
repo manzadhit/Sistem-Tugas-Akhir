@@ -47,6 +47,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/dosen', [DosenController::class, 'index'])->name('dosen.index');
   Route::get('/dosen/create', [DosenController::class, 'create'])->name('dosen.create');
   Route::post('/dosen', [DosenController::class, 'store'])->name('dosen.store');
+  Route::post('/dosen/import', [DosenController::class, 'import'])->name('dosen.import');
   Route::post('/dosen/{id}/reset-password', [DosenController::class, 'resetPassword'])->name('dosen.reset-password');
   Route::get('/dosen/{id}', [DosenController::class, 'show'])->name('dosen.show');
   Route::get('/dosen/{id}/edit', [DosenController::class, 'edit'])->name('dosen.edit');

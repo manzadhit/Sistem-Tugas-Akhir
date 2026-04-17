@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreDosenRequest;
 use App\Http\Requests\Admin\UpdateDosenRequest;
+use App\Imports\DosenImport;
 use App\Models\MataKuliah;
 use App\Models\ProfileDosen;
 use App\Models\PublikasiDosen;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DosenController extends Controller
 {
@@ -160,5 +162,20 @@ class DosenController extends Controller
 
         return redirect()->route('admin.dosen.index')
             ->with('success', "Akun dosen {$nama} berhasil dihapus.");
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new DosenImport, $validated['file']);
+
+            return back()->with('success', 'Import data dosen berhasil.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 }
