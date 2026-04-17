@@ -85,15 +85,10 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">NIDN <span
-                  class="text-red-500">*</span></label>
-              <input type="text" name="nidn" value="{{ old('nidn', $profile->nidn) }}" @class([
-                  'w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-500',
-                  'border-red-500' => $errors->has('nidn'),
-              ])>
-              @error('nidn')
-                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-              @enderror
+              <label class="block text-sm font-medium text-slate-700 mb-1">NIDN</label>
+              <input type="text" value="{{ $profile->nidn }}" disabled
+                class="w-full rounded-lg border border-slate-200 bg-slate-100 px-3 py-2 text-sm text-slate-500 cursor-not-allowed">
+              <p class="mt-1 text-xs text-slate-400">NIDN tidak dapat diubah.</p>
             </div>
 
             <div>
