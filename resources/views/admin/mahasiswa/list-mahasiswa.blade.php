@@ -20,11 +20,23 @@
         Kelola data mahasiswa Teknik Informatika
       </p>
     </div>
-    <a href="{{ route('admin.mahasiswa.create') }}"
-      class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shrink-0">
-      <i class="fas fa-plus text-xs"></i>
-      Tambah Mahasiswa
-    </a>
+    <div class="flex flex-wrap items-center gap-2 shrink-0">
+      <a href="{{ asset('templates/template-import-mahasiswa.csv') }}" download
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all shadow-sm">
+        <i class="fas fa-file-arrow-down text-xs"></i>
+        Unduh Template
+      </a>
+      <button type="button" x-data x-on:click="$dispatch('open-modal', 'import-mahasiswa')"
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all shadow-sm">
+        <i class="fas fa-file-import text-xs"></i>
+        Import Mahasiswa
+      </button>
+      <a href="{{ route('admin.mahasiswa.create') }}"
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
+        <i class="fas fa-plus text-xs"></i>
+        Tambah Mahasiswa
+      </a>
+    </div>
   </div>
 
   <!-- Stats Summary -->
@@ -92,11 +104,9 @@
             class="appearance-none pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:border-blue-600"
             name="angkatan" onchange="this.form.submit()">
             <option value="">Semua Angkatan</option>
-            <option value="2024" {{ request('angkatan') == '2024' ? 'selected' : '' }}>2024</option>
-            <option value="2023" {{ request('angkatan') == '2023' ? 'selected' : '' }}>2023</option>
-            <option value="2022" {{ request('angkatan') == '2022' ? 'selected' : '' }}>2022</option>
-            <option value="2021" {{ request('angkatan') == '2021' ? 'selected' : '' }}>2021</option>
-            <option value="2020" {{ request('angkatan') == '2020' ? 'selected' : '' }}>2020</option>
+            @for ($thn = date('Y') - 3; $thn >= date('Y') - 7; $thn--)
+              <option value="{{ $thn }}" {{ request('angkatan') == $thn ? 'selected' : '' }}>{{ $thn }}</option>
+            @endfor
           </select>
           <i
             class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
@@ -306,5 +316,7 @@
       </div>
     </div>
   </div>
+
+  @include('admin.mahasiswa.partials.import-modal')
 
 @endsection

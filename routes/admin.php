@@ -37,6 +37,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
   Route::get('/mahasiswa/create', [MahasiswaController::class, 'create'])->name('mahasiswa.create');
   Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
+  Route::post('/mahasiswa/import', [MahasiswaController::class, 'import'])->name('mahasiswa.import');
   Route::post('/mahasiswa/{id}/reset-password', [MahasiswaController::class, 'resetPassword'])->name('mahasiswa.reset-password');
   Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
   Route::get('/mahasiswa/{id}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');

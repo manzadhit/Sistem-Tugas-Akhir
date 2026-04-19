@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMahasiswaRequest;
 use App\Http\Requests\Admin\UpdateMahasiswaRequest;
+use App\Imports\MahasiswaImport;
 use App\Models\ProfileMahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MahasiswaController extends Controller
 {
@@ -28,7 +30,7 @@ class MahasiswaController extends Controller
             ->when($status, fn($q) => $q->where('status_akademik', $status))
             ->when($angkatan, fn($q) => $q->where('angkatan', $angkatan))
             ->latest()
-            ->paginate(5)
+            ->paginate(20)
             ->withQueryString();
 
         $stats = [
@@ -138,5 +140,20 @@ class MahasiswaController extends Controller
 
         return redirect()->route('admin.mahasiswa.index')
             ->with('success', "Akun mahasiswa {$nama} berhasil dihapus.");
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new MahasiswaImport, $validated['file']);
+
+            return back()->with('success', 'Import data mahasiswa berhasil.');
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 }

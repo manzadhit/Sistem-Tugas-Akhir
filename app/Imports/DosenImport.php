@@ -16,6 +16,12 @@ use Maatwebsite\Excel\Concerns\{
 
 class DosenImport implements ToCollection, WithHeadingRow, WithValidation, SkipsEmptyRows
 {
+    private string $defaultPasswordHash;
+
+    public function __construct()
+    {
+        $this->defaultPasswordHash = Hash::make('12345@#');
+    }
     public function collection(Collection $rows)
     {
         DB::transaction(function () use ($rows) {
@@ -23,7 +29,7 @@ class DosenImport implements ToCollection, WithHeadingRow, WithValidation, Skips
                 $user = User::firstOrCreate(
                     ['username' => trim($row['nidn'])],
                     [
-                        'password'             => Hash::make(trim($row['nidn'])),
+                        'password'             => $this->defaultPasswordHash,
                         'role'                 => 'dosen',
                         'must_change_password'  => true,
                     ]
