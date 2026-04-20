@@ -95,15 +95,23 @@ class DosenController extends Controller
 
     public function edit($id)
     {
-        $dosen = ProfileDosen::with('mataKuliah')->findOrFail($id);
+        $dosen = ProfileDosen::with(['mataKuliah', 'user'])->findOrFail($id);
         $mataKuliahOptions = $this->mataKuliahOptions();
 
-        return view('admin.dosen.edit-dosen', compact('dosen', 'mataKuliahOptions'));
+        // Exclude the current dosen's user from the uniqueness check
+        $kajurExists = User::where('role', 'kajur')
+            ->where('id', '!=', $dosen->user_id)
+            ->exists();
+        $sekjurExists = User::where('role', 'sekjur')
+            ->where('id', '!=', $dosen->user_id)
+            ->exists();
+
+        return view('admin.dosen.edit-dosen', compact('dosen', 'mataKuliahOptions', 'kajurExists', 'sekjurExists'));
     }
 
     public function update(UpdateDosenRequest $request, $id)
     {
-        $dosen = ProfileDosen::findOrFail($id);
+        $dosen = ProfileDosen::with('user')->findOrFail($id);
 
         $dosen->update([
             'nama_lengkap' => $request->nama_lengkap,
@@ -114,6 +122,11 @@ class DosenController extends Controller
             'status' => $request->status,
             'no_telp' => $request->no_telp,
         ]);
+
+        // Update role on the user account
+        if ($dosen->user) {
+            $dosen->user->update(['role' => $request->role]);
+        }
 
         $dosen->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
 

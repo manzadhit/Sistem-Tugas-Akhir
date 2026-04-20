@@ -63,6 +63,16 @@
 
     <div class="space-y-5">
 
+      {{-- Info role --}}
+      <div class="flex items-start gap-3 bg-blue-50 border border-blue-200 rounded-xl px-5 py-4">
+        <i class="fas fa-circle-info text-blue-500 mt-0.5"></i>
+        <div class="text-sm text-blue-800">
+          <p class="font-semibold mb-0.5">Perubahan Role</p>
+          <p class="text-xs text-blue-600">Role <strong>Kajur</strong> dan <strong>Sekjur</strong> masing-masing
+            hanya boleh 1 akun. Ganti role akan langsung mempengaruhi hak akses login dosen.</p>
+        </div>
+      </div>
+
       {{-- ██ DATA PRIBADI --}}
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
@@ -94,6 +104,28 @@
               </span>
             </div>
             <p class="text-xs text-gray-400 mt-1">NIDN tidak dapat diubah</p>
+          </div>
+
+          {{-- Role --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Role <span class="text-red-500">*</span>
+            </label>
+            <select name="role" required
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('role') border-red-400 bg-red-50 @enderror">
+              <option value="dosen" {{ old('role', $dosen->user?->role) === 'dosen' ? 'selected' : '' }}>Dosen</option>
+              <option value="kajur" {{ old('role', $dosen->user?->role) === 'kajur' ? 'selected' : '' }}
+                {{ $kajurExists ? 'disabled' : '' }}>
+                Kajur {{ $kajurExists ? '(sudah terisi)' : '' }}
+              </option>
+              <option value="sekjur" {{ old('role', $dosen->user?->role) === 'sekjur' ? 'selected' : '' }}
+                {{ $sekjurExists ? 'disabled' : '' }}>
+                Sekjur {{ $sekjurExists ? '(sudah terisi)' : '' }}
+              </option>
+            </select>
+            @error('role')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
           </div>
 
           {{-- No. Telepon --}}
