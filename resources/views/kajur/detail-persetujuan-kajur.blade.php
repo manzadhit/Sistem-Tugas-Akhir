@@ -10,7 +10,7 @@
   @php $mahasiswa = $persetujuan->tugasAkhir->mahasiswa; @endphp
 
   {{-- Breadcrumb --}}
-  <nav class="flex items-center gap-2 mb-6 text-sm">
+  <nav class="flex items-center gap-1.5 mb-4 text-xs sm:gap-2 sm:mb-6 sm:text-sm">
     <a href="{{ route('kajur.persetujuan-kajur.index') }}" class="text-gray-500 hover:text-blue-600 transition-colors">
       <i class="fas fa-clipboard-check"></i> Persetujuan Kajur
     </a>
@@ -24,23 +24,23 @@
 
   {{-- Data Mahasiswa --}}
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center gap-3">
+    <div class="px-4 py-3.5 border-b border-gray-200 flex items-center gap-3 sm:px-6 sm:py-5">
       <i class="fas fa-user-graduate text-blue-500 text-xl"></i>
-      <h3 class="text-lg font-semibold text-gray-900">Data Mahasiswa</h3>
+      <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Data Mahasiswa</h3>
     </div>
-    <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-4 sm:p-6">
+      <div class="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2">
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Mahasiswa</span>
-          <span class="text-base font-semibold text-blue-600">{{ $mahasiswa->nama_lengkap }}</span>
+          <span class="text-sm font-semibold text-blue-600 sm:text-base">{{ $mahasiswa->nama_lengkap }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</span>
-          <span class="text-base text-gray-900">{{ $mahasiswa->nim }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->nim }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
-          <span class="text-base text-gray-900">{{ $mahasiswa->jurusan ?? '-' }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tahapan</span>
@@ -52,7 +52,7 @@
         </div>
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Judul Tugas Akhir</span>
-          <span class="text-base text-gray-900">{{ $persetujuan->tugasAkhir->judul }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $persetujuan->tugasAkhir->judul }}</span>
         </div>
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Dosen Pembimbing</span>
@@ -73,10 +73,10 @@
   {{-- Verifikasi --}}
   <div x-data="{ status: @js($persetujuan->status), showAccModal: false }" class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border-2"
     :class="status === 'acc' ? 'border-emerald-400' : status === 'reject' ? 'border-red-400' : 'border-amber-400'">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+    <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
       <div class="flex items-center gap-3">
         <i class="fas fa-clipboard-check text-emerald-500 text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Verifikasi Laporan</h3>
+        <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Verifikasi Laporan</h3>
       </div>
       <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
         :class="{
@@ -91,17 +91,17 @@
             Verifikasi</span></template>
       </span>
     </div>
-    <div class="p-6">
-      <div class="flex items-start gap-4 p-4 rounded-lg border"
+    <div class="p-3 sm:p-6">
+      <div class="flex items-start gap-3 p-3 rounded-lg border sm:gap-4 sm:p-4"
         :class="status === 'acc' ? 'bg-emerald-50 border-emerald-300' : status === 'reject' ?
             'bg-red-50 border-red-300' : 'bg-amber-50 border-amber-300'">
-        <div class="w-8 h-8 rounded-full text-white flex items-center justify-center flex-shrink-0"
+        <div class="hidden w-8 h-8 rounded-full text-white items-center justify-center flex-shrink-0 sm:flex"
           :class="status === 'acc' ? 'bg-emerald-500' : status === 'reject' ? 'bg-red-500' : 'bg-amber-500'">
           <i class="text-sm"
             :class="status === 'acc' ? 'fas fa-check' : status === 'reject' ? 'fas fa-times' : 'fas fa-exclamation'"></i>
         </div>
-        <div class="flex-1">
-          <div class="text-sm font-semibold text-gray-700 mb-1">File Laporan Tugas Akhir</div>
+        <div class="flex-1 min-w-0">
+          <div class="text-[13px] font-semibold text-gray-700 mb-1 sm:text-sm">File Laporan Tugas Akhir</div>
           <div class="text-xs text-gray-500 leading-relaxed mb-3">
             Dokumen laporan yang diupload mahasiswa dan perlu diverifikasi.
           </div>
@@ -179,13 +179,13 @@
                 <x-file-upload name="files[]" accept=".pdf,.doc,.docx" :multiple="true"
                   label="Upload File Pendukung (Opsional)" :max-mb="10" class="mb-4" />
 
-                <div class="flex gap-2 justify-end">
+                <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                   <button type="button" @click="status = 'pending'"
-                    class="px-3 py-1.5 bg-white border border-gray-300 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-50 transition-all cursor-pointer">
+                    class="w-full px-3 py-1.5 bg-white border border-gray-300 text-gray-600 rounded-lg text-xs font-medium hover:bg-gray-50 transition-all cursor-pointer sm:w-auto">
                     Batal
                   </button>
                   <button type="submit"
-                    class="px-4 py-1.5 text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer"
+                    class="w-full px-4 py-1.5 text-white rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer sm:w-auto"
                     :class="status === 'revisi' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-red-500 hover:bg-red-600'">
                     <i class="fas fa-paper-plane"></i>
                     <span x-text="status === 'revisi' ? 'Kirim Revisi' : 'Tolak Laporan'"></span>
@@ -234,7 +234,7 @@
   {{-- Tombol Kembali --}}
   <div class="flex justify-start mt-2">
     <a href="{{ route('kajur.persetujuan-kajur.index') }}"
-      class="inline-flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all">
+      class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all sm:w-auto">
       <i class="fas fa-arrow-left"></i> Kembali ke Daftar
     </a>
   </div>

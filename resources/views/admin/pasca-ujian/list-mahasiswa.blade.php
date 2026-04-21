@@ -170,7 +170,7 @@
         </table>
       </div>
     @else
-      <div class="px-6 py-10 text-sm text-center text-gray-400">
+      <div class="px-6 py-10 text-sm text-center text-gray-400 flex flex-col items-center">
         <i class="mb-2 text-2xl fas fa-inbox block"></i>
         Belum ada pengajuan hasil ujian yang menunggu verifikasi.
       </div>
