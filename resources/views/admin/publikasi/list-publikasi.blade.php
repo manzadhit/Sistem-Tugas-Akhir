@@ -19,11 +19,23 @@
       <h1 class="text-xl md:text-3xl font-bold text-gray-900 mb-0.5 md:mb-2">Kelola Publikasi Dosen</h1>
       <p class="text-gray-500 text-sm">Kelola data publikasi dosen Teknik Informatika</p>
     </div>
-    <a href="{{ route('admin.publikasi.create') }}"
-      class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm shrink-0">
-      <i class="fas fa-plus text-xs"></i>
-      Tambah Publikasi
-    </a>
+    <div class="flex flex-wrap items-center gap-2 shrink-0">
+      <a href="{{ asset('templates/template-publikasi-dosen.csv') }}" download
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all shadow-sm">
+        <i class="fas fa-file-arrow-down text-xs"></i>
+        Unduh Template
+      </a>
+      <button type="button" x-data x-on:click="$dispatch('open-modal', 'import-publikasi')"
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all shadow-sm">
+        <i class="fas fa-file-import text-xs"></i>
+        Import Publikasi
+      </button>
+      <a href="{{ route('admin.publikasi.create') }}"
+        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
+        <i class="fas fa-plus text-xs"></i>
+        Tambah Publikasi
+      </a>
+    </div>
   </div>
 
   <!-- Stats Summary -->
@@ -195,8 +207,10 @@
           @empty
             <tr>
               <td colspan="6" class="px-5 py-12 text-center text-gray-400">
-                <i class="fas fa-book text-3xl mb-3 block opacity-30"></i>
-                Tidak ada data publikasi.
+                <div class="flex flex-col items-center justify-center">
+                  <i class="fas fa-book text-3xl mb-3 block opacity-30"></i>
+                  <span>Tidak ada data publikasi.</span>
+                </div>
               </td>
             </tr>
           @endforelse
@@ -244,7 +258,7 @@
           </div>
         </div>
       @empty
-        <div class="px-5 py-12 text-center">
+        <div class="px-5 py-12 text-center flex flex-col items-center">
           <i class="fas fa-book text-3xl mb-3 block text-gray-200"></i>
           <p class="text-sm text-gray-400">Tidak ada data publikasi.</p>
         </div>
@@ -255,6 +269,8 @@
   <div class="mt-4">
     {{ $daftarPublikasi->links() }}
   </div>
+
+  @include('admin.publikasi.partials.import-modal')
 
   {{-- Modal Konfirmasi Hapus --}}
   <div x-data="{ open: false, id: null, judul: '' }"

@@ -14,6 +14,7 @@ class PublikasiDosen extends Model
     protected $fillable = [
         'dosen_id',
         'judul',
+        'abstrak',
         'jenis_publikasi',
         'tahun',
         'penerbit',

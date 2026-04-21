@@ -67,6 +67,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
   Route::get('/publikasi', [PublikasiController::class, 'index'])->name('publikasi.index');
   Route::get('/publikasi/create', [PublikasiController::class, 'create'])->name('publikasi.create');
   Route::post('/publikasi', [PublikasiController::class, 'store'])->name('publikasi.store');
+  Route::post('/publikasi/import', [PublikasiController::class, 'import'])->name('publikasi.import');
   Route::get('/publikasi/{id}', [PublikasiController::class, 'show'])->name('publikasi.show');
   Route::get('/publikasi/{id}/edit', [PublikasiController::class, 'edit'])->name('publikasi.edit');
   Route::put('/publikasi/{id}', [PublikasiController::class, 'update'])->name('publikasi.update');

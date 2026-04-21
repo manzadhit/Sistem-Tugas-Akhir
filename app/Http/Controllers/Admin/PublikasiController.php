@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PublikasiImport;
 use App\Models\ProfileDosen;
 use App\Models\PublikasiDosen;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PublikasiController extends Controller
 {
@@ -107,5 +109,26 @@ class PublikasiController extends Controller
 
         return redirect()->route('admin.publikasi.index')
             ->with('success', 'Publikasi berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'dosen_id' => 'required|exists:profile_dosen,id',
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(
+                new PublikasiImport((int) $validated['dosen_id']),
+                $validated['file']
+            );
+
+            return back()->with('success', 'Import data publikasi berhasil.');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 }
