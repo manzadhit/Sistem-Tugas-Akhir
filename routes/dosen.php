@@ -34,6 +34,7 @@ Route::middleware(['auth', 'password.changed', 'role:dosen,kajur,sekjur'])->pref
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
     Route::post('/', 'store')->name('store');
+    Route::post('/import', 'import')->name('import');
     Route::get('/{publikasi}', 'show')->name('show');
     Route::get('/{publikasi}/edit', 'edit')->name('edit');
     Route::put('/{publikasi}', 'update')->name('update');

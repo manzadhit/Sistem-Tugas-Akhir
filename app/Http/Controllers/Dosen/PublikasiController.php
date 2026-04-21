@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PublikasiImport;
 use App\Models\PublikasiDosen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PublikasiController extends Controller
 {
@@ -92,6 +94,26 @@ class PublikasiController extends Controller
 
         return redirect()->route('dosen.publikasi.index')
             ->with('success', 'Publikasi berhasil dihapus.');
+    }
+
+    public function import(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(
+                new PublikasiImport((int) Auth::user()->profileDosen->id),
+                $validated['file']
+            );
+
+            return back()->with('success', 'Import data publikasi berhasil.');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Import gagal: ' . $e->getMessage());
+        }
     }
 
     private function authorizeOwner(PublikasiDosen $publikasi): void

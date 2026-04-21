@@ -23,11 +23,23 @@
       <h1 class="text-3xl font-bold text-gray-900 mb-2">Publikasi Saya</h1>
       <p class="text-gray-500">Kelola data publikasi ilmiah Anda</p>
     </div>
-    <a href="{{ route('dosen.publikasi.create') }}"
-      class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
-      <i class="fas fa-plus"></i>
-      Tambah Publikasi
-    </a>
+    <div class="flex flex-wrap items-center gap-2">
+      <a href="{{ asset('templates/template-publikasi-dosen.csv') }}" download
+        class="inline-flex items-center gap-2 px-5 py-3 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all shadow-sm">
+        <i class="fas fa-file-arrow-down"></i>
+        Unduh Template
+      </a>
+      <button type="button" x-data x-on:click="$dispatch('open-modal', 'import-publikasi-dosen')"
+        class="inline-flex items-center gap-2 px-5 py-3 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all shadow-sm">
+        <i class="fas fa-file-import"></i>
+        Import Publikasi
+      </button>
+      <a href="{{ route('dosen.publikasi.create') }}"
+        class="inline-flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
+        <i class="fas fa-plus"></i>
+        Tambah Publikasi
+      </a>
+    </div>
   </div>
 
   <!-- Stats Summary -->
@@ -229,6 +241,8 @@
   <div class="mt-4">
     {{ $publikasi->links() }}
   </div>
+
+  @include('dosen.publikasi.partials.import-modal')
 
   {{-- Modal Konfirmasi Hapus --}}
   <div x-data="{ open: false, id: null, judul: '' }"
