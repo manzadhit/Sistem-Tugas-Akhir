@@ -24,7 +24,9 @@ class UpdateAdminProfileRequest extends FormRequest
                 Rule::unique('users', 'email')->ignore($this->user()?->id),
             ],
             'current_password' => ['nullable', 'string'],
-            'password' => ['nullable', 'string', Password::defaults(), 'confirmed'],
+            'password' => ['nullable', 'string', Password::min(8)
+                ->mixedCase()
+                ->symbols(), 'confirmed'],
         ];
     }
 
@@ -59,6 +61,8 @@ class UpdateAdminProfileRequest extends FormRequest
             'email.unique' => 'Email sudah digunakan oleh akun lain.',
             'current_password.required' => 'Password saat ini wajib diisi untuk menyimpan perubahan.',
             'current_password.current_password' => 'Password saat ini tidak sesuai.',
+            'password.mixed' => 'Password baru harus mengandung huruf besar dan huruf kecil.',
+            'password.symbols' => 'Password baru harus mengandung minimal satu simbol.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ];
     }

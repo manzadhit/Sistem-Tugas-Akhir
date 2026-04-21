@@ -4,6 +4,7 @@ namespace App\Http\Requests\Dosen;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class ProfileDosenRequest extends FormRequest
 {
@@ -31,7 +32,9 @@ class ProfileDosenRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($this->user()->id),
             ],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password' => ['nullable', 'string', Password::min(8)
+                ->mixedCase()
+                ->symbols(), 'confirmed'],
         ];
     }
 
@@ -80,6 +83,8 @@ class ProfileDosenRequest extends FormRequest
             'email.unique' => 'Email sudah digunakan oleh akun lain.',
 
             'password.min' => 'Password minimal 8 karakter.',
+            'password.mixed' => 'Password harus mengandung huruf besar dan huruf kecil.',
+            'password.symbols' => 'Password harus mengandung minimal satu simbol.',
             'password.confirmed' => 'Konfirmasi password tidak cocok.',
         ];
     }

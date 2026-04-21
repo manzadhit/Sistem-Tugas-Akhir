@@ -33,7 +33,9 @@ class RequiredPasswordChangeController extends Controller
         abort_unless($user?->requiresPasswordChange(), 403);
 
         $validated = $request->validate([
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Rules\Password::min(8)
+                ->mixedCase()
+                ->symbols()],
         ]);
 
         $user->update([

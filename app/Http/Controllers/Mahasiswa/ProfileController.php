@@ -39,9 +39,6 @@ class ProfileController extends Controller
         // Update profile mahasiswa
         $profile->update([
             'nama_lengkap' => $validated['nama_lengkap'],
-            'nim' => $validated['nim'],
-            'jurusan' => $validated['jurusan'],
-            'angkatan' => $validated['angkatan'],
             'ipk' => $validated['ipk'] ?? null,
             'no_telp' => $validated['no_telp'] ?? null,
             'foto' => $fotoPath,
