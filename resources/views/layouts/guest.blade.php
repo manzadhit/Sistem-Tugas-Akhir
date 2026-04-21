@@ -13,14 +13,14 @@
 </head>
 
 <body class="font-sans text-gray-900 antialiased">
-  <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+  <div class="min-h-screen flex flex-col justify-center items-center px-4 py-6 sm:px-6 sm:py-0 bg-gradient-to-br from-gray-100 to-blue-50">
     <div>
       <a href="/">
-        <img src="{{ asset('images/logo.png') }}" alt="">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-16 w-auto mx-auto sm:h-20">
       </a>
     </div>
 
-    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+    <div class="w-full sm:max-w-md mt-4 px-5 py-5 bg-white shadow-md overflow-hidden rounded-xl sm:mt-6 sm:px-6 sm:py-4 sm:rounded-lg">
       {{ $slot }}
     </div>
   </div>

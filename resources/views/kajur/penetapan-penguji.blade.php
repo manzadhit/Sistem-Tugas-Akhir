@@ -8,7 +8,7 @@
 
 @section('content')
   <!-- Breadcrumb -->
-  <nav class="flex items-center gap-2 mb-6 text-sm">
+  <nav class="flex items-center gap-1.5 mb-4 text-xs sm:gap-2 sm:mb-6 sm:text-sm">
     <a href="{{ route('kajur.dashboard') }}" class="text-gray-500 hover:text-blue-600 transition-colors"><i
         class="fas fa-home"></i></a>
     <span class="text-gray-400">/</span>
@@ -19,9 +19,9 @@
   </nav>
 
   <!-- Page Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-1">Penetapan Dosen Penguji</h1>
-    <p class="text-gray-500">Tetapkan dosen penguji untuk seminar/ujian mahasiswa</p>
+  <div class="mb-6 sm:mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-1 sm:text-3xl">Penetapan Dosen Penguji</h1>
+    <p class="text-sm text-gray-500 sm:text-base">Tetapkan dosen penguji untuk seminar/ujian mahasiswa</p>
   </div>
 
   <!-- Flash Messages -->
@@ -31,29 +31,29 @@
 
   <!-- Data Mahasiswa Card -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center gap-3">
+    <div class="px-4 py-3.5 border-b border-gray-200 flex items-center gap-3 sm:px-6 sm:py-5">
       <i class="fas fa-user-graduate text-blue-500 text-xl"></i>
-      <h3 class="text-lg font-semibold text-gray-900">Data Mahasiswa</h3>
+      <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Data Mahasiswa</h3>
     </div>
-    <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-4 sm:p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         @php
           $mahasiswa = $permintaan->tugasAkhir->mahasiswa;
         @endphp
         <!-- Nama -->
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Mahasiswa</span>
-          <span class="text-base font-semibold text-blue-600">{{ $mahasiswa->nama_lengkap }}</span>
+          <span class="text-sm font-semibold text-blue-600 sm:text-base">{{ $mahasiswa->nama_lengkap }}</span>
         </div>
         <!-- NIM -->
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</span>
-          <span class="text-base text-gray-900">{{ $mahasiswa->nim }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->nim }}</span>
         </div>
         <!-- Jurusan -->
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
-          <span class="text-base text-gray-900">{{ $mahasiswa->jurusan ?? '-' }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
         <!-- Tahapan -->
         <div class="flex flex-col gap-1">
@@ -64,13 +64,13 @@
         <!-- Judul -->
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Judul Tugas Akhir</span>
-          <span class="text-base text-gray-900">{{ $permintaan->tugasAkhir->judul }}</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $permintaan->tugasAkhir->judul }}</span>
         </div>
         <!-- Abstrak -->
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Abstrak</span>
           <span
-            class="text-base text-gray-900 text-justify leading-relaxed line-clamp-5">{{ $permintaan->tugasAkhir->abstrak }}</span>
+            class="text-sm text-gray-900 text-justify leading-relaxed line-clamp-5 sm:text-base">{{ $permintaan->tugasAkhir->abstrak }}</span>
         </div>
         <!-- Kata Kunci -->
         <div class="flex flex-col gap-1 md:col-span-2">
@@ -102,10 +102,10 @@
   <!-- Verifikasi Persyaratan Card -->
   <div x-data="{ status: @js($permintaan->status), catatan: '', files: [], showAccModal: false }" class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border-2"
     :class="status === 'acc' ? 'border-emerald-400' : status === 'reject' ? 'border-red-400' : 'border-amber-400'">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+    <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
       <div class="flex items-center gap-3">
         <i class="fas fa-clipboard-check text-emerald-500 text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Verifikasi Persyaratan</h3>
+        <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Verifikasi Persyaratan</h3>
       </div>
       <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold"
         :class="{
@@ -120,18 +120,18 @@
             Verifikasi</span></template>
       </span>
     </div>
-    <div class="p-6">
+    <div class="p-3 sm:p-6">
       <div class="flex flex-col gap-4">
-        <div class="flex items-start gap-4 p-4 rounded-lg border"
+        <div class="flex items-start gap-3 p-3 rounded-lg border sm:gap-4 sm:p-4"
           :class="status === 'acc' ? 'bg-emerald-50 border-emerald-300' : status === 'reject' ?
               'bg-red-50 border-red-300' : 'bg-amber-50 border-amber-300'">
-          <div class="w-8 h-8 rounded-full text-white flex items-center justify-center flex-shrink-0"
+          <div class="hidden w-8 h-8 rounded-full text-white items-center justify-center flex-shrink-0 sm:flex"
             :class="status === 'acc' ? 'bg-emerald-500' : status === 'reject' ? 'bg-red-500' : 'bg-amber-500'">
             <i class="text-sm"
               :class="status === 'acc' ? 'fas fa-check' : status === 'reject' ? 'fas fa-times' : 'fas fa-exclamation'"></i>
           </div>
-          <div class="flex-1">
-            <div class="text-sm font-semibold text-gray-700 mb-1">File Laporan Tugas Akhir</div>
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-semibold text-gray-700 mb-1 sm:text-sm">File Laporan Tugas Akhir</div>
             <div class="text-xs text-gray-500 leading-relaxed mb-3">
               Dokumen laporan tugas akhir lengkap telah diupload mahasiswa dan perlu diverifikasi.
             </div>
@@ -275,17 +275,17 @@
   @if (!$hasPenguji && $permintaan->status == 'acc')
     <!-- Form Penetapan Penguji -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-      <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
         <div class="flex items-center gap-3">
           <i class="fas fa-users text-blue-500 text-xl"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Rekomendasi Dosen Penguji</h3>
+          <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Rekomendasi Dosen Penguji</h3>
         </div>
         <span
           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-br from-violet-500 to-indigo-500 text-white">
           <i class="fas fa-magic"></i> Auto-Recommended
         </span>
       </div>
-      <div class="p-6">
+      <div class="p-3 sm:p-6">
         <form x-data="pengujiHandler(
             @js($rankedDosens->values()),
             @js($unrankedDosens->values()),
@@ -300,23 +300,23 @@
           <div class="mb-5">
             <label class="block text-sm font-semibold text-gray-700 mb-4">
               Dosen Penguji <span class="text-red-600">*</span>
-              <span class="text-xs text-gray-500 font-normal ml-1">(Direkomendasikan berdasarkan analisis sistem)</span>
+              <span class="hidden text-xs text-gray-500 font-normal ml-1 sm:inline">(Direkomendasikan berdasarkan analisis sistem)</span>
             </label>
 
-            <div class="flex flex-col gap-6" id="pengujiContainer">
+            <div class="flex flex-col gap-4 sm:gap-6" id="pengujiContainer">
               <template x-for="dosen in selected" :key="dosen.id">
                 <input type="hidden" name="penguji_ids[]" :value="dosen.id">
               </template>
 
               <template x-for="(dosen, index) in selected" :key="dosen.id">
                 <div
-                  class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all">
-                  <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-                    <div class="flex items-center gap-3">
+                  class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-3 transition-all sm:p-5">
+                  <div class="flex items-center justify-between mb-3 gap-2 sm:mb-4 sm:gap-3">
+                    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
                       <span
-                        class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-base font-bold"
+                        class="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold sm:w-9 sm:h-9 sm:text-base"
                         x-text="index + 1"></span>
-                      <div class="text-sm font-semibold text-gray-700">
+                      <div class="min-w-0 truncate text-xs font-semibold text-gray-700 sm:text-sm">
                         <template x-if="hasDetail(dosen.id)">
                           <span>Penguji <span x-text="index + 1"></span> (Ranking #<span
                               x-text="getRankLabel(dosen.id)"></span>)</span>
@@ -329,10 +329,10 @@
                     <template x-if="hasDetail(dosen.id)">
                       <div class="flex gap-2">
                         <div
-                          class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
-                          <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
-                            Rekomendasi</span>
-                          <span class="text-lg font-bold text-green-900"
+                          class="flex flex-col items-center px-2 py-1.5 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[70px] sm:px-3 sm:py-2 sm:min-w-[90px]">
+                          <span
+                            class="text-[9px] font-semibold uppercase tracking-wide text-green-900 sm:text-[10px]">Skor</span>
+                          <span class="text-base font-bold text-green-900 sm:text-lg"
                             x-text="formatScore(getTotalScore(dosen.id))"></span>
                         </div>
                       </div>
@@ -340,17 +340,17 @@
                   </div>
 
                   <div
-                    class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3">
+                    class="flex flex-col gap-3 p-3 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:p-4">
                     <div class="flex items-center gap-3">
                       <div
-                        class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
+                        class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:w-11 sm:h-11 sm:text-base">
                         <span x-text="dosen.initials"></span>
                       </div>
                       <div>
-                        <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h4>
-                        <div class="text-xs text-gray-600">
-                          <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
-                          <span class="mr-3"><i class="fas fa-award"></i> <span
+                        <h4 class="text-sm font-semibold text-gray-900 mb-0.5 sm:text-[15px]" x-text="dosen.nama_lengkap"></h4>
+                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-600 sm:text-xs">
+                          <span><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
+                          <span><i class="fas fa-award"></i> <span
                               x-text="dosen.jabatan_fungsional"></span></span>
                           <span><i class="fas fa-chart-line"></i> SINTA 3Yr <span
                               x-text="formatScore(dosen.sinta_score_3y)"></span></span>
@@ -369,7 +369,7 @@
                       </div>
                     </div>
                     <button type="button"
-                      class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
+                      class="flex w-full items-center justify-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all sm:w-auto"
                       @click="openModal(index)">
                       <i class="fas fa-exchange-alt text-xs"></i> Ganti
                     </button>
@@ -378,14 +378,15 @@
                   <template x-if="hasDetail(dosen.id)">
                     <div x-cloak class="bg-white border border-gray-200 rounded-lg overflow-hidden"
                       x-data="{ open: false }">
-                      <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                      <div
+                        class="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-gray-50 transition-colors sm:px-4 sm:py-3"
                         @click="open = !open">
                         <i class="fas fa-calculator text-purple-600"></i>
                         <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
                         <i class="fas fa-chevron-down text-xs text-gray-500 ml-auto transition-transform duration-200"
                           :class="{ 'rotate-180': open }"></i>
                       </div>
-                      <div x-show="open" x-transition class="border-t border-gray-200 p-4 bg-gray-50">
+                      <div x-show="open" x-transition class="border-t border-gray-200 p-3 bg-gray-50 sm:p-4">
                         <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
                           <div class="text-xs font-semibold text-indigo-600 mb-2 flex items-center gap-2">
                             <i class="fas fa-project-diagram text-[11px]"></i> Content-Based Filtering (Cosine
@@ -403,7 +404,7 @@
                             <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
                           </div>
                           <div class="overflow-x-auto">
-                            <table class="w-full text-xs mb-2 bg-white border-collapse">
+                            <table class="w-full text-[11px] mb-2 bg-white border-collapse sm:text-xs">
                               <thead>
                                 <tr>
                                   <th
@@ -452,13 +453,13 @@
           </div>
 
           <!-- Button Group -->
-          <div class="flex gap-4 justify-end mt-6 pt-6 border-t border-gray-200">
+          <div class="flex flex-col-reverse gap-3 mt-6 pt-4 border-t border-gray-200 sm:flex-row sm:gap-4 sm:justify-end sm:pt-6">
             <a href="{{ route('kajur.permintaan-penguji.index') }}"
-              class="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all flex items-center gap-2 no-underline">
+              class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all no-underline sm:px-6 sm:py-3">
               <i class="fas fa-arrow-left"></i> Kembali
             </a>
             <button type="button" @click="showModal = true"
-              class="px-6 py-3 bg-gradient-to-br from-emerald-500 to-emerald-600 border-none text-white rounded-lg text-sm font-medium hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/30 transition-all flex items-center gap-2 cursor-pointer">
+              class="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-br from-emerald-500 to-emerald-600 border-none text-white rounded-lg text-sm font-medium hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/30 transition-all cursor-pointer sm:px-6 sm:py-3">
               <i class="fas fa-check"></i> Tetapkan Penguji
             </button>
           </div>
@@ -475,8 +476,8 @@
             class="flex fixed inset-0 bg-black/50 items-center justify-center z-[1000] p-4">
             <div @click.outside="closeModal()"
               class="bg-white rounded-2xl w-full max-w-xl max-h-[90vh] overflow-hidden shadow-2xl">
-              <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between sm:px-6 sm:py-5">
+                <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 sm:text-lg">
                   <i class="fas fa-exchange-alt"></i> Ganti Dosen Penguji
                   <span class="text-sm font-semibold text-blue-700"
                     x-text="activeIndex !== null ? '(Penguji ' + (activeIndex + 1) + ')' : ''"></span>
@@ -488,7 +489,7 @@
                 </button>
               </div>
 
-              <div class="px-6 py-6 max-h-[60vh] overflow-y-auto">
+              <div class="px-4 py-4 max-h-[60vh] overflow-y-auto sm:px-6 sm:py-6">
                 <div class="mb-4">
                   <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
@@ -503,10 +504,10 @@
                   </div>
                   <template x-for="dosen in filteredAvailableRanked" :key="'ranked-' + dosen.id">
                     <button type="button" @click="selectCandidate(dosen)"
-                      class="w-full text-left relative flex items-center gap-4 p-4 bg-white border rounded-xl cursor-pointer transition-all hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
+                      class="w-full text-left relative flex items-center gap-3 p-3 bg-white border rounded-xl cursor-pointer transition-all hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 sm:gap-4 sm:p-4"
                       :class="isCandidateSelected(dosen.id) ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'">
                       <div
-                        class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                        class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 sm:w-10 sm:h-10 sm:text-sm"
                         x-text="dosen.initials"></div>
                       <div class="flex-1 min-w-0">
                         <h5 class="text-sm font-semibold text-gray-900 truncate" x-text="dosen.nama_lengkap"></h5>
@@ -527,13 +528,13 @@
                           </span>
                         </div>
                       </div>
-                      <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
+                      <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center sm:w-7 sm:h-7">
                         <span class="text-[0.65rem] font-bold text-blue-600"
                           x-text="'#' + getRankLabel(dosen.id)"></span>
                       </div>
                       <div class="flex-shrink-0 text-right">
-                        <p class="text-[0.6rem] text-gray-400 uppercase tracking-wide">Skor</p>
-                        <p class="text-sm font-bold text-emerald-500" x-text="formatScore(getTotalScore(dosen.id))"></p>
+                        <p class="text-[0.55rem] text-gray-400 uppercase tracking-wide sm:text-[0.6rem]">Skor</p>
+                        <p class="text-xs font-bold text-emerald-500 sm:text-sm" x-text="formatScore(getTotalScore(dosen.id))"></p>
                       </div>
                     </button>
                   </template>
@@ -542,12 +543,12 @@
                   </div>
                   <template x-for="dosen in filteredAvailableUnranked" :key="'unranked-' + dosen.id">
                     <button type="button" @click="selectCandidate(dosen)"
-                      class="w-full text-left flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all hover:bg-blue-50 hover:border-blue-300"
+                      class="w-full text-left flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all hover:bg-blue-50 hover:border-blue-300 sm:p-4"
                       :class="isCandidateSelected(dosen.id) ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-100' :
                           'bg-gray-50 border-gray-200'">
                       <div class="flex items-center gap-3">
                         <div
-                          class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                          class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 sm:w-10 sm:h-10 sm:text-sm"
                           x-text="dosen.initials"></div>
                         <div>
                           <h5 class="text-[0.9rem] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h5>
@@ -579,7 +580,7 @@
                 </div>
               </div>
 
-              <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+              <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-3 sm:px-6 sm:py-4">
                 <button type="button"
                   class="px-5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-sm font-medium cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-all"
                   @click="closeModal()">
