@@ -9,7 +9,7 @@
 @section('content')
 
   <!-- Breadcrumb -->
-  <nav class="flex items-center gap-2 mb-6 text-sm">
+  <nav class="flex items-center gap-1.5 mb-4 text-xs sm:gap-2 sm:mb-6 sm:text-sm">
     <a href="{{ route('kajur.dashboard') }}" class="text-gray-500 hover:text-blue-600 transition-colors">
       <i class="fas fa-home"></i>
     </a>
@@ -22,9 +22,9 @@
   </nav>
 
   <!-- Page Header -->
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900 mb-2">Penetapan Dosen Pembimbing</h1>
-    <p class="text-[15px] text-gray-600">Tetapkan dosen pembimbing untuk tugas akhir mahasiswa</p>
+  <div class="mb-6 sm:mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 mb-1 sm:text-3xl sm:mb-2">Penetapan Dosen Pembimbing</h1>
+    <p class="text-sm text-gray-600 sm:text-[15px]">Tetapkan dosen pembimbing untuk tugas akhir mahasiswa</p>
   </div>
 
   <!-- Flash Messages -->
@@ -35,25 +35,25 @@
 
   <!-- Data Mahasiswa Card -->
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-    <div class="px-6 py-5 border-b border-gray-200">
+    <div class="px-4 py-3.5 border-b border-gray-200 sm:px-6 sm:py-5">
       <div class="flex items-center gap-3">
         <i class="fas fa-user-graduate text-blue-500 text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Data Mahasiswa</h3>
+        <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Data Mahasiswa</h3>
       </div>
     </div>
-    <div class="p-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="p-4 sm:p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Mahasiswa</span>
-          <span class="text-[15px] font-semibold text-blue-600">{{ $permintaan->mahasiswa->nama_lengkap }}</span>
+          <span class="text-sm font-semibold text-blue-600 sm:text-[15px]">{{ $permintaan->mahasiswa->nama_lengkap }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</span>
-          <span class="text-[15px] text-gray-900">{{ $permintaan->mahasiswa->nim }}</span>
+          <span class="text-sm text-gray-900 sm:text-[15px]">{{ $permintaan->mahasiswa->nim }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
-          <span class="text-[15px] text-gray-900">{{ $permintaan->mahasiswa->jurusan }}</span>
+          <span class="text-sm text-gray-900 sm:text-[15px]">{{ $permintaan->mahasiswa->jurusan }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Angkatan</span>
@@ -62,7 +62,7 @@
         </div>
         <div class="flex flex-col gap-1 md:col-span-2">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Judul Tugas Akhir</span>
-          <span class="text-[15px] text-gray-900">{{ $permintaan->judul_ta }}</span>
+          <span class="text-sm text-gray-900 sm:text-[15px]">{{ $permintaan->judul_ta }}</span>
         </div>
       </div>
     </div>
@@ -116,25 +116,25 @@
 
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border-2 {{ $cardBorder }}"
     id="verificationCardPembimbing">
-    <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+    <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
       <div class="flex items-center gap-3">
         <i class="fas fa-clipboard-check {{ $iconVerify }} text-xl"></i>
-        <h3 class="text-lg font-semibold text-gray-900">Verifikasi Persyaratan</h3>
+        <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Verifikasi Persyaratan</h3>
       </div>
       <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold {{ $badgeClass }}">
         <i class="fas {{ $badgeIcon }}"></i> {{ $badgeText }}
       </span>
     </div>
-    <div class="p-6">
+    <div class="p-3 sm:p-6">
       <div class="flex flex-col gap-4">
         <!-- Syarat: Bukti ACC -->
-        <div class="flex items-start gap-4 p-4 border rounded-lg {{ $rowBg }}">
+        <div class="flex items-start gap-3 p-3 border rounded-lg {{ $rowBg }} sm:gap-4 sm:p-4">
           <div
-            class="w-8 h-8 rounded-full {{ $iconBg }} text-white flex items-center justify-center flex-shrink-0">
+            class="hidden w-8 h-8 rounded-full {{ $iconBg }} text-white items-center justify-center flex-shrink-0 sm:flex">
             <i class="fas {{ $iconSymbol }} text-sm"></i>
           </div>
-          <div class="flex-1">
-            <div class="text-sm font-semibold text-gray-700 mb-1">
+          <div class="flex-1 min-w-0">
+            <div class="text-[13px] font-semibold text-gray-700 mb-1 sm:text-sm">
               Bukti Persetujuan (ACC) Judul Tugas Akhir
             </div>
             <div class="text-xs text-gray-600 leading-relaxed mb-3">
