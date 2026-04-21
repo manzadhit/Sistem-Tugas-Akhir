@@ -28,11 +28,11 @@
 
         <div class="sm:flex sm:items-start">
           <div
-            class="flex items-center justify-center flex-shrink-0 w-12 h-12 mx-auto {{ $iconBg }} rounded-full sm:mx-0 sm:h-10 sm:w-10">
-            <i class="text-xl {{ $iconColor }} {{ $icon }}"></i>
+            class="flex items-center justify-center flex-shrink-0 w-10 h-10 mx-auto {{ $iconBg }} rounded-full sm:mx-0 sm:h-10 sm:w-10">
+            <i class="text-lg {{ $iconColor }} {{ $icon }} sm:text-xl"></i>
           </div>
           <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
-            <h3 class="text-lg font-semibold leading-6 text-gray-900">
+            <h3 class="text-base font-semibold leading-6 text-gray-900 sm:text-lg">
               {{ $title }}
             </h3>
             <div class="mt-2 text-sm text-gray-500">
@@ -41,13 +41,13 @@
           </div>
         </div>
 
-        <div class="mt-5 flex justify-end gap-3">
+        <div class="mt-5 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end sm:gap-3">
           <button type="button" @click="{{ $model }} = false"
             class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 rounded-lg hover:bg-gray-50 sm:w-auto">
             {{ $cancelText }}
           </button>
           <button type="submit"
-            class="inline-flex justify-center w-full px-4 py-2 mt-3 text-sm font-semibold text-white shadow-sm rounded-lg {{ $confirmButtonClass }} sm:ml-3 sm:mt-0 sm:w-auto">
+            class="inline-flex justify-center w-full px-4 py-2 text-sm font-semibold text-white shadow-sm rounded-lg {{ $confirmButtonClass }} sm:w-auto">
             {{ $confirmText }}
           </button>
         </div>

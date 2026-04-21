@@ -11,7 +11,7 @@
 
   {{-- Sidebar --}}
   <aside
-    class="fixed left-0 top-[73px] z-40 h-[calc(100vh-73px)] w-[16rem] overflow-y-auto bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)] transition-transform duration-200 ease-in-out md:translate-x-0"
+    class="-translate-x-full fixed left-0 top-[73px] z-40 h-[calc(100vh-73px)] w-[16rem] overflow-y-auto bg-white shadow-[2px_0_4px_rgba(0,0,0,0.05)] transition-transform duration-200 ease-in-out md:translate-x-0"
     :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'">
     <div class="p-6">
       <div class="mb-2 flex items-center justify-between">

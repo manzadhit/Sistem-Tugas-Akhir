@@ -45,7 +45,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Nama Mahasiswa</span>
-          <span class="text-sm font-semibold text-blue-600 sm:text-[15px]">{{ $permintaan->mahasiswa->nama_lengkap }}</span>
+          <span
+            class="text-sm font-semibold text-blue-600 sm:text-[15px]">{{ $permintaan->mahasiswa->nama_lengkap }}</span>
         </div>
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">NIM</span>
@@ -148,7 +149,8 @@
             </div>
 
             <!-- File Preview -->
-            <x-file-preview-item :path="$permintaan->bukti_acc_path" type="permintaan-pembimbing" :file-id="$permintaan->id" :uploaded-at="$permintaan->created_at" class="rounded-lg mb-3" />
+            <x-file-preview-item :path="$permintaan->bukti_acc_path" type="permintaan-pembimbing" :file-id="$permintaan->id" :uploaded-at="$permintaan->created_at"
+              class="rounded-lg mb-3" />
 
             {{-- Form verifikasi: hanya muncul saat pending --}}
             @if ($statusBukti === 'pending')
@@ -211,17 +213,17 @@
   @if ($permintaan->status == 'pending' && $permintaan->status_verifikasi_bukti == 'disetujui')
     <!-- Form Penetapan Pembimbing -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-      <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
         <div class="flex items-center gap-3">
           <i class="fas fa-users text-blue-500 text-xl"></i>
-          <h3 class="text-lg font-semibold text-gray-900">Rekomendasi Dosen Pembimbing</h3>
+          <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Rekomendasi Dosen Pembimbing</h3>
         </div>
         <span
           class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
           <i class="fas fa-magic"></i> Auto-Recommended
         </span>
       </div>
-      <div class="p-6">
+      <div class="p-3 sm:p-6">
         {{-- Alpine state untuk pengelolaan dosen terpilih + modal pengganti --}}
         <form x-data="pembimbingHandler(
             @js($rankedDosens->values()),
@@ -236,10 +238,11 @@
           <div class="mb-5">
             <label class="block text-sm font-semibold text-gray-700 mb-2">
               Dosen Pembimbing <span class="text-red-600">*</span>
-              <span class="text-xs text-gray-500 font-normal ml-1">(Direkomendasikan berdasarkan analisis sistem)</span>
+              <span class="hidden text-xs text-gray-500 font-normal ml-1 sm:inline">(Direkomendasikan berdasarkan
+                analisis sistem)</span>
             </label>
 
-            <div class="flex flex-col gap-6" id="pembimbingContainer">
+            <div class="flex flex-col gap-4 sm:gap-6" id="pembimbingContainer">
               <template x-for="dosen in selected" :key="dosen.id">
                 <input type="hidden" name="dosen_ids[]" :value="dosen.id">
               </template>
@@ -247,13 +250,13 @@
               {{-- Render card dosen terpilih (otomatis update setelah proses ganti) --}}
               <template x-for="(dosen, index) in selected" :key="dosen.id">
                 <div
-                  class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-5 transition-all">
-                  <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-                    <div class="flex items-center gap-3">
+                  class="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-300 rounded-xl p-3 transition-all sm:p-5">
+                  <div class="flex items-center justify-between mb-3 gap-2 sm:mb-4 sm:gap-3">
+                    <div class="flex min-w-0 items-center gap-2 sm:gap-3">
                       <span
-                        class="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-base font-bold"
+                        class="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold sm:w-9 sm:h-9 sm:text-base"
                         x-text="index + 1"></span>
-                      <div class="text-sm font-semibold text-gray-700">
+                      <div class="min-w-0 truncate text-xs font-semibold text-gray-700 sm:text-sm">
                         <template x-if="hasDetail(dosen.id)">
                           <span>Pembimbing <span x-text="index + 1"></span> (Ranking
                             #<span x-text="getRankLabel(dosen.id)"></span>)</span>
@@ -266,10 +269,10 @@
                     <template x-if="hasDetail(dosen.id)">
                       <div class="flex gap-2">
                         <div
-                          class="flex flex-col items-center px-3 py-2 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[90px]">
-                          <span class="text-[10px] font-semibold uppercase tracking-wide text-green-900">Skor
-                            Rekomendasi</span>
-                          <span class="text-lg font-bold text-green-900"
+                          class="flex flex-col items-center px-2 py-1.5 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[70px] sm:px-3 sm:py-2 sm:min-w-[90px]">
+                          <span
+                            class="text-[9px] font-semibold uppercase tracking-wide text-green-900 sm:text-[10px]">Skor</span>
+                          <span class="text-base font-bold text-green-900 sm:text-lg"
                             x-text="formatScore(getTotalScore(dosen.id))"></span>
                         </div>
                       </div>
@@ -277,25 +280,25 @@
                   </div>
 
                   <div
-                    class="flex items-center justify-between p-4 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3">
+                    class="flex flex-col gap-3 p-3 bg-gradient-to-r from-white to-green-50 border border-green-300 rounded-lg mb-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:p-4">
                     <div class="flex items-center gap-3">
                       <div
-                        class="w-11 h-11 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-base">
+                        class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-sm sm:w-11 sm:h-11 sm:text-base">
                         <span x-text="dosen.initials"></span>
                       </div>
                       <div>
-                        <h4 class="text-[15px] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h4>
-                        <div class="text-xs text-gray-600">
-                          <span class="mr-3"><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
-                          <span class="mr-3"><i class="fas fa-award"></i> <span
-                              x-text="dosen.jabatan_fungsional"></span></span>
+                        <h4 class="text-sm font-semibold text-gray-900 mb-0.5 sm:text-[15px]"
+                          x-text="dosen.nama_lengkap"></h4>
+                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-600 sm:text-xs">
+                          <span><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
+                          <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
                           <span><i class="fas fa-chart-line"></i> SINTA 3Yr <span
                               x-text="formatScore(dosen.sinta_score_3y)"></span></span>
                         </div>
                       </div>
                     </div>
                     <button type="button"
-                      class="flex items-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all"
+                      class="flex w-full items-center justify-center gap-1.5 px-4 py-2 bg-yellow-100 text-yellow-900 border border-yellow-300 rounded-lg text-xs font-semibold hover:bg-yellow-200 hover:border-yellow-400 transition-all sm:w-auto"
                       @click="openModal(index)">
                       <i class="fas fa-exchange-alt text-xs"></i> Ganti
                     </button>
@@ -305,7 +308,8 @@
                   <template x-if="hasDetail(dosen.id)">
                     <div x-cloak class="bg-white border border-gray-200 rounded-lg overflow-hidden"
                       x-data="{ open: false }">
-                      <div class="flex items-center gap-2 px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors"
+                      <div
+                        class="flex items-center gap-2 px-3 py-2.5 cursor-pointer hover:bg-gray-50 transition-colors sm:px-4 sm:py-3"
                         @click="open = !open">
                         <i class="fas fa-calculator text-purple-600"></i>
                         <span class="text-xs font-semibold text-gray-700">Lihat Detail Perhitungan</span>
@@ -318,7 +322,7 @@
                         x-transition:leave="transition ease-in duration-150"
                         x-transition:leave-start="opacity-100 translate-y-0"
                         x-transition:leave-end="opacity-0 -translate-y-1"
-                        class="border-t border-gray-200 p-4 bg-gray-50">
+                        class="border-t border-gray-200 p-3 bg-gray-50 sm:p-4">
                         <div>
                           {{-- CBF Section --}}
                           <div class="mb-4 pb-4 border-b border-dashed border-gray-300">
@@ -340,7 +344,7 @@
                               <i class="fas fa-balance-scale text-[11px]"></i> Multi-Attribute Utility Theory (MAUT)
                             </div>
                             <div class="overflow-x-auto">
-                              <table class="w-full text-xs mb-2 bg-white border-collapse">
+                              <table class="w-full text-[11px] mb-2 bg-white border-collapse sm:text-xs">
                                 <thead>
                                   <tr>
                                     <th
@@ -391,13 +395,14 @@
           </div>
 
           <!-- Button Group -->
-          <div class="flex gap-4 justify-end pt-6 border-t border-gray-200">
+          <div
+            class="flex flex-col-reverse gap-3 pt-4 border-t border-gray-200 sm:flex-row sm:gap-4 sm:justify-end sm:pt-6">
             <a href="{{ route('kajur.permintaan-pembimbing') }}"
-              class="flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-lg text-[15px] font-medium hover:bg-gray-50 hover:border-gray-400 transition-all">
+              class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all sm:px-6 sm:py-3 sm:text-[15px]">
               <i class="fas fa-arrow-left"></i> Kembali
             </a>
             <button type="button" @click="showModal = true"
-              class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-[15px] font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              class="flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:-translate-y-0.5 transition-all sm:px-6 sm:py-3 sm:text-[15px]">
               <i class="fas fa-check"></i> Tetapkan Pembimbing
             </button>
           </div>
@@ -418,8 +423,8 @@
               style="animation: modalSlideIn 0.3s ease-out">
 
               <!-- Modal Header -->
-              <div class="px-6 py-5 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+              <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between sm:px-6 sm:py-5">
+                <h3 class="text-base font-bold text-gray-900 flex items-center gap-2 sm:text-lg">
                   <i class="fas fa-exchange-alt"></i> Ganti Dosen Pembimbing
                   <span class="text-sm font-semibold text-blue-700"
                     x-text="activeIndex !== null ? '(Pembimbing ' + (activeIndex + 1) + ')' : ''"></span>
@@ -432,7 +437,7 @@
               </div>
 
               <!-- Modal Body -->
-              <div class="px-6 py-6 max-h-[60vh] overflow-y-auto">
+              <div class="px-4 py-4 max-h-[60vh] overflow-y-auto sm:px-6 sm:py-6">
                 <div class="mb-4">
                   <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
@@ -448,10 +453,10 @@
                   </div>
                   <template x-for="dosen in filteredAvailableRanked" :key="'ranked-' + dosen.id">
                     <button type="button" @click="selectCandidate(dosen)"
-                      class="w-full text-left relative flex items-center gap-4 p-4 bg-white border rounded-xl cursor-pointer transition-all hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
+                      class="w-full text-left relative flex items-center gap-3 p-3 bg-white border rounded-xl cursor-pointer transition-all hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5 sm:gap-4 sm:p-4"
                       :class="isCandidateSelected(dosen.id) ? 'border-blue-400 ring-2 ring-blue-100' : 'border-gray-200'">
                       <div
-                        class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                        class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 sm:w-10 sm:h-10 sm:text-sm"
                         x-text="dosen.initials"></div>
 
                       <div class="flex-1 min-w-0">
@@ -467,14 +472,16 @@
                         </p>
                       </div>
 
-                      <div class="flex-shrink-0 w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-                        <span class="text-[0.65rem] font-bold text-blue-600"
+                      <div
+                        class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center sm:w-7 sm:h-7">
+                        <span class="text-[0.6rem] font-bold text-blue-600 sm:text-[0.65rem]"
                           x-text="'#' + getRankLabel(dosen.id)"></span>
                       </div>
 
                       <div class="flex-shrink-0 text-right">
-                        <p class="text-[0.6rem] text-gray-400 uppercase tracking-wide">Skor</p>
-                        <p class="text-sm font-bold text-emerald-500" x-text="formatScore(getTotalScore(dosen.id))"></p>
+                        <p class="text-[0.55rem] text-gray-400 uppercase tracking-wide sm:text-[0.6rem]">Skor</p>
+                        <p class="text-xs font-bold text-emerald-500 sm:text-sm"
+                          x-text="formatScore(getTotalScore(dosen.id))"></p>
                       </div>
                     </button>
                   </template>
@@ -483,12 +490,12 @@
                   </div>
                   <template x-for="dosen in filteredAvailableUnranked" :key="'unranked-' + dosen.id">
                     <button type="button" @click="selectCandidate(dosen)"
-                      class="w-full text-left flex items-center justify-between p-4 border rounded-lg cursor-pointer transition-all hover:bg-blue-50 hover:border-blue-300"
+                      class="w-full text-left flex items-center justify-between p-3 border rounded-lg cursor-pointer transition-all hover:bg-blue-50 hover:border-blue-300 sm:p-4"
                       :class="isCandidateSelected(dosen.id) ? 'bg-blue-50 border-blue-300 ring-2 ring-blue-100' :
                           'bg-gray-50 border-gray-200'">
                       <div class="flex items-center gap-3">
                         <div
-                          class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-sm flex-shrink-0"
+                          class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 sm:w-10 sm:h-10 sm:text-sm"
                           x-text="dosen.initials"></div>
                         <div>
                           <h5 class="text-[0.9rem] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h5>
@@ -515,7 +522,7 @@
               </div>
 
               <!-- Modal Footer -->
-              <div class="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+              <div class="px-4 py-3 border-t border-gray-200 flex justify-end gap-3 sm:px-6 sm:py-4">
                 <button type="button"
                   class="px-5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 text-sm font-medium cursor-pointer hover:bg-gray-50 hover:border-gray-400 transition-all"
                   @click="closeModal()">
@@ -547,8 +554,7 @@
 
   @if (session('show_result_modal'))
     <x-result-modal :status="session('show_result_modal')" title="Bukti ACC Ditolak!"
-      desc="Penolakan bukti ACC berhasil disimpan dan mahasiswa akan mendapatkan notifikasi."
-      :href="route('kajur.permintaan-pembimbing')" />
+      desc="Penolakan bukti ACC berhasil disimpan dan mahasiswa akan mendapatkan notifikasi." :href="route('kajur.permintaan-pembimbing')" />
   @endif
 
 @endsection
