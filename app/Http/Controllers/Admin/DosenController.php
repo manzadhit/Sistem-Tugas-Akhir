@@ -59,7 +59,7 @@ class DosenController extends Controller
         $user = User::create([
             'username' => $request->nidn,
             'email' => null,
-            'password' => bcrypt($request->nidn),
+            'password' => Hash::make('12345@#'),
             'must_change_password' => true,
             'role' => $request->role,
         ]);
@@ -78,7 +78,7 @@ class DosenController extends Controller
         $user->profileDosen->mataKuliah()->sync($request->validated('mata_kuliah_ids', []));
 
         return redirect()->route('admin.dosen.index')
-            ->with('success', "Akun {$request->role} {$request->nama_lengkap} (NIDN: {$request->nidn}) berhasil dibuat. Password default: NIDN.");
+            ->with('success', "Akun {$request->role} {$request->nama_lengkap} (NIDN: {$request->nidn}) berhasil dibuat. Password default: 12345@#.");
     }
 
     public function show($id)
@@ -144,12 +144,12 @@ class DosenController extends Controller
         }
 
         $dosen->user->update([
-            'password' => Hash::make($dosen->nidn),
+            'password' => Hash::make('12345@#'),
             'must_change_password' => true,
         ]);
 
         return redirect()->route('admin.dosen.index')
-            ->with('success', "Password dosen {$dosen->nama_lengkap} berhasil direset ke NIDN.");
+            ->with('success', "Password dosen {$dosen->nama_lengkap} berhasil direset ke 12345@#.");
     }
 
     protected function mataKuliahOptions(): array

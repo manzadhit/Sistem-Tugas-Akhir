@@ -204,11 +204,11 @@
                     <i class="fas fa-edit text-xs"></i>
                   </a>
                   <form method="POST" action="{{ route('admin.dosen.reset-password', $dosen->id) }}"
-                    onsubmit="return confirm('Reset password dosen {{ addslashes($dosen->nama_lengkap) }} ke NIDN {{ $dosen->nidn }}?')">
+                    onsubmit="return confirm('Reset password dosen {{ addslashes($dosen->nama_lengkap) }} ke 12345@#?')">
                     @csrf
                     <button type="submit"
                       class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors"
-                      title="Reset Password ke NIDN">
+                      title="Reset Password ke 12345@#">
                       <i class="fas fa-key text-xs"></i>
                     </button>
                   </form>
@@ -296,7 +296,7 @@
               <i class="fas fa-edit text-xs"></i>
             </a>
             <form method="POST" action="{{ route('admin.dosen.reset-password', $dosen->id) }}"
-              onsubmit="return confirm('Reset password dosen {{ addslashes($dosen->nama_lengkap) }} ke NIDN {{ $dosen->nidn }}?')">
+              onsubmit="return confirm('Reset password dosen {{ addslashes($dosen->nama_lengkap) }} ke 12345@#?')">
               @csrf
               <button type="submit"
                 class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors">

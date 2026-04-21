@@ -49,8 +49,8 @@
         <i class="fas fa-circle-info text-blue-500 mt-0.5"></i>
         <div class="text-sm text-blue-800">
           <p class="font-semibold mb-0.5">Akun login dibuat otomatis</p>
-          <p class="text-xs text-blue-600">Username: <strong>NIM mahasiswa</strong> · Password default: <strong>NIM
-              mahasiswa</strong> · Mahasiswa wajib ganti password setelah login pertama.</p>
+          <p class="text-xs text-blue-600">Username: <strong>NIM mahasiswa</strong> · Password default:
+            <strong>12345@#</strong> · Mahasiswa wajib ganti password setelah login pertama.</p>
         </div>
       </div>
 

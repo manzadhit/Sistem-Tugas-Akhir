@@ -55,7 +55,7 @@ class MahasiswaController extends Controller
         $user = User::create([
             'username' => $request->nim,
             'email' => null,
-            'password' => bcrypt($request->nim),
+            'password' => Hash::make('12345@#'),
             'must_change_password' => true,
             'role' => 'mahasiswa',
         ]);
@@ -71,7 +71,7 @@ class MahasiswaController extends Controller
         ]);
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', "Akun mahasiswa {$request->nama_lengkap} (NIM: {$request->nim}) berhasil dibuat. Password default: NIM.");
+            ->with('success', "Akun mahasiswa {$request->nama_lengkap} (NIM: {$request->nim}) berhasil dibuat. Password default: 12345@#.");
     }
 
     public function show($id)
@@ -121,12 +121,12 @@ class MahasiswaController extends Controller
         }
 
         $mhs->user->update([
-            'password' => Hash::make($mhs->nim),
+            'password' => Hash::make('12345@#'),
             'must_change_password' => true,
         ]);
 
         return redirect()->route('admin.mahasiswa.index')
-            ->with('success', "Password mahasiswa {$mhs->nama_lengkap} berhasil direset ke NIM.");
+            ->with('success', "Password mahasiswa {$mhs->nama_lengkap} berhasil direset ke 12345@#.");
     }
 
     public function destroy($id)

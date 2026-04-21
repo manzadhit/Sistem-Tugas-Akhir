@@ -47,8 +47,8 @@
         <i class="fas fa-circle-info text-blue-500 mt-0.5"></i>
         <div class="text-sm text-blue-800">
           <p class="font-semibold mb-0.5">Akun login dibuat otomatis</p>
-          <p class="text-xs text-blue-600">Username: <strong>NIDN dosen</strong> · Password default: <strong>NIDN
-              dosen</strong> · Dosen wajib ganti password setelah login pertama.</p>
+          <p class="text-xs text-blue-600">Username: <strong>NIDN dosen</strong> · Password default:
+            <strong>12345@#</strong> · Dosen wajib ganti password setelah login pertama.</p>
           <p class="text-xs text-blue-600 mt-1">Role <strong>Kajur</strong> dan <strong>Sekjur</strong> masing-masing
             hanya boleh 1 akun.</p>
         </div>

@@ -172,11 +172,11 @@
                     <i class="fas fa-edit text-xs"></i>
                   </a>
                   <form method="POST" action="{{ route('admin.mahasiswa.reset-password', $mhs->id) }}"
-                    onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke NIM {{ $mhs->nim }}?')">
+                    onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke 12345@#?')">
                     @csrf
                     <button type="submit"
                       class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors"
-                      title="Reset Password ke NIM">
+                      title="Reset Password ke 12345@#">
                       <i class="fas fa-key text-xs"></i>
                     </button>
                   </form>
@@ -244,7 +244,7 @@
               <i class="fas fa-edit text-xs"></i>
             </a>
             <form method="POST" action="{{ route('admin.mahasiswa.reset-password', $mhs->id) }}"
-              onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke NIM {{ $mhs->nim }}?')">
+              onsubmit="return confirm('Reset password mahasiswa {{ addslashes($mhs->nama_lengkap) }} ke 12345@#?')">
               @csrf
               <button type="submit"
                 class="w-8 h-8 rounded-md bg-violet-100 text-violet-700 flex items-center justify-center hover:bg-violet-200 transition-colors">
