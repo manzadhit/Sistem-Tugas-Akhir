@@ -59,148 +59,144 @@
     </div>
   </div>
 
-  <!-- Filter Section -->
-  <div class="bg-white rounded-xl p-4 sm:p-6 shadow-sm mb-6">
-    <form method="GET" action="{{ route('dosen.bimbingan.index') }}" id="filterForm">
-      <div class="flex flex-wrap gap-3 items-end">
-        <div class="flex flex-col gap-2 flex-1 min-w-40">
-          <label class="text-sm font-medium text-gray-700">Cari Mahasiswa</label>
-          <input type="text" name="search" value="{{ request('search') }}"
-            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10"
-            placeholder="Nama atau NIM..."
+  <!-- Container: Filter + Table/Cards -->
+  <div class="rounded-xl border border-slate-200 bg-white shadow-sm">
+    <!-- Header + Filter -->
+    <div class="flex flex-col gap-4 border-b border-slate-200 p-4 sm:p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 class="text-base sm:text-lg font-semibold text-slate-800">Menunggu Review</h2>
+        <p class="mt-0.5 sm:mt-1 text-xs sm:text-sm text-slate-500">Submission mahasiswa bimbingan yang perlu ditinjau</p>
+      </div>
+      <form action="{{ route('dosen.bimbingan.index') }}" method="GET" id="filterForm"
+        class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+        <div class="relative flex-1 sm:flex-initial">
+          <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400"></i>
+          <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau NIM..."
+            class="w-full rounded-lg border border-slate-200 py-2 pl-9 pr-4 text-sm text-slate-600 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('filterForm').submit()}" />
         </div>
-        <div class="flex flex-col gap-2 flex-1 min-w-36">
-          <label class="text-sm font-medium text-gray-700">Tahap</label>
+        <div class="relative min-w-[150px] w-full sm:w-auto">
           <select name="tahap" onchange="document.getElementById('filterForm').submit()"
-            class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/10">
+            class="w-full appearance-none !bg-none rounded-lg border border-slate-200 py-2 pl-3 pr-8 text-sm text-slate-600 bg-white focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
             <option value="">Semua Tahap</option>
             <option value="proposal" @selected(request('tahap') === 'proposal')>Proposal</option>
             <option value="hasil" @selected(request('tahap') === 'hasil')>Hasil</option>
             <option value="skripsi" @selected(request('tahap') === 'skripsi')>Skripsi</option>
           </select>
+          <i class="fas fa-chevron-down absolute right-2.5 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
         </div>
-        @if (request()->hasAny(['search', 'tahap']))
-          <div class="flex flex-col justify-end" style="padding-bottom: 1px">
+        <div class="flex items-center gap-2">
+          <button type="submit"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700">
+            <i class="fas fa-search mr-1.5 sm:hidden text-xs"></i>Cari
+          </button>
+          @if (request()->hasAny(['search', 'tahap']))
             <a href="{{ route('dosen.bimbingan.index') }}"
-              class="w-10 h-10 flex items-center justify-center rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
-              title="Reset filter">
-              <i class="fas fa-times"></i>
+              class="flex-1 sm:flex-initial inline-flex items-center justify-center rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-50">
+              Reset
+            </a>
+          @endif
+        </div>
+      </form>
+    </div>
+
+    {{-- ═══ Mobile & Tablet: Card Layout (visible < lg) ═══ --}}
+    <div class="block lg:hidden">
+      @forelse ($pendingSubmissions as $index => $submission)
+        <div class="border-b border-slate-100 p-4 last:border-b-0">
+          {{-- Top row: number + tahap --}}
+          <div class="flex items-center justify-between mb-2.5">
+            <span class="text-xs font-medium text-slate-400">#{{ $pendingSubmissions->firstItem() + $index }}</span>
+            <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+              {{ $submission->tugasAkhir->tahapan }}
+            </span>
+          </div>
+
+          {{-- Mahasiswa info --}}
+          <div class="mb-2">
+            <p class="font-semibold text-sm text-slate-800">{{ $submission->tugasAkhir->mahasiswa->nama_lengkap }}</p>
+            <p class="text-xs text-slate-500">NIM: {{ $submission->tugasAkhir->mahasiswa->nim }}</p>
+          </div>
+
+          {{-- Judul --}}
+          <div class="mb-3">
+            <p class="text-xs font-medium text-slate-400 mb-0.5">Judul Tugas Akhir</p>
+            <p class="text-sm text-slate-600 leading-relaxed line-clamp-2">{{ $submission->tugasAkhir->judul }}</p>
+          </div>
+
+          {{-- Footer: tanggal + aksi --}}
+          <div class="flex items-center justify-between pt-2.5 border-t border-slate-100">
+            <div class="flex items-center gap-1.5 text-xs text-slate-400">
+              <i class="fas fa-calendar-alt"></i>
+              <span>{{ $submission->created_at->format('d M Y') }}</span>
+            </div>
+            <a href="{{ route('dosen.bimbingan.detail', ['submission' => $submission->id]) }}"
+              class="inline-flex items-center gap-1.5 rounded-lg bg-blue-600 px-3.5 py-2 text-xs font-medium text-white hover:bg-blue-700 transition">
+              <i class="fas fa-eye text-[10px]"></i> Lihat Detail
             </a>
           </div>
-        @endif
-      </div>
-    </form>
-  </div>
-
-  <!-- Mobile & Tablet Cards -->
-  <div class="space-y-3 lg:hidden">
-    @forelse ($pendingSubmissions as $submission)
-      <div class="bg-white rounded-xl shadow-sm p-4 border border-gray-100">
-        <div class="flex items-start justify-between gap-3 mb-3">
-          <div class="min-w-0">
-            <div class="text-sm font-semibold text-gray-900 truncate">
-              {{ $submission->tugasAkhir->mahasiswa->nama_lengkap }}</div>
-            <div class="text-xs text-gray-500">NIM: {{ $submission->tugasAkhir->mahasiswa->nim }}</div>
-          </div>
-          <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 shrink-0">
-            {{ $submission->tugasAkhir->tahapan }}
-          </span>
         </div>
-
-        <div class="space-y-1.5 text-xs sm:text-sm">
-          <div>
-            <div class="text-xs text-gray-400">Tanggal Submit</div>
-            <div class="text-gray-700">{{ $submission->created_at->format('d M Y') }}</div>
-          </div>
-          <div>
-            <div class="text-xs text-gray-400">Judul</div>
-            <div class="text-gray-700 leading-snug line-clamp-2">{{ $submission->tugasAkhir->judul }}</div>
+      @empty
+        <div class="px-5 py-10 text-center">
+          <div class="flex flex-col items-center gap-2 text-slate-500">
+            <i class="fas fa-inbox text-3xl text-slate-300"></i>
+            <p class="text-sm font-medium text-slate-600">Belum ada submission yang menunggu review.</p>
+            <p class="text-xs text-slate-400">Submission mahasiswa yang masuk akan tampil di sini.</p>
           </div>
         </div>
+      @endforelse
+    </div>
 
-        <div class="mt-3 pt-3 border-t border-gray-100">
-          <a href="{{ route('dosen.bimbingan.detail', ['submission' => $submission->id]) }}"
-            class="inline-flex items-center gap-2 rounded-lg bg-blue-100 text-blue-700 px-3 py-2 text-xs font-semibold hover:bg-blue-200 transition-all">
-            <i class="fas fa-eye"></i>
-            Lihat Detail
-          </a>
-        </div>
-      </div>
-    @empty
-      <div
-        class="bg-white rounded-xl shadow-sm border border-dashed border-gray-300 p-6 text-sm text-gray-500 text-center">
-        Belum ada submission yang menunggu review.
-      </div>
-    @endforelse
-  </div>
-
-  <!-- Desktop Table -->
-  <div class="hidden lg:block bg-white rounded-xl shadow-sm overflow-x-auto">
-    <table class="w-full min-w-[720px] border-collapse">
-      <thead class="bg-gray-50">
-        <tr>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            No</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            NIM</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            Nama</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            Tanggal Submit</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            Judul</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            Jenis</th>
-          <th
-            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
-            Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        @forelse ($pendingSubmissions as $submission)
-          <tr class="hover:bg-gray-50 transition-colors">
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $loop->iteration }}</td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">{{ $submission->tugasAkhir->mahasiswa->nim }}
-            </td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              {{ $submission->tugasAkhir->mahasiswa->nama_lengkap }}</td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              {{ $submission->created_at->format('d M Y') }}</td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              <div class="max-w-[300px] whitespace-normal leading-snug">
-                {{ $submission->tugasAkhir->judul }}
-              </div>
-            </td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              <span
-                class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800 whitespace-nowrap">{{ $submission->tugasAkhir->tahapan }}</span>
-            </td>
-            <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              <div class="flex gap-2">
+    {{-- ═══ Desktop: Table Layout (visible lg+) ═══ --}}
+    <div class="hidden lg:block overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b border-slate-200 bg-slate-50">
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">No</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">NIM</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Nama</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Tanggal Submit</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Judul</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Jenis</th>
+            <th class="whitespace-nowrap px-5 py-3 text-xs font-semibold uppercase tracking-wider text-slate-500">Aksi</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @forelse ($pendingSubmissions as $index => $submission)
+            <tr class="hover:bg-slate-50 transition-colors">
+              <td class="whitespace-nowrap px-5 py-4 text-slate-500">{{ $pendingSubmissions->firstItem() + $index }}</td>
+              <td class="whitespace-nowrap px-5 py-4 text-slate-500">{{ $submission->tugasAkhir->mahasiswa->nim }}</td>
+              <td class="px-5 py-4 font-medium text-slate-800">{{ $submission->tugasAkhir->mahasiswa->nama_lengkap }}</td>
+              <td class="whitespace-nowrap px-5 py-4 text-slate-500">{{ $submission->created_at->format('d M Y') }}</td>
+              <td class="px-5 py-4">
+                <div class="max-w-xs text-slate-600 leading-relaxed">{{ $submission->tugasAkhir->judul }}</div>
+              </td>
+              <td class="px-5 py-4">
+                <span class="inline-flex rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800 whitespace-nowrap">{{ $submission->tugasAkhir->tahapan }}</span>
+              </td>
+              <td class="px-5 py-4">
                 <a href="{{ route('dosen.bimbingan.detail', ['submission' => $submission->id]) }}"
-                  class="w-8 h-8 rounded-md flex items-center justify-center bg-blue-100 text-blue-600 hover:bg-blue-200 transition-all text-sm">
-                  <i class="fas fa-eye"></i>
-                </a>
-              </div>
-            </td>
-          </tr>
-        @empty
-          <tr>
-            <td colspan="7" class="p-6 text-sm text-gray-500 text-center">Belum ada submission yang menunggu review.
-            </td>
-          </tr>
-        @endforelse
-      </tbody>
-    </table>
-  </div>
-  <div class="mt-4">
-    {{ $pendingSubmissions->links('pagination::tailwind') }}
+                  class="inline-flex items-center rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 transition">Lihat</a>
+              </td>
+            </tr>
+          @empty
+            <tr>
+              <td colspan="7" class="px-5 py-10 text-center">
+                <div class="flex flex-col items-center gap-2 text-slate-500">
+                  <i class="fas fa-inbox text-3xl text-slate-300"></i>
+                  <p class="text-sm font-medium text-slate-600">Belum ada submission yang menunggu review.</p>
+                  <p class="text-sm text-slate-400">Submission mahasiswa yang masuk akan tampil di tabel ini.</p>
+                </div>
+              </td>
+            </tr>
+          @endforelse
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex flex-col items-center justify-between gap-3 border-t border-slate-200 px-4 sm:px-5 py-4 sm:flex-row">
+      {{ $pendingSubmissions->links() }}
+    </div>
   </div>
 @endsection
