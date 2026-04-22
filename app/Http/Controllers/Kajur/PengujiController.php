@@ -69,7 +69,8 @@ class PengujiController extends Controller
         $periodeAktifId = PeriodeAkademik::aktif()->value('id');
 
         $pengujiCount = [
-            'pengujiMahasiswa as total_pengujian_periode' => $this->penetapanPengujiService->getPengujianAktifQuery($periodeAktifId)
+            'pengujiMahasiswa as total_pengujian_periode' => $this->penetapanPengujiService->getPengujianPeriodeQuery($periodeAktifId),
+            'pengujiMahasiswa as total_pengujian_aktif' => $this->penetapanPengujiService->getPengujianAktifQuery()
         ];
 
         if (! $hasPenguji && $permintaan->status === 'acc') {
@@ -83,16 +84,29 @@ class PengujiController extends Controller
                 ->sortBy(fn($item) => array_search($item->id, $rankedIds))
                 ->values();
 
+            // Suntikkan hasil MAUT & Similarity langsung ke dalam object ProfileDosen
+            $rankedDosens->each(function ($dosen) use ($mautResult, $similarityScores, $rankedIds) {
+                $dosen->rank = array_search($dosen->id, $rankedIds) + 1;
+                $dosen->similarity_score = $similarityScores[$dosen->id] ?? 0;
+                $dosen->total_score = $mautResult[$dosen->id]['total_score'] ?? 0;
+                $dosen->criteria_details = $mautResult[$dosen->id]['criteria_details'] ?? [];
+                $dosen->has_detail = true;
+            });
+
             $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
                 ->withCount($pengujiCount)
                 ->get();
-        }
 
+            // Tandai dosen unranked agar UI tahu mereka tidak punya detail MAUT
+            $unrankedDosens->each(function ($dosen) {
+                $dosen->rank = null;
+                $dosen->has_detail = false;
+            });
+        }
+        
         return view('kajur.penetapan-penguji', compact(
             'permintaan',
             'hasPenguji',
-            'similarityScores',
-            'mautResult',
             'rankedDosens',
             'unrankedDosens'
         ));

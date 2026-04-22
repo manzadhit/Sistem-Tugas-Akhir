@@ -48,7 +48,7 @@ class PenetapanPengujiService
     });
   }
 
-  public function getPengujianAktifQuery(?int $periodeAktifId)
+  public function getPengujianPeriodeQuery(?int $periodeAktifId)
   {
     return function ($query) use ($periodeAktifId) {
       if (!$periodeAktifId) {
@@ -56,7 +56,20 @@ class PenetapanPengujiService
       }
 
       $query->whereHas('mahasiswa.tugasAkhir.ujian', function ($q) use ($periodeAktifId) {
-        $q->where('periode_akademik_id', $periodeAktifId);
+        $q->where('jenis_ujian', 'proposal')
+          ->where('periode_akademik_id', $periodeAktifId);
+      });
+    };
+  }
+
+  public function getPengujianAktifQuery()
+  {
+    return function ($query) {
+      $query->whereHas('mahasiswa', function ($q) {
+        $q->where('status_akademik', 'aktif')
+          ->whereHas('tugasAkhir.ujian', function ($q2) {
+            $q2->where('jenis_ujian', 'proposal')->where('status', 'selesai');
+          });
       });
     };
   }

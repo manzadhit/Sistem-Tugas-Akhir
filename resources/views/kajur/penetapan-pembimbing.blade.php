@@ -228,9 +228,7 @@
         <form x-data="pembimbingHandler(
             @js($rankedDosens->values()),
             @js($unrankedDosens->values()),
-            @js($rankedDosens->take(2)->values()),
-            @js($similarityScores),
-            @js($mautResult)
+            @js($rankedDosens->take(2)->values())
         )" action="{{ route('kajur.tetapkanPembimbing', ['permintaan' => $permintaan->id]) }}"
           method="POST">
           @csrf
@@ -257,23 +255,23 @@
                         class="w-7 h-7 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold sm:w-9 sm:h-9 sm:text-base"
                         x-text="index + 1"></span>
                       <div class="min-w-0 truncate text-xs font-semibold text-gray-700 sm:text-sm">
-                        <template x-if="hasDetail(dosen.id)">
+                        <template x-if="dosen.has_detail">
                           <span>Pembimbing <span x-text="index + 1"></span> (Ranking
-                            #<span x-text="getRankLabel(dosen.id)"></span>)</span>
+                            #<span x-text="dosen.rank"></span>)</span>
                         </template>
-                        <template x-if="!hasDetail(dosen.id)">
+                        <template x-if="!dosen.has_detail">
                           <span>Pembimbing <span x-text="index + 1"></span></span>
                         </template>
                       </div>
                     </div>
-                    <template x-if="hasDetail(dosen.id)">
+                    <template x-if="dosen.has_detail">
                       <div class="flex gap-2">
                         <div
                           class="flex flex-col items-center px-2 py-1.5 rounded-lg bg-gradient-to-br from-green-200 to-green-300 min-w-[70px] sm:px-3 sm:py-2 sm:min-w-[90px]">
                           <span
                             class="text-[9px] font-semibold uppercase tracking-wide text-green-900 sm:text-[10px]">Skor</span>
                           <span class="text-base font-bold text-green-900 sm:text-lg"
-                            x-text="formatScore(getTotalScore(dosen.id))"></span>
+                            x-text="formatScore(dosen.total_score)"></span>
                         </div>
                       </div>
                     </template>
@@ -292,8 +290,8 @@
                         <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-600 sm:text-xs">
                           <span><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
                           <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
-                          <span><i class="fas fa-chart-line"></i> SINTA 3Yr <span
-                              x-text="formatScore(dosen.sinta_score_3y)"></span></span>
+                          <span><i class="fas fa-users"></i> <span x-text="dosen.total_bimbingan_aktif"></span> Bimbingan Aktif</span>
+
                         </div>
                       </div>
                     </div>
@@ -305,7 +303,7 @@
                   </div>
 
                   <!-- Detail perhitungan hanya untuk dosen yang punya hasil MAUT -->
-                  <template x-if="hasDetail(dosen.id)">
+                  <template x-if="dosen.has_detail">
                     <div x-cloak class="bg-white border border-gray-200 rounded-lg overflow-hidden"
                       x-data="{ open: false }">
                       <div
@@ -333,8 +331,7 @@
                             <div
                               class="flex justify-between items-center px-3 py-2 bg-blue-100 rounded-md text-xs font-semibold">
                               <span class="text-blue-900">Nilai Similarity (CBF)</span>
-                              <span class="text-blue-900 text-sm"
-                                x-text="formatScore(similarityScores[dosen.id])"></span>
+                              <span class="text-blue-900 text-sm" x-text="formatScore(dosen.similarity_score)"></span>
                             </div>
                           </div>
 
@@ -362,17 +359,18 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                  <template x-for="criterion in getCriteria(dosen.id)"
+                                  <template x-for="criterion in dosen.criteria_details"
                                     :key="criterion.key + '-' + criterion.label">
                                     <tr>
                                       <td class="px-2 py-2 font-medium border border-gray-200" x-text="criterion.label">
                                       </td>
                                       <td class="px-2 py-2 text-center border border-gray-200"
-                                        x-text="formatScore(criterion.nilai)"></td>
-                                      <td class="px-2 py-2 text-center border border-gray-200" x-text="criterion.bobot">
+                                        x-text="formatScore(criterion.normalized_value)"></td>
+                                      <td class="px-2 py-2 text-center border border-gray-200"
+                                        x-text="criterion.weight">
                                       </td>
                                       <td class="px-2 py-2 text-right border border-gray-200"
-                                        x-text="formatScore(criterion.utility)"></td>
+                                        x-text="formatScore(criterion.utility_score)"></td>
                                     </tr>
                                   </template>
                                 </tbody>
@@ -381,8 +379,7 @@
                             <div
                               class="flex justify-between items-center px-3 py-2 bg-gradient-to-br from-green-200 to-green-300 rounded-md text-xs font-semibold">
                               <span class="text-green-900">Total Skor MAUT</span>
-                              <span class="text-green-900 text-base"
-                                x-text="formatScore(getTotalScore(dosen.id))"></span>
+                              <span class="text-green-900 text-base" x-text="formatScore(dosen.total_score)"></span>
                             </div>
                           </div>
                         </div>
@@ -465,8 +462,7 @@
                           NIDN: <span x-text="dosen.nidn || '-' "></span>
                         </p>
                         <p class="text-[0.7rem] text-gray-500 truncate">
-                          <span x-text="dosen.keahlian"></span> <span>·</span>
-                          <span>SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span></span>
+                          <span x-text="dosen.keahlian"></span>
                           <span>·</span>
                           <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                         </p>
@@ -475,13 +471,13 @@
                       <div
                         class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center sm:w-7 sm:h-7">
                         <span class="text-[0.6rem] font-bold text-blue-600 sm:text-[0.65rem]"
-                          x-text="'#' + getRankLabel(dosen.id)"></span>
+                          x-text="'#' + dosen.rank"></span>
                       </div>
 
                       <div class="flex-shrink-0 text-right">
                         <p class="text-[0.55rem] text-gray-400 uppercase tracking-wide sm:text-[0.6rem]">Skor</p>
                         <p class="text-xs font-bold text-emerald-500 sm:text-sm"
-                          x-text="formatScore(getTotalScore(dosen.id))"></p>
+                          x-text="formatScore(dosen.total_score)"></p>
                       </div>
                     </button>
                   </template>
@@ -503,8 +499,7 @@
                             NIDN: <span x-text="dosen.nidn || '-' "></span>
                           </p>
                           <p class="text-[0.7rem] text-gray-500">
-                            <span x-text="dosen.keahlian"></span> <span>·</span>
-                            <span>SINTA 3Yr <span x-text="formatScore(dosen.sinta_score_3y)"></span></span>
+                            <span x-text="dosen.keahlian"></span>
                             <span>·</span>
                             <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                           </p>
@@ -561,13 +556,11 @@
 
 @push('scripts')
   <script>
-    function pembimbingHandler(rankedDosens, unrankedDosens, initialSelected, similarityScores, mautResult) {
+    function pembimbingHandler(rankedDosens, unrankedDosens, initialSelected) {
       return {
         // Data master dari backend
         rankedDosens,
         unrankedDosens,
-        similarityScores,
-        mautResult,
 
         // State utama UI
         selected: [...initialSelected],
@@ -609,23 +602,6 @@
           }
 
           this.pilihDosen(this.candidateDosen);
-        },
-
-        hasDetail(dosenId) {
-          return !!this.mautResult?.[dosenId];
-        },
-
-        getCriteria(dosenId) {
-          return this.mautResult?.[dosenId]?.criteria ?? [];
-        },
-
-        getTotalScore(dosenId) {
-          return Number(this.mautResult?.[dosenId]?.total_score ?? 0);
-        },
-
-        getRankLabel(dosenId) {
-          const idx = this.rankedDosens.findIndex(d => d.id === dosenId);
-          return idx === -1 ? '-' : idx + 1;
         },
 
         formatScore(value) {

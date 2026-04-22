@@ -14,40 +14,44 @@ class MAUTService
 
   public function buildDecisionMatrix($similarityScores, $context, $mahasiswa)
   {
+    if($context == 'pembimbing') {
+      return $this->buildDecisionMatrixPembimbing($similarityScores, $mahasiswa);
+    }
+
+    if($context == 'penguji') {
+      return $this->buildDecisionMatrixPenguji($similarityScores);
+    }
+  }
+
+  public function buildDecisionMatrixPembimbing($similarityScores,  $mahasiswa)
+  {
     $dosenIds = array_keys($similarityScores);
+    $matrix = $this->criteriaDataService->getPembimbingRekomendationData($dosenIds, $mahasiswa);
 
-    $criteriaData = $this->criteriaDataService->getData($dosenIds, $context, $mahasiswa);
-
-    $matrix = [];
-
-    foreach ($dosenIds as $dosenId) {
-      $row = [
-        'similarity' => $similarityScores[$dosenId] ?? 0,
-        'jabatan_fungsional' => $criteriaData[$dosenId]['jabatan_fungsional'] ?? 0,
-        'jumlah_publikasi' => $criteriaData[$dosenId]['jumlah_publikasi'] ?? 0,
-        'sinta_score_3y' => $criteriaData[$dosenId]['sinta_score_3y'] ?? 0,
-      ];
-
-      if ($context === 'penguji') {
-        $row['beban_pengujian'] = $criteriaData[$dosenId]['beban_pengujian'] ?? 0;
-      } else {
-        $row['beban_bimbingan'] = $criteriaData[$dosenId]['beban_bimbingan'] ?? 0;
-        $row['pemerataan_ipk'] = $criteriaData[$dosenId]['pemerataan_ipk'] ?? 0;
-      }
-
-      $matrix[$dosenId] = $row;
+    foreach ($dosenIds as $id) {
+      $matrix[$id]['similarity'] = $similarityScores[$id];
     }
 
     return $matrix;
   }
 
-  public function normalizeDecisionMatrix($decisionMatrix, $context = 'pembimbing', $criteria = null)
+  public function buildDecisionMatrixPenguji($similarityScores)
+  {
+    $dosenIds = array_keys($similarityScores);
+    $matrix = $this->criteriaDataService->getPengujiRekomendationData($dosenIds);
+
+    foreach ($dosenIds as $id) {
+      $matrix[$id]['similarity'] = $similarityScores[$id];
+    }
+
+    return $matrix;
+  }
+
+  public function normalizeDecisionMatrix($decisionMatrix, $criteria)
   {
     if (empty($decisionMatrix)) {
       return [];
     }
-
-    $criteria = $criteria ?? $this->getActiveCriteria($context);
 
     $normalizedMatrix = [];
 
@@ -86,10 +90,8 @@ class MAUTService
     return $result;
   }
 
-  public function calculateAll($normalizedMatrix, $context = 'pembimbing', $criteria = null)
+  public function calculateAll($normalizedMatrix, $criteria)
   {
-    $criteria = $criteria ?? $this->getActiveCriteria($context);
-
     $result = [];
 
     foreach ($normalizedMatrix as $dosenId => $normalizedValues) {
@@ -105,34 +107,39 @@ class MAUTService
       return [];
     }
 
-    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context, $mahasiswa);
     $criteria = $this->getActiveCriteria($context);
-    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $context, $criteria);
-    $scores = $this->calculateAll($normalizedMatrix, $context, $criteria);
+
+    $decisionMatrix = $this->buildDecisionMatrix($similarityScores, $context, $mahasiswa);
+    $normalizedMatrix = $this->normalizeDecisionMatrix($decisionMatrix, $criteria);
+    $scores = $this->calculateAll($normalizedMatrix, $criteria);
 
     arsort($scores);
 
     $details = [];
+
     foreach ($scores as $dosenId => $totalScore) {
       $criteriaDetails = [];
+
       foreach ($criteria as $criterion) {
         $key = $criterion['key'];
-        $normalizedValue = $normalizedMatrix[$dosenId][$key] ?? 0;
         $weight = $criterion['weight'];
+        $normalizedValue = $normalizedMatrix[$dosenId][$key] ?? 0;
+        $utilityScore = $normalizedValue * $weight;
+
         $criteriaDetails[] = [
           'key'   => $key,
-          'label' => $criterion['label'] ?? $key,
+          'weight' => $weight,
+          'label' => $criterion['label'],
           'type'  => $criterion['type'],
-          'nilai' => round($normalizedValue, 2),
-          'bobot' => $weight,
-          'utility' => round($normalizedValue * $weight, 2),
+          'normalized_value' => round($normalizedValue, 2),
+          'utility_score' => round($utilityScore, 2),
         ];
       }
 
-      usort($criteriaDetails, fn($a, $b) => $b['bobot'] <=> $a['bobot']);
+      usort($criteriaDetails, fn($a, $b) => $b['weight'] <=> $a['weight']);
 
       $details[$dosenId] = [
-        'criteria' => $criteriaDetails,
+        'criteria_details' => $criteriaDetails,
         'total_score' => round($totalScore, 2),
       ];
     }

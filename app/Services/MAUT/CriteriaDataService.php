@@ -9,32 +9,47 @@ use App\Models\ProfileDosen;
 
 class CriteriaDataService
 {
-  public function getData($dosenIds, $context, $mahasiswa)
+  public function getPembimbingRekomendationData($dosenIds, $mahasiswa)
   {
     $jabatan = $this->getJabatanFungsional($dosenIds);
     $jumlahPublikasi = $this->getJumlahPublikasi($dosenIds);
     $sintaScore3y = $this->getSintaScore3y($dosenIds);
-    $beban = $this->getBebanByContext($dosenIds, $context);
-
-    $pemerataanIpk = $context == 'pembimbing' ? $this->getPemerataanIpk($dosenIds, $mahasiswa) : [];
+    $pemerataanIpk = $this->getPemerataanIpk($dosenIds, $mahasiswa);
+    $bebanBimbingan = $this->getBebanBimbingan($dosenIds);
 
     $result = [];
 
     foreach ($dosenIds as $id) {
-      $row = [
+      $result[$id] = [
         'jabatan_fungsional' => $jabatan[$id] ?? 0,
         'jumlah_publikasi' => $jumlahPublikasi[$id] ?? 0,
         'sinta_score_3y' => $sintaScore3y[$id] ?? 0,
+        'beban_bimbingan' => $bebanBimbingan[$id] ?? 0,
+        'pemerataan_ipk' => $pemerataanIpk[$id] ?? 0,
       ];
+    }
 
-      if ($context === 'penguji') {
-        $row['beban_pengujian'] = $beban[$id] ?? 0;
-      } else {
-        $row['beban_bimbingan'] = $beban[$id] ?? 0;
-        $row['pemerataan_ipk'] = $pemerataanIpk[$id] ?? 0;
-      }
+    return $result;
+  }
 
-      $result[$id] = $row;
+  public function getPengujiRekomendationData($dosenIds)
+  {
+    $jabatan = $this->getJabatanFungsional($dosenIds);
+    $jumlahPublikasi = $this->getJumlahPublikasi($dosenIds);
+    $sintaScore3y = $this->getSintaScore3y($dosenIds);
+    $bebanPengujianPeriode = $this->getBebanPengujiPeriode($dosenIds);
+    $bebanPengujianAktif = $this->getBebanPengujiAktif($dosenIds);
+
+    $result = [];
+
+    foreach ($dosenIds as $id) {
+      $result[$id] = [
+        'jabatan_fungsional' => $jabatan[$id] ?? 0,
+        'jumlah_publikasi' => $jumlahPublikasi[$id] ?? 0,
+        'sinta_score_3y' => $sintaScore3y[$id] ?? 0,
+        'beban_pengujian_periode' => $bebanPengujianPeriode[$id] ?? 0,
+        'beban_pengujian_aktif' => $bebanPengujianAktif[$id] ?? 0,
+      ];
     }
 
     return $result;
@@ -105,7 +120,7 @@ class CriteriaDataService
     return $result;
   }
 
-  public function getBebanPenguji($dosenIds)
+  public function getBebanPengujiPeriode($dosenIds)
   {
     $periodeAkademik = PeriodeAkademik::query()
       ->aktif()
@@ -113,8 +128,34 @@ class CriteriaDataService
 
     $counts = DosenPenguji::query()
       ->whereIn('dosen_id', $dosenIds)->whereHas('mahasiswa.tugasAkhir.ujian', function ($query) use ($periodeAkademik) {
-        $query->where('periode_akademik_id', $periodeAkademik->id);
+        $query->where('jenis_ujian', 'proposal')
+          ->where('periode_akademik_id', $periodeAkademik->id);
       })->selectRaw('dosen_id, COUNT(*) as total')
+      ->groupBy('dosen_id')
+      ->pluck('total', 'dosen_id');
+
+
+    $result = [];
+
+    foreach ($dosenIds as $dosenId) {
+      $result[$dosenId] = (int) ($counts[$dosenId] ?? 0);
+    }
+
+    return $result;
+  }
+
+  public function getBebanPengujiAktif($dosenIds)
+  {
+
+    $counts = DosenPenguji::query()
+      ->whereIn('dosen_id', $dosenIds)
+      ->whereHas('mahasiswa', function ($q) {
+        $q->where('status_akademik', 'aktif')
+          ->whereHas('tugasAkhir.ujian', function ($q2) {
+            $q2->where('jenis_ujian', 'proposal')->where('status', 'selesai');
+          });
+      })
+      ->selectRaw('dosen_id, COUNT(*) as total')
       ->groupBy('dosen_id')
       ->pluck('total', 'dosen_id');
 
@@ -164,13 +205,6 @@ class CriteriaDataService
     } else {
       return 'tinggi';
     }
-  }
-
-  protected function getBebanByContext($dosenIds, $context)
-  {
-    return $context === 'penguji'
-      ? $this->getBebanPenguji($dosenIds)
-      : $this->getBebanBimbingan($dosenIds);
   }
 
   protected function mapJabatanToValue($jabatan)

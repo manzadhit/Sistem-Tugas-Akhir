@@ -66,6 +66,7 @@ class PembimbingController extends Controller
         if ($permintaan->status === 'pending' && $permintaan->status_verifikasi_bukti === 'disetujui') {
             $similarityScores = $cbfService->getTopN($permintaan->id, 5);
             $mautResult = $mautService->rankWithDetails($similarityScores, 'pembimbing', $permintaan->mahasiswa);
+
             $rankedIds = array_keys($mautResult);
 
             $rankedDosens = ProfileDosen::whereIn('id', $rankedIds)
@@ -74,15 +75,28 @@ class PembimbingController extends Controller
                 ->sortBy(fn($item) => array_search($item->id, $rankedIds))
                 ->values();
 
+            // Suntikkan hasil MAUT & Similarity langsung ke dalam object ProfileDosen
+            $rankedDosens->each(function ($dosen) use ($mautResult, $similarityScores, $rankedIds) {
+                $dosen->rank = array_search($dosen->id, $rankedIds) + 1;
+                $dosen->similarity_score = $similarityScores[$dosen->id] ?? 0;
+                $dosen->total_score = $mautResult[$dosen->id]['total_score'] ?? 0;
+                $dosen->criteria_details = $mautResult[$dosen->id]['criteria_details'] ?? [];
+                $dosen->has_detail = true;
+            });
+
             $unrankedDosens = ProfileDosen::whereNotIn('id', $rankedDosens->pluck('id'))
                 ->withCount($activeBimbinganCount)
                 ->get();
+
+            // Tandai dosen unranked agar UI tahu mereka tidak punya detail MAUT
+            $unrankedDosens->each(function ($dosen) {
+                $dosen->rank = null;
+                $dosen->has_detail = false;
+            });
         }
 
         return view('kajur.penetapan-pembimbing', compact(
             'permintaan',
-            'similarityScores',
-            'mautResult',
             'rankedDosens',
             'unrankedDosens'
         ));
