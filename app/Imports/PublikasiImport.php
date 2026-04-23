@@ -43,7 +43,7 @@ class PublikasiImport implements ToModel, WithHeadingRow, WithValidation, SkipsE
             'tahun' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'title' => 'required|string|max:255',
             'jenis_publikasi' => 'required|in:jurnal,haki,buku',
-            'url' => 'nullable|url:http,https|max:255',
+            'url' => 'nullable|url:http,https',
             'abstrak' => 'nullable|string',
         ];
     }
