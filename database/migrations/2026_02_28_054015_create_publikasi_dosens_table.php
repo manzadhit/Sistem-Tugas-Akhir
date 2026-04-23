@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->enum('jenis_publikasi', ['jurnal', 'haki', 'buku']);
             $table->year('tahun');
             $table->string('penerbit')->nullable();
-            $table->string('url')->nullable();
+            $table->text('url')->nullable();
             $table->timestamps();
         });
     }
