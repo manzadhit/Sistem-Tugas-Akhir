@@ -26,9 +26,12 @@ class MahasiswaImport implements ToCollection, WithHeadingRow, WithValidation, S
     public function collection(Collection $rows)
     {
         DB::transaction(function () use ($rows) {
+            $nimInCsv = [];
+
             foreach ($rows as $row) {
                 $nim = strtoupper(trim($row['nim']));
                 $namaLengkap = strtoupper(trim($row['nama_lengkap']));
+                $nimInCsv[] = $nim;
 
                 // Ambil angkatan dari digit ke-5 & ke-6 NIM (E1E1YY...)
                 $angkatan = preg_match('/^E1E1(\d{2})/i', $nim, $m) ? 2000 + (int) $m[1] : null;
@@ -52,6 +55,13 @@ class MahasiswaImport implements ToCollection, WithHeadingRow, WithValidation, S
                         'status_akademik'  => 'aktif',
                     ]
                 );
+            }
+
+            // Mahasiswa aktif yang tidak ada di absen → nonaktifkan
+            if (! empty($nimInCsv)) {
+                ProfileMahasiswa::where('status_akademik', 'aktif')
+                    ->whereNotIn('nim', $nimInCsv)
+                    ->update(['status_akademik' => 'nonaktif']);
             }
         });
     }
