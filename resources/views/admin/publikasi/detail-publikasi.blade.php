@@ -126,19 +126,9 @@
         <h2 class="text-sm font-semibold text-gray-800">Dosen Penulis</h2>
       </div>
       @if ($publikasi->dosen)
-        @php
-          $initials = collect(explode(' ', $publikasi->dosen->nama_lengkap))
-              ->filter()
-              ->take(2)
-              ->map(fn($w) => strtoupper($w[0]))
-              ->implode('');
-        @endphp
         <div class="px-5 py-4 flex items-center justify-between gap-4">
           <div class="flex items-center gap-3 min-w-0">
-            <div
-              class="w-9 h-9 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-xs font-bold shrink-0">
-              {{ $initials }}
-            </div>
+            <x-avatar :src="$publikasi->dosen->foto" :initials="$publikasi->dosen->initials" />
             <div class="min-w-0">
               <div class="text-sm font-semibold text-gray-800 truncate">{{ $publikasi->dosen->nama_lengkap }}</div>
               <div class="text-xs text-gray-400">{{ $publikasi->dosen->nidn ?? '-' }}</div>

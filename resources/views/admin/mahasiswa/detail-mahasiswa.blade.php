@@ -21,17 +21,11 @@
     <div class="p-5 sm:p-6">
       <div class="flex flex-col lg:flex-row lg:items-center gap-5">
         <div class="flex items-center gap-4 sm:gap-5 flex-1 min-w-0">
-          <div
-            class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center text-2xl sm:text-3xl font-bold shrink-0">
-            IM
-          </div>
+          <x-avatar :src="$mhs->foto" :initials="$mhs->initials" size="2xl" class="!rounded-xl !bg-blue-50 !text-blue-700 border border-blue-100 !text-3xl !font-bold" />
           <div class="min-w-0">
             <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 truncate">{{ $mhs->nama_lengkap }}</h1>
             <p class="text-sm text-gray-500 mt-0.5">NIM {{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }}</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-              </span>
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">
                 {{ $mhs->status_akademik }}
@@ -177,7 +171,7 @@
             @forelse ($kataKunci as $keyword)
               <span class="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">{{ $keyword }}</span>
             @empty
-              <span class="text-xs text-gray-400">-</span>
+              <span class="text-xs text-gray-400"></span>
             @endforelse
           </div>
         </div>
@@ -193,7 +187,7 @@
         </div>
         <div class="px-5 py-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           @foreach ($mhs->dosenPembimbing as $pembimbing)
-            <div class="flex items-start gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+            <div class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
               <div
                 class="w-9 h-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold shrink-0">
                 {{ $loop->iteration }}
@@ -201,7 +195,7 @@
               <div class="min-w-0">
                 <div class="text-xs text-gray-400 mb-0.5">Pembimbing {{ $loop->iteration }}</div>
                 <div class="text-sm font-semibold text-gray-800">{{ $pembimbing->dosen->nama_lengkap }}</div>
-                <div class="text-xs text-gray-400">{{ $pembimbing->dosen->nip ?? '-' }}</div>
+                <div class="text-xs text-gray-400">{{ $pembimbing->dosen->nip ?? '' }}</div>
               </div>
             </div>
           @endforeach

@@ -21,11 +21,6 @@
       <div class="flex flex-col lg:flex-row lg:items-center gap-5">
         <div class="flex items-center gap-4 sm:gap-5 flex-1 min-w-0">
           @php
-            $initials = collect(explode(' ', $dosen->nama_lengkap))
-                ->take(2)
-                ->map(fn($w) => strtoupper($w[0]))
-                ->join('');
-
             $statusColors = [
                 'aktif' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
                 'cuti' => 'bg-yellow-100 text-yellow-700 border-yellow-200',
@@ -34,17 +29,11 @@
             ];
             $statusColor = $statusColors[$dosen->status] ?? 'bg-gray-100 text-gray-500 border-gray-200';
           @endphp
-          <div
-            class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-blue-50 text-blue-700 border border-blue-100 flex items-center justify-center text-2xl sm:text-3xl font-bold shrink-0">
-            {{ $initials }}
-          </div>
+          <x-avatar :src="$dosen->foto" :initials="$dosen->initials" size="2xl" class="!rounded-xl !bg-blue-50 !text-blue-700 border border-blue-100 !text-3xl !font-bold" />
           <div class="min-w-0">
             <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 truncate">{{ $dosen->nama_lengkap }}</h1>
             <p class="text-sm text-gray-500 mt-0.5">NIDN {{ $dosen->nidn }} · {{ $dosen->jabatan_fungsional }}</p>
             <div class="mt-2 flex flex-wrap gap-2">
-              <span
-                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 border border-gray-200">
-              </span>
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border {{ $statusColor }}">
                 {{ ucfirst($dosen->status) }}
@@ -228,16 +217,7 @@
             @php $mhs = $bimbingan->mahasiswa; @endphp
             <div class="px-5 py-3.5 flex items-center gap-4">
               {{-- Avatar inisial --}}
-              @php
-                $mhsInitials = collect(explode(' ', $mhs->nama_lengkap ?? ''))
-                    ->take(2)
-                    ->map(fn($w) => strtoupper($w[0]))
-                    ->join('');
-              @endphp
-              <div
-                class="w-9 h-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold shrink-0">
-                {{ $mhsInitials }}
-              </div>
+              <x-avatar :src="$mhs->foto" :initials="$mhs->initials" />
 
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-gray-800 truncate">{{ $mhs->nama_lengkap }}</div>
@@ -288,16 +268,7 @@
             @php $mhs = $pengujian->mahasiswa; @endphp
             <div class="px-5 py-3.5 flex items-center gap-4">
               {{-- Avatar inisial --}}
-              @php
-                $mhsInitials = collect(explode(' ', $mhs->nama_lengkap ?? ''))
-                    ->take(2)
-                    ->map(fn($w) => strtoupper($w[0]))
-                    ->join('');
-              @endphp
-              <div
-                class="w-9 h-9 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xs font-bold shrink-0">
-                {{ $mhsInitials }}
-              </div>
+              <x-avatar :src="$mhs->foto" :initials="$mhs->initials" />
 
               <div class="flex-1 min-w-0">
                 <div class="text-sm font-semibold text-gray-800 truncate">{{ $mhs->nama_lengkap }}</div>
@@ -308,11 +279,6 @@
                   class="text-xs px-2.5 py-0.5 rounded-full font-medium bg-orange-50 text-orange-600 border border-orange-100">
                   {{ ucfirst(str_replace('_', ' ', $pengujian->jenis_penguji)) }}
                 </span>
-                @if ($pengujian->status_aktif)
-                  <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-emerald-50 text-emerald-600">Aktif</span>
-                @else
-                  <span class="text-xs px-2 py-0.5 rounded-full font-medium bg-gray-100 text-gray-400">Selesai</span>
-                @endif
               </div>
 
               <a href="{{ route('admin.mahasiswa.show', $mhs->id) }}"

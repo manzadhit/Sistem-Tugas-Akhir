@@ -17,8 +17,6 @@ class ProfileDosenRequest extends FormRequest
     {
         return [
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'nidn' => ['required', 'string', 'max:20'],
-            'jurusan' => ['required', 'string', 'max:100'],
             'keahlian' => ['nullable', 'string', 'max:255'],
             'jabatan_fungsional' => ['required', 'string', 'max:100'],
             'mata_kuliah_ids' => ['nullable', 'array'],
@@ -42,8 +40,6 @@ class ProfileDosenRequest extends FormRequest
     {
         return [
             'nama_lengkap' => 'Nama Lengkap',
-            'nidn' => 'NIDN',
-            'jurusan' => 'Jurusan',
             'keahlian' => 'Keahlian',
             'jabatan_fungsional' => 'Jabatan Fungsional',
             'mata_kuliah_ids' => 'Mata Kuliah yang Diampu',
@@ -59,12 +55,6 @@ class ProfileDosenRequest extends FormRequest
         return [
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
             'nama_lengkap.max' => 'Nama lengkap maksimal 255 karakter.',
-
-            'nidn.required' => 'NIDN wajib diisi.',
-            'nidn.max' => 'NIDN maksimal 20 karakter.',
-
-            'jurusan.required' => 'Jurusan wajib diisi.',
-            'jurusan.max' => 'Jurusan maksimal 100 karakter.',
 
             'keahlian.max' => 'Keahlian maksimal 255 karakter.',
 

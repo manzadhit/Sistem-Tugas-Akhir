@@ -156,10 +156,7 @@
               </td>
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3">
-                  <div
-                    class="w-9 h-9 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm shrink-0">
-                    {{ strtoupper($dosen->nama_lengkap[0]) }}
-                  </div>
+                  <x-avatar :src="$dosen->foto" :initials="$dosen->initials" />
                   <div>
                     <div class="font-medium text-gray-900 text-sm">{{ $dosen->nama_lengkap }}</div>
                     <div class="text-xs text-gray-500">NIDN {{ $dosen->nidn }}</div>
@@ -255,10 +252,7 @@
         @endphp
         <div class="px-4 py-3.5 flex items-center gap-3">
           {{-- Avatar --}}
-          <div
-            class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-sm shrink-0">
-            {{ strtoupper($dosen->nama_lengkap[0]) }}
-          </div>
+          <x-avatar :src="$dosen->foto" :initials="$dosen->initials" size="lg" />
           {{-- Info --}}
           <div class="flex-1 min-w-0">
             <div class="font-medium text-gray-900 text-sm truncate">{{ $dosen->nama_lengkap }}</div>

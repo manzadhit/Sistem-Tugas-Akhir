@@ -132,10 +132,7 @@
         @forelse ($topPublikasi as $i => $dosen)
           <div class="flex items-center gap-3 px-6 py-3">
             <span class="w-5 text-xs font-bold text-slate-400">{{ $i + 1 }}</span>
-            <div
-              class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-semibold text-xs shrink-0">
-              {{ strtoupper($dosen->nama_lengkap[0]) }}
-            </div>
+              <x-avatar :src="$dosen->foto" :initials="$dosen->initials" size="sm" />
             <div class="flex-1 min-w-0">
               <div class="text-sm font-medium text-slate-900 truncate">{{ $dosen->nama_lengkap }}</div>
               <div class="text-xs text-slate-500">NIDN {{ $dosen->nidn }}</div>

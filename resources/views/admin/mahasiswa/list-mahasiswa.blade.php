@@ -195,9 +195,7 @@
                 {{ ($daftarMahasiswa->currentPage() - 1) * $daftarMahasiswa->perPage() + $loop->iteration }}</td>
               <td class="px-5 py-4">
                 <div class="flex items-center gap-3">
-                  <div
-                    class="w-9 h-9 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm shrink-0">
-                    {{ strtoupper($mhs->nama_lengkap[0]) }}</div>
+                  <x-avatar :src="$mhs->foto" :initials="$mhs->initials" />
                   <div>
                     <div class="font-medium text-gray-900 text-sm">{{ $mhs->nama_lengkap }}</div>
                     <div class="text-xs text-gray-500">{{ $mhs->nim }}</div>
@@ -271,10 +269,7 @@
         @endphp
         <div class="px-4 py-3.5 flex items-center gap-3">
           {{-- Avatar --}}
-          <div
-            class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold text-sm shrink-0">
-            {{ strtoupper($mhs->nama_lengkap[0]) }}
-          </div>
+          <x-avatar :src="$mhs->foto" :initials="$mhs->initials" size="lg" />
           {{-- Info --}}
           <div class="flex-1 min-w-0">
             <div class="font-medium text-gray-900 text-sm truncate">{{ $mhs->nama_lengkap }}</div>

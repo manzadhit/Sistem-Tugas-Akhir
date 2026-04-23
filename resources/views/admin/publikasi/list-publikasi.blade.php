@@ -149,11 +149,6 @@
                   'haki' => 'bg-amber-100 text-amber-700',
                   default => 'bg-gray-100 text-gray-700',
               };
-              $initials = collect(explode(' ', $pub->dosen->nama_lengkap ?? ''))
-                  ->filter()
-                  ->take(2)
-                  ->map(fn($w) => strtoupper($w[0]))
-                  ->implode('');
             @endphp
             <tr class="hover:bg-gray-50 transition-colors">
               <td class="px-5 py-4 text-sm text-gray-500">
@@ -167,10 +162,7 @@
               </td>
               <td class="px-5 py-4">
                 <div class="flex items-center gap-2.5">
-                  <div
-                    class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 font-semibold text-xs shrink-0">
-                    {{ $initials }}
-                  </div>
+                  <x-avatar :src="$pub->dosen->foto ?? null" :initials="$pub->dosen->initials ?? ''" size="sm" />
                   <span class="text-sm font-medium text-gray-900">{{ $pub->dosen->nama_lengkap ?? '-' }}</span>
                 </div>
               </td>

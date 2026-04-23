@@ -21,16 +21,7 @@
   {{-- Banner --}}
   <div class="bg-gradient-to-br from-blue-800 to-blue-500 rounded-2xl p-5 sm:p-8 mb-6 text-white">
     <div class="flex items-center gap-4">
-      @php
-        $initials = collect(explode(' ', $mhs->nama_lengkap))
-            ->take(2)
-            ->map(fn($w) => strtoupper($w[0]))
-            ->join('');
-      @endphp
-      <div
-        class="w-14 h-14 rounded-2xl bg-white/20 border-2 border-white/30 flex items-center justify-center text-xl font-bold shrink-0">
-        {{ $initials }}
-      </div>
+      <x-avatar :src="$mhs->foto" :initials="$mhs->initials" size="xl" class="!rounded-2xl !bg-white/20 border-2 border-white/30 !text-xl !font-bold !text-white" />
       <div>
         <h1 class="text-xl sm:text-2xl font-bold mb-0.5">Edit Data Mahasiswa</h1>
         <p class="opacity-80 text-sm">{{ $mhs->nama_lengkap }} · NIM {{ $mhs->nim }}</p>
