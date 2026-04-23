@@ -12,12 +12,14 @@
           'icon' => 'fas fa-file-signature',
           'label' => 'Verifikasi Syarat Ujian',
           'active' => request()->is('admin/ujian/verifikasi-syarat*'),
+          'badge' => $countSyarat > 0 ? $countSyarat : null,
       ],
       [
           'href' => route('admin.ujian.hasil.index'),
           'icon' => 'fas fa-clipboard-check',
           'label' => 'Verifikasi Hasil Ujian',
           'active' => request()->is('admin/ujian/verifikasi-hasil*'),
+          'badge' => $countHasil > 0 ? $countHasil : null,
       ],
   
       ['section' => 'Kelola Data'],

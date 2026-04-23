@@ -10,18 +10,21 @@
         'icon' => 'fas fa-user-plus',
         'label' => 'Permintaan Pembimbing',
         'active' => request()->routeIs('kajur.permintaan-pembimbing', 'kajur.penetapan-pembimbing'),
+        'badge' => $countPermintaanPembimbing > 0 ? $countPermintaanPembimbing : null,
     ],
     [
         'href' => route('kajur.permintaan-penguji.index'),
         'icon' => 'fas fa-clipboard-check',
         'label' => 'Permintaan Penguji',
         'active' => request()->routeIs('kajur.permintaan-penguji.index', 'kajur.penetapan-penguji'),
+        'badge' => $countPermintaanPenguji > 0 ? $countPermintaanPenguji : null,
     ],
     [
         'href' => route('kajur.persetujuan-kajur.index'),
         'icon' => 'fas fa-file-signature',
         'label' => 'Persetujuan Kajur',
         'active' => request()->routeIs('kajur.persetujuan-kajur.*'),
+        'badge' => $countPersetujuanKajur > 0 ? $countPersetujuanKajur : null,
     ],
     ['section' => 'Pembimbingan'],
     [
@@ -29,6 +32,7 @@
         'icon' => 'fas fa-users',
         'label' => 'Mahasiswa Bimbingan',
         'active' => request()->is('dosen/bimbingan*'),
+        'badge' => $countPendingBimbinganKajur > 0 ? $countPendingBimbinganKajur : null,
     ],
 
     ['section' => 'Pengujian'],

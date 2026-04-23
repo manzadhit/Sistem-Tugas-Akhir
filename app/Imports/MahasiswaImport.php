@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\User;
+use App\Models\DosenPembimbing;
 use App\Models\ProfileMahasiswa;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -59,9 +60,20 @@ class MahasiswaImport implements ToCollection, WithHeadingRow, WithValidation, S
 
             // Mahasiswa aktif yang tidak ada di absen → nonaktifkan
             if (! empty($nimInCsv)) {
-                ProfileMahasiswa::where('status_akademik', 'aktif')
+                $nonaktifIds = ProfileMahasiswa::where('status_akademik', 'aktif')
                     ->whereNotIn('nim', $nimInCsv)
-                    ->update(['status_akademik' => 'nonaktif']);
+                    ->pluck('id');
+
+                if ($nonaktifIds->isNotEmpty()) {
+                    ProfileMahasiswa::whereIn('id', $nonaktifIds)
+                        ->update(['status_akademik' => 'nonaktif']);
+
+                    DosenPembimbing::whereIn('mahasiswa_id', $nonaktifIds)
+                        ->where('status_aktif', true)
+                        ->update([
+                            'status_aktif' => false,
+                        ]);
+                }
             }
         });
     }

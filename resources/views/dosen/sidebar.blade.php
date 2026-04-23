@@ -12,6 +12,7 @@
           'icon' => 'fas fa-users',
           'label' => 'Mahasiswa Bimbingan',
           'active' => request()->is('dosen/bimbingan*'),
+          'badge' => $countPendingBimbingan > 0 ? $countPendingBimbingan : null,
       ],
   
       ['section' => 'Pengujian'],

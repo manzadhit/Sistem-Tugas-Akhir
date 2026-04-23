@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreMahasiswaRequest;
 use App\Http\Requests\Admin\UpdateMahasiswaRequest;
 use App\Imports\ExistingTaImport;
 use App\Imports\MahasiswaImport;
+use App\Models\DosenPembimbing;
 use App\Models\ProfileMahasiswa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -108,6 +109,15 @@ class MahasiswaController extends Controller
             'no_telp' => $request->no_telp,
             'status_akademik' => $request->status_akademik,
         ]);
+
+        // Nonaktifkan dosen pembimbing jika status mahasiswa bukan aktif
+        if ($request->status_akademik !== 'aktif') {
+            DosenPembimbing::where('mahasiswa_id', $mhs->id)
+                ->where('status_aktif', true)
+                ->update([
+                    'status_aktif' => false,
+                ]);
+        }
 
         return redirect()->route('admin.mahasiswa.index')->with('success', "Data mahasiswa {$mhs->nama_lengkap} berhasil diperbarui.");
     }
