@@ -21,20 +21,73 @@
       </p>
     </div>
     <div class="flex flex-wrap items-center gap-2 shrink-0">
-      <a href="{{ asset('templates/template-import-mahasiswa.csv') }}" download
-        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-all shadow-sm">
-        <i class="fas fa-file-arrow-down text-xs"></i>
-        Unduh Template
-      </a>
-      <button type="button" x-data x-on:click="$dispatch('open-modal', 'import-mahasiswa')"
-        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all shadow-sm">
-        <i class="fas fa-file-import text-xs"></i>
-        Import Mahasiswa
-      </button>
+      {{-- Dropdown: Import Mahasiswa --}}
+      <div x-data="{ open: false }" class="relative">
+        <button @click="open = !open" type="button"
+          class="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-medium hover:bg-emerald-700 transition-all shadow-sm">
+          <i class="fas fa-file-import text-xs"></i>
+          <span class="hidden sm:inline">Import Mahasiswa</span>
+          <span class="sm:hidden">Mahasiswa</span>
+          <i class="fas fa-chevron-down text-[10px] ml-0.5 transition-transform" :class="open && 'rotate-180'"></i>
+        </button>
+        <div x-show="open" x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+          x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+          @click.outside="open = false"
+          class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg ring-1 ring-black/5 py-1.5 z-30"
+          style="display: none;">
+          <a href="{{ asset('templates/template-import-mahasiswa.csv') }}" download
+            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+            <i class="fas fa-file-arrow-down text-gray-400 text-xs w-4 text-center"></i>
+            Unduh Template
+          </a>
+          <button type="button" @click="$dispatch('open-modal', 'import-mahasiswa'); open = false"
+            class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+            <i class="fas fa-upload text-gray-400 text-xs w-4 text-center"></i>
+            Import Data
+          </button>
+        </div>
+      </div>
+
+      {{-- Dropdown: Import Existing TA --}}
+      <div x-data="{ open: false }" class="relative">
+        <button @click="open = !open" type="button"
+          class="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-violet-600 text-white rounded-lg text-sm font-medium hover:bg-violet-700 transition-all shadow-sm">
+          <i class="fas fa-database text-xs"></i>
+          <span class="hidden sm:inline">Existing TA</span>
+          <span class="sm:hidden">Existing</span>
+          <i class="fas fa-chevron-down text-[10px] ml-0.5 transition-transform" :class="open && 'rotate-180'"></i>
+        </button>
+        <div x-show="open" x-transition:enter="transition ease-out duration-150"
+          x-transition:enter-start="opacity-0 scale-95 -translate-y-1"
+          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+          x-transition:leave="transition ease-in duration-100"
+          x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+          x-transition:leave-end="opacity-0 scale-95 -translate-y-1"
+          @click.outside="open = false"
+          class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-lg ring-1 ring-black/5 py-1.5 z-30"
+          style="display: none;">
+          <a href="{{ asset('templates/template-migrasi-existing-ta.csv') }}" download
+            class="flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+            <i class="fas fa-file-arrow-down text-gray-400 text-xs w-4 text-center"></i>
+            Unduh Template
+          </a>
+          <button type="button" @click="$dispatch('open-modal', 'import-existing-ta'); open = false"
+            class="w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
+            <i class="fas fa-upload text-gray-400 text-xs w-4 text-center"></i>
+            Import Data
+          </button>
+        </div>
+      </div>
+
+      {{-- Tombol Utama: Tambah Mahasiswa --}}
       <a href="{{ route('admin.mahasiswa.create') }}"
-        class="inline-flex items-center gap-2 px-4 md:px-5 py-2 md:py-3 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
+        class="inline-flex items-center gap-2 px-3 md:px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-all shadow-sm">
         <i class="fas fa-plus text-xs"></i>
-        Tambah Mahasiswa
+        Tambah
       </a>
     </div>
   </div>
@@ -318,5 +371,6 @@
   </div>
 
   @include('admin.mahasiswa.partials.import-modal')
+  @include('admin.mahasiswa.partials.import-existing-ta-modal')
 
 @endsection

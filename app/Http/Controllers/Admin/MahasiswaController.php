@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMahasiswaRequest;
 use App\Http\Requests\Admin\UpdateMahasiswaRequest;
+use App\Imports\ExistingTaImport;
 use App\Imports\MahasiswaImport;
 use App\Models\ProfileMahasiswa;
 use App\Models\User;
@@ -154,6 +155,23 @@ class MahasiswaController extends Controller
             return back()->with('success', 'Import data mahasiswa berhasil.');
         } catch (\Throwable $e) {
             return back()->with('error', 'Import gagal: ' . $e->getMessage());
+        }
+    }
+
+    public function importExistingTa(Request $request)
+    {
+        $validated = $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls,csv|max:2048',
+        ]);
+
+        try {
+            Excel::import(new ExistingTaImport, $validated['file']);
+
+            return back()->with('success', 'Import data existing TA berhasil.');
+        } catch (\Throwable $e) {
+            return back()
+                ->withInput(['form_context' => 'import_existing_ta'])
+                ->withErrors(['file' => 'Import existing TA gagal: ' . $e->getMessage()]);
         }
     }
 }
