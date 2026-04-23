@@ -84,12 +84,19 @@
       </section>
     @else
       <section class="overflow-hidden rounded-xl bg-white shadow-sm">
-        <div class="px-5 py-4">
-          <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Form Pengajuan</h3>
-          <p class="mt-1 text-sm text-gray-500">Isi data sesuai judul yang sudah disetujui.</p>
+        <div class="border-b border-gray-200 bg-gray-50/60 px-8 py-5">
+          <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
+              <i class="fas fa-clipboard-list text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-gray-900 sm:text-lg">Form Pengajuan</h3>
+              <p class="mt-0.5 text-sm text-gray-500">Isi data sesuai judul yang sudah disetujui.</p>
+            </div>
+          </div>
         </div>
 
-        <div class="px-8 pb-4">
+        <div class="px-8 pb-4 mx-2 mt-6 mb-2 ">
 
           <form method="POST" action="{{ route('mahasiswa.permintaan-pembimbing.store') }}" enctype="multipart/form-data"
             class="" x-data="{ judul_ta: @js(old('judul_ta', $permintaanPembimbing?->judul_ta ?? '')) }">
@@ -97,7 +104,8 @@
 
             <div>
               <div class="max-w-xl space-y-2">
-                <label class="flex items-center gap-2 text-sm font-bold text-gray-900">
+                <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <i class="fas fa-chart-line text-blue-500"></i>
                   IPK <span class="text-red-500">*</span>
                 </label>
 
@@ -119,12 +127,13 @@
               </div>
 
               <div class="mt-6 space-y-2">
-                <label class="flex items-center gap-2 text-sm font-bold text-gray-900">
+                <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <i class="fas fa-heading text-blue-500"></i>
                   Judul Tugas Akhir <span class="text-red-500">*</span>
                 </label>
 
                 <textarea name="judul_ta"
-                  class="min-h-[120px] w-full rounded-lg border border-gray-300 px-3 py-3 text-[0.95rem] transition-colors focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                  class="min-h-[80px] w-full rounded-lg border border-gray-300 px-3 py-3 text-[0.95rem] transition-colors focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-100"
                   maxlength="500" placeholder="Contoh: Sistem Rekomendasi Pemilihan Dosen Pembimbing Berbasis Machine Learning"
                   x-model="judul_ta">{{ old('judul_ta', $permintaanPembimbing?->judul_ta) }}</textarea>
 
@@ -138,11 +147,28 @@
               </div>
 
               <div class="space-y-2">
-                <label class="flex items-center gap-2 text-sm font-bold text-gray-900">
+                <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <i class="fas fa-file-circle-check text-blue-500"></i>
                   Bukti ACC <span class="text-red-500">*</span>
                 </label>
 
-                <x-file-upload name="bukti_acc" accept=".pdf,.jpg,.jpeg,.png" max-mb="2" />
+                <div
+                  class="relative overflow-hidden transition bg-white border border-gray-300 rounded-lg focus-within:border-blue-600 focus-within:ring-4 focus-within:ring-blue-100">
+                  <input type="file" name="bukti_acc" id="bukti_acc" accept=".pdf,.jpg,.jpeg,.png" required
+                    onchange="document.getElementById('label-bukti_acc').textContent = this.files[0]?.name ?? 'Pilih file'"
+                    class="absolute inset-0 z-10 w-full h-full opacity-0 cursor-pointer" />
+                  <div class="flex items-stretch">
+                    <div
+                      class="flex items-center flex-shrink-0 gap-2 px-5 py-3 text-sm font-medium text-gray-700 transition bg-gray-100 hover:bg-gray-200">
+                      <i class="fas fa-cloud-upload-alt"></i>
+                      Browse File
+                    </div>
+                    <div class="flex items-center flex-1 px-4 py-3 text-sm text-gray-500 border-l border-gray-200"
+                      id="label-bukti_acc">
+                      Pilih file (PDF, JPG, PNG — maks 2MB)
+                    </div>
+                  </div>
+                </div>
 
                 @error('bukti_acc')
                   <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
@@ -150,7 +176,8 @@
               </div>
 
               <div class="mt-6 space-y-2">
-                <label class="flex items-center gap-2 text-sm font-bold text-gray-900">
+                <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <i class="fas fa-book-open text-blue-500"></i>
                   Mata Kuliah Relevan <span class="text-red-500">*</span>
                 </label>
 
@@ -169,7 +196,7 @@
               </div>
             </div>
 
-            <div class="mt-4 flex justify-end">
+            <div class="mt-2 flex justify-end">
               <x-primary-button
                 class="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 md:px-6 md:py-3">
                 <span>Kirim</span>
