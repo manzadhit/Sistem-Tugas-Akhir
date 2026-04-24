@@ -28,7 +28,6 @@
   </div>
 
   <!-- Flash Messages -->
-  <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
 
@@ -114,6 +113,8 @@
         default => 'text-yellow-500',
     };
   @endphp
+
+  <x-alert type="success" />
 
   <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border-2 {{ $cardBorder }}"
     id="verificationCardPembimbing">
@@ -210,10 +211,51 @@
     </div>
   </div>
 
+  @if ($permintaan->status == 'pending' && $permintaan->status_verifikasi_bukti === 'pending')
+    {{-- Petunjuk: rekomendasi akan muncul setelah verifikasi --}}
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-gray-200">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between sm:px-6 sm:py-5">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-users text-gray-300 text-xl"></i>
+          <h3 class="text-base font-semibold text-gray-400 sm:text-lg">Rekomendasi Dosen Pembimbing</h3>
+        </div>
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-400">
+          <i class="fas fa-lock text-[10px]"></i> Menunggu Verifikasi
+        </span>
+      </div>
+      <div class="p-4 sm:p-6">
+        {{-- Skeleton cards --}}
+        <div class="space-y-4 animate-pulse">
+          @for ($i = 0; $i < 2; $i++)
+            <div class="border border-gray-200 rounded-xl p-4">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-7 h-7 bg-gray-200 rounded-full sm:w-9 sm:h-9"></div>
+                <div class="h-3 bg-gray-200 rounded w-40"></div>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-9 h-9 bg-gray-200 rounded-full sm:w-11 sm:h-11"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3.5 bg-gray-200 rounded w-48"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-64"></div>
+                </div>
+              </div>
+            </div>
+          @endfor
+        </div>
+        <p class="text-center text-xs text-gray-400 mt-4">
+          <i class="fas fa-info-circle mr-1"></i>
+          Hasil rekomendasi akan muncul setelah verifikasi bukti ACC disetujui.
+        </p>
+      </div>
+    </div>
+  @endif
+
   @if ($permintaan->status == 'pending' && $permintaan->status_verifikasi_bukti == 'disetujui')
     <!-- Form Penetapan Pembimbing -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
+      <div
+        class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
         <div class="flex items-center gap-3">
           <i class="fas fa-users text-blue-500 text-xl"></i>
           <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Rekomendasi Dosen Pembimbing</h3>
@@ -229,8 +271,8 @@
             @js($rankedDosens->values()),
             @js($unrankedDosens->values()),
             @js($rankedDosens->take(2)->values())
-        )" action="{{ route('kajur.tetapkanPembimbing', ['permintaan' => $permintaan->id]) }}"
-          method="POST">
+        )"
+          action="{{ route('kajur.tetapkanPembimbing', ['permintaan' => $permintaan->id]) }}" method="POST">
           @csrf
           <!-- Dosen Pembimbing -->
           <div class="mb-5">
@@ -290,7 +332,8 @@
                         <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-600 sm:text-xs">
                           <span><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
                           <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
-                          <span><i class="fas fa-users"></i> <span x-text="dosen.total_bimbingan_aktif"></span> Bimbingan Aktif</span>
+                          <span><i class="fas fa-users"></i> <span x-text="dosen.total_bimbingan_aktif"></span>
+                            Bimbingan Aktif</span>
 
                         </div>
                       </div>
@@ -647,6 +690,21 @@
           return this.availableUnranked.filter(d => this.matchesSearch(d));
         }
       }
+    }
+  </script>
+
+  <script>
+    // Simpan posisi scroll saat form disubmit, restore setelah reload
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', () => {
+        sessionStorage.setItem('scrollY', window.scrollY);
+      });
+    });
+
+    const savedScroll = sessionStorage.getItem('scrollY');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll));
+      sessionStorage.removeItem('scrollY');
     }
   </script>
 @endpush

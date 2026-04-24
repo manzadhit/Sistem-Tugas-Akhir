@@ -25,7 +25,6 @@
   </div>
 
   <!-- Flash Messages -->
-  <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
 
@@ -99,6 +98,9 @@
     </div>
   </div>
 
+  <x-alert type="success" />
+
+
   <!-- Verifikasi Persyaratan Card -->
   <div x-data="{ status: @js($permintaan->status), catatan: '', files: [], showAccModal: false }" class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border-2"
     :class="status === 'acc' ? 'border-emerald-400' : status === 'reject' ? 'border-red-400' : 'border-amber-400'">
@@ -146,7 +148,8 @@
             @endif
 
             @foreach ($permintaan->kajurSubmissionFiles as $file)
-              <x-file-preview-item :path="$file->file_path" type="kajur-submission-file" :file-id="$file->id" :uploaded-at="$file->created_at" class="rounded-lg mb-3" />
+              <x-file-preview-item :path="$file->file_path" type="kajur-submission-file" :file-id="$file->id" :uploaded-at="$file->created_at"
+                class="rounded-lg mb-3" />
             @endforeach
 
             {{-- Satu form untuk semua aksi (acc / revisi / reject) --}}
@@ -250,7 +253,8 @@
                   <p class="text-sm text-gray-700 leading-relaxed">{{ $permintaan->review }}</p>
                 @endif
                 @foreach ($permintaan->kajurSubmissionFiles->where('uploaded_by', 'kajur') as $reviewFile)
-                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
+                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at"
+                    class="rounded-lg mt-3" />
                 @endforeach
               </div>
             @elseif ($permintaan->status === 'reject')
@@ -262,7 +266,8 @@
                   <p class="text-sm text-gray-700 leading-relaxed">{{ $permintaan->review }}</p>
                 @endif
                 @foreach ($permintaan->kajurSubmissionFiles->where('uploaded_by', 'kajur') as $reviewFile)
-                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id" :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
+                  <x-file-preview-item :path="$reviewFile->file_path" type="kajur-submission-file" :file-id="$reviewFile->id"
+                    :uploaded-at="$reviewFile->created_at" class="rounded-lg mt-3" />
                 @endforeach
               </div>
             @endif
@@ -272,10 +277,50 @@
     </div>
   </div>
 
+  @if ($permintaan->status === 'pending')
+    {{-- Skeleton: rekomendasi muncul setelah verifikasi ACC --}}
+    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6 border border-gray-200">
+      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between sm:px-6 sm:py-5">
+        <div class="flex items-center gap-3">
+          <i class="fas fa-users text-gray-300 text-xl"></i>
+          <h3 class="text-base font-semibold text-gray-400 sm:text-lg">Rekomendasi Dosen Penguji</h3>
+        </div>
+        <span
+          class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-400">
+          <i class="fas fa-lock text-[10px]"></i> Menunggu Verifikasi
+        </span>
+      </div>
+      <div class="p-4 sm:p-6">
+        <div class="space-y-4 animate-pulse">
+          @for ($i = 0; $i < 3; $i++)
+            <div class="border border-gray-200 rounded-xl p-4">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-7 h-7 bg-gray-200 rounded-full sm:w-9 sm:h-9"></div>
+                <div class="h-3 bg-gray-200 rounded w-40"></div>
+              </div>
+              <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="w-9 h-9 bg-gray-200 rounded-full sm:w-11 sm:h-11"></div>
+                <div class="flex-1 space-y-2">
+                  <div class="h-3.5 bg-gray-200 rounded w-48"></div>
+                  <div class="h-2.5 bg-gray-200 rounded w-64"></div>
+                </div>
+              </div>
+            </div>
+          @endfor
+        </div>
+        <p class="text-center text-xs text-gray-400 mt-4">
+          <i class="fas fa-info-circle mr-1"></i>
+          Hasil rekomendasi akan muncul setelah verifikasi persyaratan disetujui.
+        </p>
+      </div>
+    </div>
+  @endif
+
   @if (!$hasPenguji && $permintaan->status == 'acc')
     <!-- Form Penetapan Penguji -->
     <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-6">
-      <div class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
+      <div
+        class="px-4 py-3.5 border-b border-gray-200 flex items-center justify-between flex-wrap gap-3 sm:px-6 sm:py-5">
         <div class="flex items-center gap-3">
           <i class="fas fa-users text-blue-500 text-xl"></i>
           <h3 class="text-base font-semibold text-gray-900 sm:text-lg">Rekomendasi Dosen Penguji</h3>
@@ -298,7 +343,8 @@
           <div class="mb-5">
             <label class="block text-sm font-semibold text-gray-700 mb-4">
               Dosen Penguji <span class="text-red-600">*</span>
-              <span class="hidden text-xs text-gray-500 font-normal ml-1 sm:inline">(Direkomendasikan berdasarkan analisis sistem)</span>
+              <span class="hidden text-xs text-gray-500 font-normal ml-1 sm:inline">(Direkomendasikan berdasarkan
+                analisis sistem)</span>
             </label>
 
             <div class="flex flex-col gap-4 sm:gap-6" id="pengujiContainer">
@@ -345,13 +391,15 @@
                         <span x-text="dosen.initials"></span>
                       </div>
                       <div>
-                        <h4 class="text-sm font-semibold text-gray-900 mb-0.5 sm:text-[15px]" x-text="dosen.nama_lengkap"></h4>
+                        <h4 class="text-sm font-semibold text-gray-900 mb-0.5 sm:text-[15px]"
+                          x-text="dosen.nama_lengkap"></h4>
                         <div class="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-gray-600 sm:text-xs">
                           <span><i class="fas fa-id-badge"></i> <span x-text="dosen.nidn"></span></span>
-                          <span><i class="fas fa-award"></i> <span
-                              x-text="dosen.jabatan_fungsional"></span></span>
-                          <span><i class="fas fa-calendar-alt"></i> <span x-text="dosen.total_pengujian_periode ?? 0"></span> Pengujian (Periode Aktif)</span>
-                          <span><i class="fas fa-tasks"></i> <span x-text="dosen.total_pengujian_aktif ?? 0"></span> Pengujian (Belum Lulus)</span>
+                          <span><i class="fas fa-award"></i> <span x-text="dosen.jabatan_fungsional"></span></span>
+                          <span><i class="fas fa-calendar-alt"></i> <span
+                              x-text="dosen.total_pengujian_periode ?? 0"></span> Pengujian (Periode Aktif)</span>
+                          <span><i class="fas fa-tasks"></i> <span x-text="dosen.total_pengujian_aktif ?? 0"></span>
+                            Pengujian (Belum Lulus)</span>
                         </div>
                       </div>
                     </div>
@@ -440,7 +488,8 @@
           </div>
 
           <!-- Button Group -->
-          <div class="flex flex-col-reverse gap-3 mt-6 pt-4 border-t border-gray-200 sm:flex-row sm:gap-4 sm:justify-end sm:pt-6">
+          <div
+            class="flex flex-col-reverse gap-3 mt-6 pt-4 border-t border-gray-200 sm:flex-row sm:gap-4 sm:justify-end sm:pt-6">
             <a href="{{ route('kajur.permintaan-penguji.index') }}"
               class="flex items-center justify-center gap-2 px-4 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 hover:border-gray-400 transition-all no-underline sm:px-6 sm:py-3">
               <i class="fas fa-arrow-left"></i> Kembali
@@ -503,18 +552,21 @@
                         <p class="mt-0.5 flex flex-wrap gap-x-1.5 gap-y-1 text-[0.7rem] text-gray-500">
                           <span class="truncate max-w-full" x-text="dosen.keahlian || 'Umum'"></span>
                           <span class="hidden sm:inline">·</span>
-                          <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode aktif)</span></span>
+                          <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode
+                              aktif)</span></span>
                           <span class="hidden sm:inline">·</span>
-                          <span><span x-text="dosen.total_pengujian_aktif ?? 0"></span> <span>pengujian (belum lulus)</span></span>
+                          <span><span x-text="dosen.total_pengujian_aktif ?? 0"></span> <span>pengujian (belum
+                              lulus)</span></span>
                         </p>
                       </div>
-                      <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center sm:w-7 sm:h-7">
-                        <span class="text-[0.65rem] font-bold text-blue-600"
-                          x-text="'#' + dosen.rank"></span>
+                      <div
+                        class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center sm:w-7 sm:h-7">
+                        <span class="text-[0.65rem] font-bold text-blue-600" x-text="'#' + dosen.rank"></span>
                       </div>
                       <div class="flex-shrink-0 text-right">
                         <p class="text-[0.55rem] text-gray-400 uppercase tracking-wide sm:text-[0.6rem]">Skor</p>
-                        <p class="text-xs font-bold text-emerald-500 sm:text-sm" x-text="formatScore(dosen.total_score)"></p>
+                        <p class="text-xs font-bold text-emerald-500 sm:text-sm"
+                          x-text="formatScore(dosen.total_score)"></p>
                       </div>
                     </button>
                   </template>
@@ -531,14 +583,18 @@
                           class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-semibold text-xs flex-shrink-0 sm:w-10 sm:h-10 sm:text-sm"
                           x-text="dosen.initials"></div>
                         <div class="min-w-0 flex-1">
-                          <h5 class="truncate text-[0.9rem] font-semibold text-gray-900 mb-0.5" x-text="dosen.nama_lengkap"></h5>
-                          <p class="truncate text-[0.7rem] text-gray-500">NIDN: <span x-text="dosen.nidn || '-' "></span></p>
+                          <h5 class="truncate text-[0.9rem] font-semibold text-gray-900 mb-0.5"
+                            x-text="dosen.nama_lengkap"></h5>
+                          <p class="truncate text-[0.7rem] text-gray-500">NIDN: <span
+                              x-text="dosen.nidn || '-' "></span></p>
                           <p class="mt-0.5 flex flex-wrap gap-x-1.5 gap-y-1 text-[0.7rem] text-gray-500">
                             <span class="truncate max-w-full" x-text="dosen.keahlian || 'Umum'"></span>
                             <span class="hidden sm:inline">·</span>
-                            <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode aktif)</span></span>
+                            <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode
+                                aktif)</span></span>
                             <span class="hidden sm:inline">·</span>
-                            <span><span x-text="dosen.total_pengujian_aktif ?? 0"></span> <span>pengujian (belum lulus)</span></span>
+                            <span><span x-text="dosen.total_pengujian_aktif ?? 0"></span> <span>pengujian (belum
+                                lulus)</span></span>
                           </p>
                         </div>
                       </div>
@@ -668,6 +724,21 @@
           return this.availableUnranked.filter(d => this.matchesSearch(d));
         }
       }
+    }
+  </script>
+
+  <script>
+    // Simpan posisi scroll saat form disubmit, restore setelah reload
+    document.querySelectorAll('form').forEach(form => {
+      form.addEventListener('submit', () => {
+        sessionStorage.setItem('scrollY', window.scrollY);
+      });
+    });
+
+    const savedScroll = sessionStorage.getItem('scrollY');
+    if (savedScroll) {
+      window.scrollTo(0, parseInt(savedScroll));
+      sessionStorage.removeItem('scrollY');
     }
   </script>
 @endsection
