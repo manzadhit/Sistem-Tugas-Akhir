@@ -98,11 +98,10 @@
 
         <div class="px-8 pb-4 mx-2 mt-6 mb-2 ">
 
-          <form method="POST" action="{{ route('mahasiswa.permintaan-pembimbing.store') }}" enctype="multipart/form-data"
-            class="" x-data="{ judul_ta: @js(old('judul_ta', $permintaanPembimbing?->judul_ta ?? '')) }">
+          <form method="POST" action="{{ route('mahasiswa.permintaan-pembimbing.store') }}" enctype="multipart/form-data">
             @csrf
 
-            <div>
+            <div class="space-y-6">
               <div class="max-w-xl space-y-2">
                 <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
                   <i class="fas fa-chart-line text-blue-500"></i>
@@ -120,13 +119,12 @@
                     mahasiswa berdasarkan IPK.</span>
                 </div>
 
-
                 @error('ipk')
-                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
               </div>
 
-              <div class="mt-6 space-y-2">
+              <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
                   <i class="fas fa-heading text-blue-500"></i>
                   Judul Tugas Akhir <span class="text-red-500">*</span>
@@ -135,14 +133,10 @@
                 <textarea name="judul_ta"
                   class="min-h-[80px] w-full rounded-lg border border-gray-300 px-3 py-3 text-[0.95rem] transition-colors focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-100"
                   maxlength="500" placeholder="Contoh: Sistem Rekomendasi Pemilihan Dosen Pembimbing Berbasis Machine Learning"
-                  x-model="judul_ta">{{ old('judul_ta', $permintaanPembimbing?->judul_ta) }}</textarea>
-
-                <div class="text-right text-xs text-gray-500">
-                  <span x-text="judul_ta.length"></span>/500 karakter
-                </div>
+                  >{{ old('judul_ta', $permintaanPembimbing?->judul_ta) }}</textarea>
 
                 @error('judul_ta')
-                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
               </div>
 
@@ -171,11 +165,11 @@
                 </div>
 
                 @error('bukti_acc')
-                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
               </div>
 
-              <div class="mt-6 space-y-2">
+              <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
                   <i class="fas fa-book-open text-blue-500"></i>
                   Mata Kuliah Relevan <span class="text-red-500">*</span>
@@ -188,15 +182,15 @@
                 <p class="text-xs text-gray-500">Pilih minimal 1 mata kuliah.</p>
 
                 @error('mata_kuliah_ids')
-                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
                 @error('mata_kuliah_ids.*')
-                  <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
               </div>
             </div>
 
-            <div class="mt-2 flex justify-end">
+            <div class="mt-6 flex justify-end">
               <x-primary-button
                 class="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 md:px-6 md:py-3">
                 <span>Kirim</span>

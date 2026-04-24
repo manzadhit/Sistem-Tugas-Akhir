@@ -125,7 +125,7 @@ class PembimbingController extends Controller
                 ->with('show_result_modal', 'reject');
         }
 
-        return back()->with('success', 'Verifikasi bukti berhasil disimpan.');
+        return back()->withFragment('formPenetapanPembimbing')->with('success', 'Verifikasi bukti berhasil disimpan.');
     }
 
     public function tetapkanPembimbing(Request $request, PermintaanPembimbing $permintaan)

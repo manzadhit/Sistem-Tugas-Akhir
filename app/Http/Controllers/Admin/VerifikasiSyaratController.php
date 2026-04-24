@@ -218,6 +218,7 @@ class VerifikasiSyaratController extends Controller
 
       return redirect()
         ->route('admin.ujian.syarat.undangan', $id)
+        ->withFragment('undanganCard')
         ->with('success', 'Undangan berhasil di-generate');
     } catch (\Throwable $th) {
       Log::error('Gagal generate undangan ujian.', [

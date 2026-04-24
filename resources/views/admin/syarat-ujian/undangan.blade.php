@@ -44,7 +44,6 @@
   </div>
 
   {{-- Flash Messages --}}
-  <x-alert type="success" />
   <x-alert type="error" />
   <x-alert type="warning" />
 
@@ -191,20 +190,25 @@
               class="px-3 py-2.5 border {{ $errors->has('periode_akademik_id') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
               <option value="">-- Pilih Periode Akademik --</option>
               @php
-                $selectedPeriode = old('periode_akademik_id', $ujian->periode_akademik_id ?? $periodeAkademik->firstWhere('status', 'aktif')?->id);
+                $selectedPeriode = old(
+                    'periode_akademik_id',
+                    $ujian->periode_akademik_id ?? $periodeAkademik->firstWhere('status', 'aktif')?->id,
+                );
               @endphp
               @foreach ($periodeAkademik as $p)
-                <option value="{{ $p->id }}"
-                  {{ $selectedPeriode == $p->id ? 'selected' : '' }}>
+                <option value="{{ $p->id }}" {{ $selectedPeriode == $p->id ? 'selected' : '' }}>
                   {{ $p->tahun_ajaran }} — Semester {{ ucfirst($p->semester) }}
-                  @if ($p->status === 'aktif') (Aktif) @endif
+                  @if ($p->status === 'aktif')
+                    (Aktif)
+                  @endif
                 </option>
               @endforeach
             </select>
             @error('periode_akademik_id')
               <span class="text-xs text-red-500"><i class="fas fa-exclamation-circle mr-1"></i>{{ $message }}</span>
             @enderror
-            <p class="text-xs text-gray-400 mt-0.5">Pilih periode akademik yang berlaku untuk ujian ini sebelum membuat surat undangan.</p>
+            <p class="text-xs text-gray-400 mt-0.5">Pilih periode akademik yang berlaku untuk ujian ini sebelum membuat
+              surat undangan.</p>
           </div>
         </div>
       </div>
@@ -286,8 +290,10 @@
       </div>
     </form>
 
+    <x-alert type="success" />
+
     {{-- Berkas Card --}}
-    <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+    <div id="undanganCard" class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
       <div class="flex items-center justify-between p-4 sm:px-6 sm:py-5 border-b border-gray-100">
         <h2 class="text-sm sm:text-base font-semibold text-gray-900 flex items-center gap-2">
           <i class="fas fa-paperclip text-gray-400 text-sm"></i>
@@ -337,7 +343,8 @@
       <div
         class="flex items-center justify-between p-4 sm:p-6 bg-white rounded-2xl border border-gray-200 mt-6 max-sm:flex-col max-sm:gap-4 max-sm:text-center">
         <div class="flex items-center gap-3">
-          <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan Mahasiswa</p>
+          <p class="text-[10px] sm:text-xs text-gray-500">Undangan akan dikirim ke semua Pembimbing, Penguji dan
+            Mahasiswa</p>
         </div>
         <div class="flex gap-3 max-sm:w-full">
           <button type="button" @click="showConfirmModal = true"

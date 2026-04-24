@@ -37,7 +37,7 @@
 
 @if (session($type))
   <div
-    {{ $attributes->merge(['class' => "mb-4 rounded-xl border {$style['bg']} {$style['border']} px-4 py-3 text-sm {$style['text']} flex items-start gap-3"]) }}>
+    {{ $attributes->merge(['class' => "mb-2 rounded-xl border {$style['bg']} {$style['border']} px-4 py-3 text-sm {$style['text']} flex items-start gap-3"]) }}>
     <i class="fas {{ $style['icon'] }} {{ $style['iconColor'] }} mt-0.5"></i>
     <div class="flex-1">
       {{ session($type) }}
