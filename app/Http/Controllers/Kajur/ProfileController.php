@@ -40,8 +40,6 @@ class ProfileController extends Controller
         // Update profile dosen
         $profile->update([
             'nama_lengkap' => $validated['nama_lengkap'],
-            'nidn' => $validated['nidn'],
-            'jurusan' => $validated['jurusan'],
             'keahlian' => $validated['keahlian'] ?? null,
             'jabatan_fungsional' => $validated['jabatan_fungsional'] ?? null,
             'no_telp' => $validated['no_telp'] ?? null,

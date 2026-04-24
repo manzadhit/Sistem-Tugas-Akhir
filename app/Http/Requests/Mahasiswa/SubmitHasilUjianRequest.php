@@ -22,8 +22,8 @@ class SubmitHasilUjianRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'files' => 'required|array',
-            'files.*' => 'file|mimetypes:application/pdf',
+            'files' => ['required', 'array', 'min:1'],
+            'files.*' => ['file', 'mimetypes:application/pdf', 'max:10240'],
         ];
     }
 
@@ -31,7 +31,8 @@ class SubmitHasilUjianRequest extends FormRequest
     {
         return [
             'files.required' => 'Minimal satu dokumen harus diupload.',
-            'files.*.mimes' => 'Format file harus PDF',
+            'files.min' => 'Minimal satu dokumen harus diupload.',
+            'files.*.mimetypes' => 'Format file harus PDF.',
             'files.*.max' => 'Ukuran file maksimal 10MB.',
         ];
     }
