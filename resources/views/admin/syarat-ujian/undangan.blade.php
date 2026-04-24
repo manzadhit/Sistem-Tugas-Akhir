@@ -190,9 +190,12 @@
             <select name="periode_akademik_id" required
               class="px-3 py-2.5 border {{ $errors->has('periode_akademik_id') ? 'border-red-300 ring-1 ring-red-100 bg-red-50' : 'border-gray-200 bg-gray-50' }} rounded-lg text-sm text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-100 transition-all">
               <option value="">-- Pilih Periode Akademik --</option>
+              @php
+                $selectedPeriode = old('periode_akademik_id', $ujian->periode_akademik_id ?? $periodeAkademik->firstWhere('status', 'aktif')?->id);
+              @endphp
               @foreach ($periodeAkademik as $p)
                 <option value="{{ $p->id }}"
-                  {{ old('periode_akademik_id', $ujian->periode_akademik_id) == $p->id ? 'selected' : '' }}>
+                  {{ $selectedPeriode == $p->id ? 'selected' : '' }}>
                   {{ $p->tahun_ajaran }} — Semester {{ ucfirst($p->semester) }}
                   @if ($p->status === 'aktif') (Aktif) @endif
                 </option>
