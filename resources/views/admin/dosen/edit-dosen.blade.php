@@ -64,11 +64,11 @@
         </div>
       </div>
 
-      {{-- ██ DATA PRIBADI --}}
+      {{-- ██ DATA DOSEN --}}
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
           <i class="fas fa-id-card text-blue-500 text-sm"></i>
-          <h2 class="text-sm font-semibold text-gray-800">Data Pribadi</h2>
+          <h2 class="text-sm font-semibold text-gray-800">Data Dosen</h2>
         </div>
         <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
 
@@ -119,6 +119,55 @@
             @enderror
           </div>
 
+          {{-- Jurusan --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Jurusan <span class="text-red-500">*</span>
+            </label>
+            <input type="text" name="jurusan" value="{{ old('jurusan', $dosen->jurusan) }}" required
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jurusan') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+            @error('jurusan')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- Jabatan Fungsional --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Jabatan Fungsional <span class="text-red-500">*</span>
+            </label>
+            <select name="jabatan_fungsional" required
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jabatan_fungsional') border-red-400 bg-red-50 @enderror">
+              @foreach (['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar', 'Tenaga Pendidik'] as $jabatan)
+                <option value="{{ $jabatan }}"
+                  {{ old('jabatan_fungsional', $dosen->jabatan_fungsional) === $jabatan ? 'selected' : '' }}>
+                  {{ $jabatan }}
+                </option>
+              @endforeach
+            </select>
+            @error('jabatan_fungsional')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
+          {{-- Status --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Status <span class="text-red-500">*</span>
+            </label>
+            <select name="status" required
+              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('status') border-red-400 bg-red-50 @enderror">
+              @foreach (['aktif' => 'Aktif', 'cuti' => 'Cuti', 'nonaktif' => 'Non-aktif', 'pensiun' => 'Pensiun'] as $val => $lbl)
+                <option value="{{ $val }}" {{ old('status', $dosen->status) === $val ? 'selected' : '' }}>
+                  {{ $lbl }}
+                </option>
+              @endforeach
+            </select>
+            @error('status')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
           {{-- No. Telepon --}}
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1.5">No. Telepon</label>
@@ -133,25 +182,16 @@
             @enderror
           </div>
 
-        </div>
-      </div>
-
-      {{-- ██ DATA AKADEMIK --}}
-      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-        <div class="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-          <i class="fas fa-graduation-cap text-blue-500 text-sm"></i>
-          <h2 class="text-sm font-semibold text-gray-800">Data Akademik</h2>
-        </div>
-        <div class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 gap-5">
-
-          {{-- Jurusan --}}
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              Jurusan <span class="text-red-500">*</span>
+              SINTA Score 3Yr
             </label>
-            <input type="text" name="jurusan" value="{{ old('jurusan', $dosen->jurusan) }}" required
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jurusan') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
-            @error('jurusan')
+            <input type="number" name="sinta_score_3y"
+              value="{{ old('sinta_score_3y', $dosen->sinta_score_3y ?? 0) }}" min="0" step="0.01"
+              placeholder="0.00"
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('sinta_score_3y') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+            <p class="mt-1 text-xs text-slate-500">Skor SINTA 3 tahun terakhir.</p>
+            @error('sinta_score_3y')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
           </div>
@@ -183,57 +223,6 @@
             @enderror
             @error('mata_kuliah_ids.*')
               <p class="mt-2 text-xs text-red-500">{{ $message }}</p>
-            @enderror
-          </div>
-
-          {{-- Jabatan Fungsional --}}
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              Jabatan Fungsional <span class="text-red-500">*</span>
-            </label>
-            <select name="jabatan_fungsional" required
-              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('jabatan_fungsional') border-red-400 bg-red-50 @enderror">
-              @foreach (['Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar', 'Tenaga Pendidik'] as $jabatan)
-                <option value="{{ $jabatan }}"
-                  {{ old('jabatan_fungsional', $dosen->jabatan_fungsional) === $jabatan ? 'selected' : '' }}>
-                  {{ $jabatan }}
-                </option>
-              @endforeach
-            </select>
-            @error('jabatan_fungsional')
-              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              SINTA Score 3Yr
-            </label>
-            <input type="number" name="sinta_score_3y"
-              value="{{ old('sinta_score_3y', $dosen->sinta_score_3y ?? 0) }}" min="0" step="0.01"
-              placeholder="0.00"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('sinta_score_3y') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
-            <p class="mt-1 text-xs text-slate-500">Skor SINTA 3 tahun terakhir.</p>
-            @error('sinta_score_3y')
-              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
-            @enderror
-          </div>
-
-          {{-- Status --}}
-          <div>
-            <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              Status <span class="text-red-500">*</span>
-            </label>
-            <select name="status" required
-              class="w-full pl-3 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('status') border-red-400 bg-red-50 @enderror">
-              @foreach (['aktif' => 'Aktif', 'cuti' => 'Cuti', 'nonaktif' => 'Non-aktif', 'pensiun' => 'Pensiun'] as $val => $lbl)
-                <option value="{{ $val }}" {{ old('status', $dosen->status) === $val ? 'selected' : '' }}>
-                  {{ $lbl }}
-                </option>
-              @endforeach
-            </select>
-            @error('status')
-              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
           </div>
 
