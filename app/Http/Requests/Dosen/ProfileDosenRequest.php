@@ -17,9 +17,9 @@ class ProfileDosenRequest extends FormRequest
     {
         return [
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'rumpun_ilmu' => ['nullable', 'string', 'max:255'],
+            'rumpun_ilmu' => ['required', 'string', 'max:255'],
             'jabatan_fungsional' => ['required', 'string', 'max:100'],
-            'mata_kuliah_ids' => ['nullable', 'array'],
+            'mata_kuliah_ids' => ['required', 'array', 'min:1'],
             'mata_kuliah_ids.*' => ['integer', 'distinct', 'exists:mata_kuliah,id'],
             'no_telp' => ['nullable', 'string', 'max:20'],
             'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
@@ -56,9 +56,14 @@ class ProfileDosenRequest extends FormRequest
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
             'nama_lengkap.max' => 'Nama lengkap maksimal 255 karakter.',
 
+            'rumpun_ilmu.required' => 'Rumpun ilmu wajib diisi.',
             'rumpun_ilmu.max' => 'Rumpun Ilmu maksimal 255 karakter.',
 
+            'jabatan_fungsional.required' => 'Jabatan fungsional wajib dipilih.',
             'jabatan_fungsional.max' => 'Jabatan fungsional maksimal 100 karakter.',
+
+            'mata_kuliah_ids.required' => 'Mata kuliah yang diampu wajib dipilih.',
+            'mata_kuliah_ids.min' => 'Pilih minimal satu mata kuliah yang diampu.',
 
             'no_telp.max' => 'No. telepon maksimal 20 karakter.',
 

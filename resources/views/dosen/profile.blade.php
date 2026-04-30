@@ -75,6 +75,7 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Nama Lengkap <span
                   class="text-red-500">*</span></label>
               <input type="text" name="nama_lengkap" value="{{ old('nama_lengkap', $profile->nama_lengkap) }}"
+                required
                 class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('nama_lengkap') border-red-500 @enderror">
               @error('nama_lengkap')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -96,9 +97,11 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">Jabatan Fungsional</label>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Jabatan Fungsional <span
+                  class="text-red-500">*</span></label>
               <div class="relative">
                 <select name="jabatan_fungsional"
+                  required
                   class="w-full appearance-none rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 @error('jabatan_fungsional') border-red-500 @enderror">
                   <option value="" {{ old('jabatan_fungsional', $profile->jabatan_fungsional) ? '' : 'selected' }}>-- Pilih jabatan --</option>
                   @foreach (['Tenaga Pendidik','Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar'] as $jabatan)
@@ -115,18 +118,11 @@
               @enderror
             </div>
 
-            <div>
-              <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
-              <input type="text" name="no_telp" value="{{ old('no_telp', $profile->no_telp) }}"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_telp') border-red-500 @enderror">
-              @error('no_telp')
-                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-              @enderror
-            </div>
-
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">Rumpun Ilmu</label>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Rumpun Ilmu <span
+                  class="text-red-500">*</span></label>
               <input type="text" name="rumpun_ilmu" value="{{ old('rumpun_ilmu', $profile->rumpun_ilmu) }}"
+                required
                 placeholder="Contoh: Rekayasa Perangkat Lunak (RPL)"
                 class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rumpun_ilmu') border-red-500 @enderror">
               @error('rumpun_ilmu')
@@ -135,7 +131,8 @@
             </div>
 
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">Mata Kuliah yang Diampu</label>
+              <label class="block text-sm font-medium text-slate-700 mb-1">Mata Kuliah yang Diampu <span
+                  class="text-red-500">*</span></label>
               <x-multi-select name="mata_kuliah_ids" :options="$mataKuliahOptions" :selected="old('mata_kuliah_ids', $profile->mataKuliah->pluck('id')->map(fn($id) => (string) $id)->all())"
                 placeholder="Pilih mata kuliah yang diampu..." search-placeholder="Cari mata kuliah..."
                 empty-text="Mata kuliah tidak ditemukan." />
@@ -145,6 +142,15 @@
               @enderror
               @error('mata_kuliah_ids.*')
                 <p class="mt-2 text-xs text-red-600">{{ $message }}</p>
+              @enderror
+            </div>
+
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium text-slate-700 mb-1">No. Telepon</label>
+              <input type="text" name="no_telp" value="{{ old('no_telp', $profile->no_telp) }}"
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('no_telp') border-red-500 @enderror">
+              @error('no_telp')
+                <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
             </div>
           </div>
@@ -162,6 +168,7 @@
               <label class="block text-sm font-medium text-slate-700 mb-1">Email <span
                   class="text-red-500">*</span></label>
               <input type="email" name="email" value="{{ old('email', $user->email) }}"
+                required
                 class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('email') border-red-500 @enderror">
               @error('email')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
