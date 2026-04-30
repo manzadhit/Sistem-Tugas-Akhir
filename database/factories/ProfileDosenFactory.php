@@ -22,7 +22,7 @@ class ProfileDosenFactory extends Factory
             'nidn' => fake()->unique()->numerify('########'),
             'nama_lengkap' => fake()->name(),
             'jurusan' => fake()->randomElement(['Informatika', 'Sistem Informasi', 'Teknik Komputer']),
-            'keahlian' => fake()->randomElement(['Rekayasa Perangkat Lunak', 'Artificial Intelligence', 'Jaringan']),
+            'rumpun_ilmu' => fake()->randomElement(['Rekayasa Perangkat Lunak', 'Artificial Intelligence', 'Jaringan']),
             'jabatan_fungsional' => fake()->randomElement(['Tenaga Pendidik', 'Asisten Ahli', 'Lektor', 'Lektor Kepala', 'Guru Besar']),
             'sinta_score_3y' => fake()->randomFloat(2, 0, 500),
             'status' => fake()->randomElement(['aktif', 'cuti', 'nonaktif', 'pensiun']),

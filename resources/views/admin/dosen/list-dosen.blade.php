@@ -125,7 +125,7 @@
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Dosen</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jabatan
               Fungsional</th>
-            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Keahlian</th>
+            <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Rumpun Ilmu</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Publikasi</th>
             <th class="px-5 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">SINTA 3Yr</th>
@@ -173,7 +173,7 @@
                   <span class="text-gray-400 text-sm">—</span>
                 @endif
               </td>
-              <td class="px-5 py-4 text-sm text-gray-600 max-w-[180px] truncate">{{ $dosen->keahlian ?? '—' }}</td>
+              <td class="px-5 py-4 text-sm text-gray-600 max-w-[180px] truncate">{{ $dosen->rumpun_ilmu ?? '—' }}</td>
               <td class="px-5 py-4">
                 <span
                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $cls }}">

@@ -34,7 +34,7 @@ class UpdateDosenRequest extends FormRequest
                 },
             ],
             'jurusan' => ['required', 'string', 'max:255'],
-            'keahlian' => ['required', 'string', 'max:255'],
+            'rumpun_ilmu' => ['nullable', 'string', 'max:255'],
             'jabatan_fungsional' => ['required', 'string', 'max:255'],
             'sinta_score_3y' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
             'status' => ['required', 'in:aktif,cuti,nonaktif,pensiun'],

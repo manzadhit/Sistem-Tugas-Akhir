@@ -35,7 +35,7 @@
       <div class="rounded-xl border border-blue-100 bg-blue-50 px-4 py-3 text-sm text-blue-800">
         Gunakan file dengan kolom header:
         <strong>nidn</strong>, <strong>nama lengkap</strong>, <strong>jurusan</strong>,
-        <strong>jabatan fungsional</strong>, <strong>keahlian</strong>, <strong>email</strong>,
+        <strong>jabatan fungsional</strong>, <strong>rumpun ilmu</strong>, <strong>email</strong>,
         <strong>no telp</strong>.
       </div>
 

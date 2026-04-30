@@ -51,13 +51,13 @@
 
             <!-- Card Body -->
             <div class="border-t border-gray-100 pt-4">
-              @if ($dosen->keahlian)
+              @if ($dosen->rumpun_ilmu)
                 <div class="flex items-center gap-3 py-2 text-sm">
                   <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-500">
                     <i class="fas fa-graduation-cap"></i>
                   </div>
                   <div class="flex-1 text-gray-700">
-                    <strong>Bidang Keahlian:</strong><br />{{ $dosen->keahlian }}
+                    <strong>Rumpun Ilmu:</strong><br />{{ $dosen->rumpun_ilmu }}
                   </div>
                 </div>
               @endif

@@ -68,7 +68,7 @@ class DosenController extends Controller
             'nidn' => $request->nidn,
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
-            'keahlian' => $request->keahlian,
+            'rumpun_ilmu' => $request->rumpun_ilmu,
             'jabatan_fungsional' => $request->jabatan_fungsional,
             'sinta_score_3y' => $request->validated('sinta_score_3y') ?? 0,
             'status' => $request->status,
@@ -116,7 +116,7 @@ class DosenController extends Controller
         $dosen->update([
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
-            'keahlian' => $request->keahlian,
+            'rumpun_ilmu' => $request->rumpun_ilmu,
             'jabatan_fungsional' => $request->jabatan_fungsional,
             'sinta_score_3y' => $request->validated('sinta_score_3y') ?? 0,
             'status' => $request->status,

@@ -125,11 +125,11 @@
             </div>
 
             <div class="sm:col-span-2">
-              <label class="block text-sm font-medium text-slate-700 mb-1">Keahlian</label>
-              <input type="text" name="keahlian" value="{{ old('keahlian', $profile->keahlian) }}"
-                placeholder="Contoh: Machine Learning, Web Development"
-                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('keahlian') border-red-500 @enderror">
-              @error('keahlian')
+              <label class="block text-sm font-medium text-slate-700 mb-1">Rumpun Ilmu</label>
+              <input type="text" name="rumpun_ilmu" value="{{ old('rumpun_ilmu', $profile->rumpun_ilmu) }}"
+                placeholder="Contoh: Rekayasa Perangkat Lunak (RPL)"
+                class="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 @error('rumpun_ilmu') border-red-500 @enderror">
+              @error('rumpun_ilmu')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
               @enderror
             </div>

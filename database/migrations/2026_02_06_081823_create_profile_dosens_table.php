@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nidn')->unique();
             $table->string('nama_lengkap');
             $table->string('jurusan');
-            $table->string('keahlian')->nullable();
+            $table->string('rumpun_ilmu')->nullable();
             $table->string('jabatan_fungsional');
             $table->decimal('sinta_score_3y', 10, 2)->default(0);
             $table->enum('status', ['aktif', 'cuti', 'nonaktif', 'pensiun'])->default('aktif');

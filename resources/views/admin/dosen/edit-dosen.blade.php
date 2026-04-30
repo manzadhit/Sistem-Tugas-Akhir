@@ -156,15 +156,15 @@
             @enderror
           </div>
 
-          {{-- Keahlian --}}
+          {{-- Rumpun Ilmu --}}
           <div class="sm:col-span-2">
             <label class="block text-xs font-medium text-gray-600 mb-1.5">
-              Keahlian / Bidang Riset <span class="text-red-500">*</span>
+              Rumpun Ilmu
             </label>
-            <input type="text" name="keahlian" value="{{ old('keahlian', $dosen->keahlian) }}" required
-              placeholder="cth. Kecerdasan Buatan, Jaringan Komputer, Rekayasa Perangkat Lunak"
-              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('keahlian') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
-            @error('keahlian')
+            <input type="text" name="rumpun_ilmu" value="{{ old('rumpun_ilmu', $dosen->rumpun_ilmu) }}"
+              placeholder="Contoh: Rekayasa Perangkat Lunak (RPL)"
+              class="w-full px-4 py-2.5 border rounded-lg text-sm text-gray-800 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('rumpun_ilmu') border-red-400 bg-red-50 @else border-gray-300 @enderror" />
+            @error('rumpun_ilmu')
               <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
             @enderror
           </div>

@@ -555,7 +555,7 @@
                         <p class="text-[0.7rem] text-gray-500 truncate">NIDN: <span x-text="dosen.nidn || '-' "></span>
                         </p>
                         <p class="mt-0.5 flex flex-wrap gap-x-1.5 gap-y-1 text-[0.7rem] text-gray-500">
-                          <span class="truncate max-w-full" x-text="dosen.keahlian || 'Umum'"></span>
+                          <span class="truncate max-w-full" x-text="dosen.rumpun_ilmu || 'Umum'"></span>
                           <span class="hidden sm:inline">·</span>
                           <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode
                               aktif)</span></span>
@@ -593,7 +593,7 @@
                           <p class="truncate text-[0.7rem] text-gray-500">NIDN: <span
                               x-text="dosen.nidn || '-' "></span></p>
                           <p class="mt-0.5 flex flex-wrap gap-x-1.5 gap-y-1 text-[0.7rem] text-gray-500">
-                            <span class="truncate max-w-full" x-text="dosen.keahlian || 'Umum'"></span>
+                            <span class="truncate max-w-full" x-text="dosen.rumpun_ilmu || 'Umum'"></span>
                             <span class="hidden sm:inline">·</span>
                             <span><span x-text="dosen.total_pengujian_periode ?? 0"></span> <span>pengujian (periode
                                 aktif)</span></span>
@@ -700,7 +700,7 @@
           const haystack = [
               dosen.nama_lengkap,
               dosen.nidn,
-              dosen.keahlian,
+              dosen.rumpun_ilmu,
             ]
             .filter(Boolean)
             .join(' ')

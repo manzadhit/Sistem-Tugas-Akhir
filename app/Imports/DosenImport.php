@@ -46,8 +46,8 @@ class DosenImport implements ToCollection, WithHeadingRow, WithValidation, Skips
                         'nidn'              => trim($row['nidn']),
                         'nama_lengkap'      => trim($row['nama_lengkap']),
                         'jurusan'           => trim($row['jurusan'] ?? ''),
-                        'jabatan_fungsional'=> trim($row['jabatan_fungsional'] ?? ''),
-                        'keahlian'          => trim($row['keahlian'] ?? ''),
+                        'jabatan_fungsional' => trim($row['jabatan_fungsional'] ?? ''),
+                        'rumpun_ilmu'        => trim($row['rumpun_ilmu'] ?? ''),
                         'no_telp'           => trim($row['no_telp'] ?? ''),
                         'status'            => 'aktif',
                     ]
@@ -63,7 +63,7 @@ class DosenImport implements ToCollection, WithHeadingRow, WithValidation, Skips
             'nama_lengkap'       => 'required|string|max:255',
             'jurusan'            => 'required|string|max:255',
             'jabatan_fungsional' => 'required|string|max:255',
-            'keahlian'           => 'nullable|string|max:255',
+            'rumpun_ilmu'        => 'nullable|string|max:255',
             'email'              => 'nullable|email|max:255',
             'no_telp'            => 'nullable|string|max:20',
         ];
@@ -75,8 +75,8 @@ class DosenImport implements ToCollection, WithHeadingRow, WithValidation, Skips
         $data['nama_lengkap']      = (string) ($data['nama_lengkap'] ?? '');
         $data['email']             = (string) ($data['email'] ?? '');
         $data['jurusan']           = (string) ($data['jurusan'] ?? '');
-        $data['jabatan_fungsional']= (string) ($data['jabatan_fungsional'] ?? '');
-        $data['keahlian']          = (string) ($data['keahlian'] ?? '');
+        $data['jabatan_fungsional'] = (string) ($data['jabatan_fungsional'] ?? '');
+        $data['rumpun_ilmu']        = (string) ($data['rumpun_ilmu'] ?? '');
         $data['no_telp']           = (string) ($data['no_telp'] ?? '');
 
         return $data;

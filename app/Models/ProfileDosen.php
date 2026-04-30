@@ -17,7 +17,7 @@ class ProfileDosen extends Model
         'nidn',
         'nama_lengkap',
         'jurusan',
-        'keahlian',
+        'rumpun_ilmu',
         'jabatan_fungsional',
         'sinta_score_3y',
         'status',

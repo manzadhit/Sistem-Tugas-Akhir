@@ -109,7 +109,7 @@ class TextPreprocessingService
                 ->implode(' ');
 
             $documents[$dosen->id] = trim(implode(' ', array_filter([
-                $dosen->keahlian,
+                $dosen->rumpun_ilmu,
                 $mataKuliah,
                 $publikasi,
             ])));

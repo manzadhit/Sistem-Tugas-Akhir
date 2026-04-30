@@ -509,7 +509,7 @@
                           NIDN: <span x-text="dosen.nidn || '-' "></span>
                         </p>
                         <p class="text-[0.7rem] text-gray-500 truncate">
-                          <span x-text="dosen.keahlian"></span>
+                          <span x-text="dosen.rumpun_ilmu"></span>
                           <span>·</span>
                           <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                         </p>
@@ -546,7 +546,7 @@
                             NIDN: <span x-text="dosen.nidn || '-' "></span>
                           </p>
                           <p class="text-[0.7rem] text-gray-500">
-                            <span x-text="dosen.keahlian"></span>
+                            <span x-text="dosen.rumpun_ilmu"></span>
                             <span>·</span>
                             <span x-text="dosen.total_bimbingan_aktif"></span> <span>bimbingan aktif</span>
                           </p>
@@ -655,7 +655,7 @@
           return Number(value ?? 0).toFixed(2);
         },
 
-        // Search sederhana berbasis nama, NIDN, dan bidang keahlian
+        // Search sederhana berbasis nama, NIDN, dan rumpun ilmu
         matchesSearch(dosen) {
           const keyword = this.searchQuery.toLowerCase();
           if (!keyword) {
@@ -665,7 +665,7 @@
           const haystack = [
               dosen.nama_lengkap,
               dosen.nidn,
-              dosen.keahlian,
+              dosen.rumpun_ilmu,
             ]
             .filter(Boolean)
             .join(' ')
