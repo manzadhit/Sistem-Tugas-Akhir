@@ -16,6 +16,7 @@ class ProfileMahasiswa extends Model
         'nim',
         'nama_lengkap',
         'jurusan',
+        'peminatan',
         'angkatan',
         'ipk',
         'no_telp',

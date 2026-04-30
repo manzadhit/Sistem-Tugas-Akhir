@@ -113,6 +113,25 @@
             @enderror
           </div>
 
+          {{-- Peminatan --}}
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1.5">
+              Peminatan
+            </label>
+            <select name="peminatan"
+              class="w-full pl-3 pr-8 py-2.5 border rounded-lg text-sm text-gray-800 bg-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all @error('peminatan') border-red-400 bg-red-50 @else border-gray-300 @enderror">
+              <option value="">Pilih peminatan</option>
+              @foreach (['RPL' => 'Rekayasa Perangkat Lunak', 'KCV' => 'Komputasi Cerdas dan Visual', 'KBJ' => 'Komputasi Berbasis Jaringan'] as $val => $lbl)
+                <option value="{{ $val }}" {{ old('peminatan') === $val ? 'selected' : '' }}>
+                  {{ $val }} - {{ $lbl }}
+                </option>
+              @endforeach
+            </select>
+            @error('peminatan')
+              <p class="text-xs text-red-500 mt-1">{{ $message }}</p>
+            @enderror
+          </div>
+
           {{-- No. Telp --}}
           <div>
             <label class="block text-xs font-medium text-gray-600 mb-1.5">No. Telepon</label>

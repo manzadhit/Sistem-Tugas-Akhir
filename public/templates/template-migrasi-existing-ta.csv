@@ -1,5 +1,5 @@
-nim,nama lengkap,judul ta,tahap,pembimbing 1 nidn,pembimbing 2 nidn,penguji 1 nidn,penguji 2 nidn,penguji 3 nidn,proposal periode aktif
-E1E120001,ANDI MUHAMMAD ARKAN,"Sistem Rekomendasi Topik Tugas Akhir Berbasis Web",proposal,0012038401,0025078902,,,,
-E1E120002,ASFAN MELIAWAN KAHARUDDIN,"Analisis Sentimen Ulasan Aplikasi Menggunakan Naive Bayes",hasil,0012038401,0025078902,0031000001,0032000002,0033000003,ya
-E1E120003,FATMA YULNIAR,"Rancang Bangun Sistem Monitoring Tugas Akhir Mahasiswa",skripsi,0012038401,0025078902,0031000001,0032000002,0033000003,tidak
-E1E120004,IRFAN MAULANA,"Sistem Pendukung Keputusan Penentuan Topik Tugas Akhir",lulus,0012038401,0025078902,0031000001,0032000002,0033000003,tidak
+nim,nama lengkap,peminatan,judul ta,tahap,pembimbing 1 nidn,pembimbing 2 nidn,penguji 1 nidn,penguji 2 nidn,penguji 3 nidn,proposal periode aktif
+E1E120001,ANDI MUHAMMAD ARKAN,RPL,"Sistem Rekomendasi Topik Tugas Akhir Berbasis Web",proposal,0012038401,0025078902,,,,
+E1E120002,ASFAN MELIAWAN KAHARUDDIN,KCV,"Analisis Sentimen Ulasan Aplikasi Menggunakan Naive Bayes",hasil,0012038401,0025078902,0031000001,0032000002,0033000003,ya
+E1E120003,FATMA YULNIAR,KBJ,"Rancang Bangun Sistem Monitoring Tugas Akhir Mahasiswa",skripsi,0012038401,0025078902,0031000001,0032000002,0033000003,tidak
+E1E120004,IRFAN MAULANA,RPL,"Sistem Pendukung Keputusan Penentuan Topik Tugas Akhir",lulus,0012038401,0025078902,0031000001,0032000002,0033000003,tidak

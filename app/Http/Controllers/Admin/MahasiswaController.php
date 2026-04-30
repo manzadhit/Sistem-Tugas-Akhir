@@ -21,6 +21,7 @@ class MahasiswaController extends Controller
         $search = $request->get('search');
         $status = $request->get('status');
         $angkatan = $request->get('angkatan');
+        $peminatan = $request->get('peminatan');
 
         $daftarMahasiswa = ProfileMahasiswa::query()
             ->when($search, function ($q) use ($search) {
@@ -31,6 +32,7 @@ class MahasiswaController extends Controller
             })
             ->when($status, fn($q) => $q->where('status_akademik', $status))
             ->when($angkatan, fn($q) => $q->where('angkatan', $angkatan))
+            ->when($peminatan, fn($q) => $q->where('peminatan', $peminatan))
             ->latest()
             ->paginate(20)
             ->withQueryString();
@@ -66,8 +68,8 @@ class MahasiswaController extends Controller
             'nim' => $request->nim,
             'nama_lengkap' => $request->nama_lengkap,
             'jurusan' => $request->jurusan,
+            'peminatan' => $request->peminatan,
             'angkatan' => $request->angkatan,
-            'ipk' => null,
             'no_telp' => $request->no_telp,
             'status_akademik' => $request->status_akademik,
         ]);
@@ -105,7 +107,7 @@ class MahasiswaController extends Controller
             'nama_lengkap' => $request->nama_lengkap,
             'angkatan' => $request->angkatan,
             'jurusan' => $request->jurusan,
-            'ipk' => $request->ipk,
+            'peminatan' => $request->peminatan,
             'no_telp' => $request->no_telp,
             'status_akademik' => $request->status_akademik,
         ]);

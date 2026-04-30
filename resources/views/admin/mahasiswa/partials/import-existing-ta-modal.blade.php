@@ -34,11 +34,12 @@
 
       <div class="rounded-xl border border-violet-100 bg-violet-50 px-4 py-3 text-sm text-violet-800">
         Gunakan file dengan kolom header:
-        <strong>nim</strong>, <strong>nama lengkap</strong>, <strong>judul ta</strong>, <strong>tahap</strong>,
-        <strong>pembimbing 1 nidn</strong>, <strong>pembimbing 2 nidn</strong>, <strong>penguji 1 nidn</strong>,
-        <strong>penguji 2 nidn</strong>, <strong>penguji 3 nidn</strong>, <strong>proposal periode aktif</strong>.
+        <strong>nim</strong>, <strong>nama lengkap</strong>, <strong>peminatan</strong>, <strong>judul ta</strong>,
+        <strong>tahap</strong>, <strong>pembimbing 1 nidn</strong>, <strong>pembimbing 2 nidn</strong>,
+        <strong>penguji 1 nidn</strong>, <strong>penguji 2 nidn</strong>, <strong>penguji 3 nidn</strong>,
+        <strong>proposal periode aktif</strong>.
         <br>
-        <span class="text-xs text-violet-700">Tahap yang didukung: proposal, hasil, skripsi, lulus. Data dosen harus sudah diimport lebih dulu.</span>
+        <span class="text-xs text-violet-700">Peminatan opsional dan hanya boleh RPL, KCV, atau KBJ. Tahap yang didukung: proposal, hasil, skripsi, lulus. Data dosen harus sudah diimport lebih dulu.</span>
       </div>
 
       <div>

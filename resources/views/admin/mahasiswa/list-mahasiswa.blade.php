@@ -164,6 +164,18 @@
           <i
             class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
         </div>
+        <div class="relative">
+          <select
+            class="appearance-none pl-4 pr-9 py-2 border border-gray-300 rounded-lg text-sm bg-white cursor-pointer focus:outline-none focus:border-blue-600"
+            name="peminatan" onchange="this.form.submit()">
+            <option value="">Semua Peminatan</option>
+            @foreach (['RPL', 'KCV', 'KBJ'] as $val)
+              <option value="{{ $val }}" {{ request('peminatan') === $val ? 'selected' : '' }}>{{ $val }}</option>
+            @endforeach
+          </select>
+          <i
+            class="fas fa-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs pointer-events-none"></i>
+        </div>
       </form>
     </div>
     {{-- ░░ TABEL — tampil di sm ke atas ░░ --}}
@@ -174,7 +186,7 @@
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">No</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Mahasiswa</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Angkatan</th>
-            <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">IPK</th>
+            <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Peminatan</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Status</th>
             <th class="px-5 py-4 text-left font-semibold text-xs text-gray-500 uppercase tracking-wider">Aksi</th>
           </tr>
@@ -203,7 +215,7 @@
                 </div>
               </td>
               <td class="px-5 py-4 text-sm text-gray-700">{{ $mhs->angkatan }}</td>
-              <td class="px-5 py-4 text-sm font-semibold text-gray-900">{{ $mhs->ipk ?? '-' }}</td>
+              <td class="px-5 py-4 text-sm text-gray-700">{{ $mhs->peminatan ?? '-' }}</td>
               <td class="px-5 py-4">
                 <span
                   class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
@@ -245,7 +257,7 @@
             </tr>
           @empty
             <tr>
-              <td colspan="6" class="px-5 py-12 text-center text-gray-400">
+              <td colspan="7" class="px-5 py-12 text-center text-gray-400">
                 <i class="fas fa-users text-3xl mb-3 block opacity-30"></i>
                 Tidak ada data mahasiswa.
               </td>
@@ -273,8 +285,7 @@
           {{-- Info --}}
           <div class="flex-1 min-w-0">
             <div class="font-medium text-gray-900 text-sm truncate">{{ $mhs->nama_lengkap }}</div>
-            <div class="text-xs text-gray-500">{{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }} · IPK
-              {{ $mhs->ipk ?? '-' }}</div>
+            <div class="text-xs text-gray-500">{{ $mhs->nim }} · {{ $mhs->peminatan ?? '-' }} · Angkatan {{ $mhs->angkatan }}</div>
             <div class="mt-1">
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $statusMhsCls }}">
                 {{ ucfirst($mhs->status_akademik) }}

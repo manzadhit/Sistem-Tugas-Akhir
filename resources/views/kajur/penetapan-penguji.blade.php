@@ -54,6 +54,11 @@
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Jurusan</span>
           <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
+        <!-- Peminatan -->
+        <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Peminatan</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->peminatan ?? '-' }}</span>
+        </div>
         <!-- Tahapan -->
         <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tahapan</span>

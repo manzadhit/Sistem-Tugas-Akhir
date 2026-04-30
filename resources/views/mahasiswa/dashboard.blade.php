@@ -65,6 +65,10 @@
         <p class="font-semibold text-slate-900">{{ auth()->user()->profileMahasiswa?->jurusan ?? '-' }}</p>
       </div>
       <div>
+        <p class="text-xs text-slate-500">Peminatan</p>
+        <p class="font-semibold text-slate-900">{{ auth()->user()->profileMahasiswa?->peminatan ?? '-' }}</p>
+      </div>
+      <div>
         <p class="text-xs text-slate-500">Angkatan</p>
         <p class="font-semibold text-slate-900">{{ auth()->user()->profileMahasiswa?->angkatan ?? '-' }}</p>
       </div>

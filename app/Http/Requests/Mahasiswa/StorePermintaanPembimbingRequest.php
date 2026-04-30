@@ -5,6 +5,7 @@ namespace App\Http\Requests\Mahasiswa;
 use App\Models\PermintaanPembimbing;
 use App\Models\TugasAkhir;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePermintaanPembimbingRequest extends FormRequest
 {
@@ -27,6 +28,7 @@ class StorePermintaanPembimbingRequest extends FormRequest
 
         return [
             'ipk' => ['required', 'numeric', 'min:0', 'max:4'],
+            'peminatan' => ['required', Rule::in(['RPL', 'KCV', 'KBJ'])],
             'judul_ta' => [
                 'required', 'string', 'max:500',
                 function (string $attribute, mixed $value, \Closure $fail) use ($mahasiswaId) {

@@ -24,7 +24,7 @@
           <x-avatar :src="$mhs->foto" :initials="$mhs->initials" size="2xl" class="!rounded-xl !bg-blue-50 !text-blue-700 border border-blue-100 !text-3xl !font-bold" />
           <div class="min-w-0">
             <h1 class="text-xl sm:text-2xl font-semibold text-gray-900 truncate">{{ $mhs->nama_lengkap }}</h1>
-            <p class="text-sm text-gray-500 mt-0.5">NIM {{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }}</p>
+            <p class="text-sm text-gray-500 mt-0.5">NIM {{ $mhs->nim }} · Angkatan {{ $mhs->angkatan }} · Peminatan {{ $mhs->peminatan ?? '-' }}</p>
             <div class="mt-2 flex flex-wrap gap-2">
               <span
                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-700 border border-green-200">
@@ -92,8 +92,8 @@
             <i class="fas fa-graduation-cap"></i>
           </div>
           <div class="min-w-0">
-            <div class="text-xs text-gray-400 mb-0.5">Jurusan</div>
-            <div class="text-sm font-medium text-gray-800 break-words">{{ $mhs->jurusan }}</div>
+            <div class="text-xs text-gray-400 mb-0.5">Peminatan</div>
+            <div class="text-sm font-medium text-gray-800 break-words">{{ $mhs->peminatan ?? '-' }}</div>
           </div>
         </div>
 

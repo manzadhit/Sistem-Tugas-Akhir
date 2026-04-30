@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateMahasiswaRequest extends FormRequest
 {
@@ -17,7 +18,7 @@ class UpdateMahasiswaRequest extends FormRequest
             'nama_lengkap' => ['required', 'string', 'max:255'],
             'angkatan' => ['required', 'digits:4', 'integer', 'min:2000', 'max:'.date('Y')],
             'jurusan' => ['required', 'string', 'max:255'],
-            'ipk' => ['required', 'numeric', 'min:0', 'max:4'],
+            'peminatan' => ['nullable', Rule::in(['RPL', 'KCV', 'KBJ'])],
             'no_telp' => ['nullable', 'string', 'max:20'],
             'status_akademik' => ['required', 'in:aktif,cuti,nonaktif,lulus,dropout'],
         ];

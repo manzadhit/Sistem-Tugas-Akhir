@@ -124,6 +124,27 @@
                 @enderror
               </div>
 
+              <div class="max-w-xl space-y-2">
+                <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
+                  <i class="fas fa-layer-group text-blue-500"></i>
+                  Peminatan <span class="text-red-500">*</span>
+                </label>
+
+                <select name="peminatan" required
+                  class="w-full rounded-lg border border-gray-300 bg-white px-3 py-3 text-[0.95rem] transition-colors focus:border-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-100">
+                  <option value="">Pilih peminatan</option>
+                  @foreach (['RPL' => 'Rekayasa Perangkat Lunak', 'KCV' => 'Komputasi Cerdas dan Visual', 'KBJ' => 'Komputasi Berbasis Jaringan'] as $val => $lbl)
+                    <option value="{{ $val }}" {{ old('peminatan', $mahasiswa->peminatan) === $val ? 'selected' : '' }}>
+                      {{ $val }} - {{ $lbl }}
+                    </option>
+                  @endforeach
+                </select>
+
+                @error('peminatan')
+                  <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+              </div>
+
               <div class="space-y-2">
                 <label class="flex items-center gap-2 text-sm font-bold text-gray-700">
                   <i class="fas fa-heading text-blue-500"></i>

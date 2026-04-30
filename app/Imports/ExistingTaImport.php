@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -36,16 +37,17 @@ class ExistingTaImport implements ToCollection, WithHeadingRow, WithValidation, 
                 $baris = $index + 2;
 
                 // parse data dari row CSV
-                $nim = $row['nim'];
-                $namaLengkap = $row['nama_lengkap'];
-                $judulTa = $row['judul_ta'];
-                $tahap = $row['tahap'];
-                $proposalPeriodeAktif = $row['proposal_periode_aktif'] ?? '';
-                $pembimbing1Nidn = $row['pembimbing_1_nidn'];
-                $pembimbing2Nidn = $row['pembimbing_2_nidn'];
-                $penguji1Nidn = $row['penguji_1_nidn'] ?? '';
-                $penguji2Nidn = $row['penguji_2_nidn'] ?? '';
-                $penguji3Nidn = $row['penguji_3_nidn'] ?? '';
+                $nim                 = strtoupper(trim((string) $row['nim']));
+                $namaLengkap         = strtoupper(trim((string) $row['nama_lengkap']));
+                $peminatan           = strtoupper(trim((string) ($row['peminatan'] ?? ''))) ?: null;
+                $judulTa             = trim((string) $row['judul_ta']);
+                $tahap               = strtolower(trim((string) $row['tahap']));
+                $proposalPeriodeAktif = strtolower(trim((string) ($row['proposal_periode_aktif'] ?? '')));
+                $pembimbing1Nidn     = trim((string) $row['pembimbing_1_nidn']);
+                $pembimbing2Nidn     = trim((string) $row['pembimbing_2_nidn']);
+                $penguji1Nidn        = trim((string) ($row['penguji_1_nidn'] ?? ''));
+                $penguji2Nidn        = trim((string) ($row['penguji_2_nidn'] ?? ''));
+                $penguji3Nidn        = trim((string) ($row['penguji_3_nidn'] ?? ''));
 
                 // extract angkatan dari NIM (E1E122xxx → 2022)
                 preg_match('/^E1E1(\d{2})/i', $nim, $matches);
@@ -117,6 +119,7 @@ class ExistingTaImport implements ToCollection, WithHeadingRow, WithValidation, 
                         'user_id' => $user->id,
                         'nama_lengkap' => $namaLengkap,
                         'jurusan' => 'Informatika',
+                        'peminatan' => $peminatan ?: null,
                         'angkatan' => (string) $angkatan,
                         'status_akademik' => $tahap === 'lulus' ? 'lulus' : 'aktif',
                     ]
@@ -207,6 +210,7 @@ class ExistingTaImport implements ToCollection, WithHeadingRow, WithValidation, 
                 },
             ],
             'nama_lengkap' => ['required', 'string', 'max:255'],
+            'peminatan' => ['nullable', Rule::in(['RPL', 'KCV', 'KBJ'])],
             'judul_ta' => ['required', 'string', 'max:255'],
             'tahap' => ['required', 'in:proposal,hasil,skripsi,lulus'],
             'pembimbing_1_nidn' => ['required', 'string', 'max:30'],
@@ -222,6 +226,8 @@ class ExistingTaImport implements ToCollection, WithHeadingRow, WithValidation, 
     {
         $data['nim'] = strtoupper(trim((string) ($data['nim'] ?? '')));
         $data['nama_lengkap'] = strtoupper(trim((string) ($data['nama_lengkap'] ?? '')));
+        $peminatan = strtoupper(trim((string) ($data['peminatan'] ?? '')));
+        $data['peminatan'] = $peminatan !== '' ? $peminatan : null;
         $data['judul_ta'] = trim((string) ($data['judul_ta'] ?? ''));
         $data['tahap'] = strtolower(trim((string) ($data['tahap'] ?? '')));
         $data['proposal_periode_aktif'] = strtolower(trim((string) ($data['proposal_periode_aktif'] ?? '')));
@@ -239,6 +245,7 @@ class ExistingTaImport implements ToCollection, WithHeadingRow, WithValidation, 
         return [
             'nim.required' => 'NIM wajib diisi.',
             'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+            'peminatan.in' => 'Peminatan hanya boleh RPL, KCV, atau KBJ.',
             'judul_ta.required' => 'Judul tugas akhir wajib diisi.',
             'tahap.required' => 'Tahap wajib diisi.',
             'tahap.in' => 'Tahap hanya boleh proposal, hasil, skripsi, atau lulus.',

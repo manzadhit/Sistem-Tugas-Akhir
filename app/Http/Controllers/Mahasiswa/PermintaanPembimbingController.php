@@ -66,6 +66,7 @@ class PermintaanPembimbingController extends Controller
 
         $mahasiswa->update([
             'ipk' => $validated['ipk'],
+            'peminatan' => $validated['peminatan'],
         ]);
 
         $existing = PermintaanPembimbing::where('mahasiswa_id', $mahasiswa->id)->first();

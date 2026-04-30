@@ -43,6 +43,10 @@
           <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->jurusan ?? '-' }}</span>
         </div>
         <div class="flex flex-col gap-1">
+          <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Peminatan</span>
+          <span class="text-sm text-gray-900 sm:text-base">{{ $mahasiswa->peminatan ?? '-' }}</span>
+        </div>
+        <div class="flex flex-col gap-1">
           <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Tahapan</span>
           <span
             class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold w-fit
