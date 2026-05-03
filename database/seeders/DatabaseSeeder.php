@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(MataKuliahSeeder::class);
         $this->call(BobotKriteriaSeeder::class);
-        $this->call(PeriodeAkademikSeeder::class);
+        // $this->call(PeriodeAkademikSeeder::class);
         $this->call(AdminSeeder::class);
 
         // ─── Kajur ───

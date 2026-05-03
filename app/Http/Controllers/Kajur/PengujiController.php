@@ -134,10 +134,15 @@ class PengujiController extends Controller
     {
         $dosenIds = $request->validated()['penguji_ids'];
 
+        if (!PeriodeAkademik::aktif()->exists()) {
+            return back()->with('error', 'Tidak dapat menetapkan penguji. Belum ada periode akademik aktif. Hubungi Admin.');
+        }
+
         $mahasiswaId = $permintaan->tugasAkhir->mahasiswa->id;
+        $tugasAkhirId = $permintaan->tugasAkhir->id;
 
         try {
-            $this->penetapanPengujiService->tetapkanPenguji($mahasiswaId, $dosenIds);
+            $this->penetapanPengujiService->tetapkanPenguji($mahasiswaId, $tugasAkhirId, $dosenIds);
             $assignedPenguji = DosenPenguji::with(['dosen.user', 'mahasiswa'])
                 ->where('mahasiswa_id', $mahasiswaId)
                 ->whereIn('dosen_id', $dosenIds)

@@ -99,10 +99,6 @@
                       {{ ucfirst($ujian->jenis_ujian) }}
                     </span>
                   @endforeach
-                @else
-                  <span class="inline-flex rounded-full bg-amber-100 px-2 py-0.5 font-semibold text-amber-800">
-                    Belum Ujian
-                  </span>
                 @endif
               </div>
             </div>

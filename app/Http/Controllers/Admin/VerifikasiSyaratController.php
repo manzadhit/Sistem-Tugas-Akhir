@@ -138,6 +138,7 @@ class VerifikasiSyaratController extends Controller
       'tugasAkhir.mahasiswa.dosenPenguji.dosen',
       'jadwalUjian',
       'undanganUjian',
+      'periodeAkademik',
     ])->findOrFail($id);
 
     $ketuaSidang = $ujian->tugasAkhir->mahasiswa->dosenPenguji
@@ -151,11 +152,7 @@ class VerifikasiSyaratController extends Controller
       $q->where('role', 'sekjur');
     })->first();
 
-    $periodeAkademik = PeriodeAkademik::orderByRaw("CASE status WHEN 'aktif' THEN 0 WHEN 'draft' THEN 1 ELSE 2 END")
-      ->orderByDesc('mulai_at')
-      ->get();
-
-    return view('admin.syarat-ujian.undangan', compact('ujian', 'ketuaJurusan', 'sekretarisJurusan', 'ketuaSidang', 'periodeAkademik'));
+    return view('admin.syarat-ujian.undangan', compact('ujian', 'ketuaJurusan', 'sekretarisJurusan', 'ketuaSidang'));
   }
 
   public function storeUndangan(Request $request, $id)
@@ -164,7 +161,6 @@ class VerifikasiSyaratController extends Controller
       'nomor_surat' => 'required|string|max:100',
       'hal' => 'required|string|max:255',
       'tanggal_surat' => 'required|date',
-      'periode_akademik_id' => 'required|exists:periode_akademik,id',
       'ketua_sidang_id' => 'nullable|exists:profile_dosen,id',
       'sekretaris_sidang_id' => 'nullable|exists:profile_dosen,id',
     ]);
@@ -214,7 +210,7 @@ class VerifikasiSyaratController extends Controller
         ]
       );
 
-      $ujian->update(['periode_akademik_id' => $request->periode_akademik_id]);
+
 
       return redirect()
         ->route('admin.ujian.syarat.undangan', $id)

@@ -741,9 +741,10 @@
     });
 
     const savedScroll = sessionStorage.getItem('scrollY');
-    if (savedScroll) {
+    const hasError = @json(session()->has('error') || session()->has('warning'));
+    if (savedScroll && !hasError) {
       window.scrollTo(0, parseInt(savedScroll));
-      sessionStorage.removeItem('scrollY');
     }
+    sessionStorage.removeItem('scrollY');
   </script>
 @endsection

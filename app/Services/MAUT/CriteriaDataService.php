@@ -124,7 +124,11 @@ class CriteriaDataService
   {
     $periodeAkademik = PeriodeAkademik::query()
       ->aktif()
-      ->sole();
+      ->first();
+
+    if (!$periodeAkademik) {
+      return array_fill_keys($dosenIds, 0);
+    }
 
     $counts = DosenPenguji::query()
       ->whereIn('dosen_id', $dosenIds)->whereHas('mahasiswa.tugasAkhir.ujian', function ($query) use ($periodeAkademik) {

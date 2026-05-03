@@ -83,19 +83,13 @@
           <div>
             <div class="text-xs text-gray-400">Tahapan</div>
             <div class="text-gray-700">
-              @if ($ujians->isNotEmpty())
-                <div class="flex flex-wrap gap-1.5">
-                  @foreach ($ujians as $ujian)
-                    <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                      {{ ucfirst($ujian->jenis_ujian) }}
-                    </span>
-                  @endforeach
-                </div>
-              @else
-                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
-                  Belum Ujian
-                </span>
-              @endif
+              <div class="flex flex-wrap gap-1.5">
+                @foreach ($ujians as $ujian)
+                  <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                    {{ ucfirst($ujian->jenis_ujian) }}
+                  </span>
+                @endforeach
+              </div>
             </div>
           </div>
           <div>
@@ -147,19 +141,13 @@
             <td class="p-4 text-sm font-medium text-gray-900 border-b border-gray-100">{{ $item->mahasiswa->nama_lengkap }}
             </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
-              @if ($ujians->isNotEmpty())
-                <div class="flex flex-wrap gap-1.5">
-                  @foreach ($ujians as $ujian)
-                    <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
-                      {{ ucfirst($ujian->jenis_ujian) }}
-                    </span>
-                  @endforeach
-                </div>
-              @else
-                <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">
-                  Belum Ujian
-                </span>
-              @endif
+              <div class="flex flex-wrap gap-1.5">
+                @foreach ($ujians as $ujian)
+                  <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800">
+                    {{ ucfirst($ujian->jenis_ujian) }}
+                  </span>
+                @endforeach
+              </div>
             </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
               <div class="max-w-[300px] whitespace-normal leading-snug">

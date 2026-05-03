@@ -4,6 +4,7 @@ namespace App\Services\Mahasiswa;
 
 use App\Models\DokumenUjian;
 use App\Models\JadwalUjian;
+use App\Models\PeriodeAkademik;
 use App\Models\Ujian;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,10 @@ class UjianService
   {
     return Ujian::firstOrCreate(
       ['tugas_akhir_id' => $tugasAkhirId, 'jenis_ujian' => $jenis],
-      ['status' => 'draft']
+      [
+        'status' => 'draft',
+        'periode_akademik_id' => PeriodeAkademik::aktif()->value('id'),
+      ]
     );
   }
 

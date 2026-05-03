@@ -28,7 +28,7 @@ class PengujianController extends Controller
 
         $daftarPengujian = $this->pengujianService
             ->getQuery($dosenId, $selectedPeriode, $search)
-            ->paginate(15)
+            ->paginate(10)
             ->withQueryString();
 
         return view('dosen.daftar-pengujian', compact(

@@ -5,6 +5,8 @@ namespace App\Services\Kajur;
 use App\Models\DosenPenguji;
 use App\Models\KajurSubmission;
 use App\Models\KajurSubmissionFile;
+use App\Models\PeriodeAkademik;
+use App\Models\Ujian;
 use Illuminate\Support\Facades\DB;
 
 class PenetapanPengujiService
@@ -35,9 +37,9 @@ class PenetapanPengujiService
     });
   }
 
-  public function tetapkanPenguji(int $mahasiswaId, array $dosen_ids)
+  public function tetapkanPenguji(int $mahasiswaId, int $tugasAkhirId, array $dosen_ids)
   {
-    return DB::transaction(function () use ($mahasiswaId, $dosen_ids) {
+    return DB::transaction(function () use ($mahasiswaId, $tugasAkhirId, $dosen_ids) {
       foreach ($dosen_ids as $index => $id) {
         DosenPenguji::create([
           'mahasiswa_id' => $mahasiswaId,
@@ -45,6 +47,18 @@ class PenetapanPengujiService
           'jenis_penguji' => 'penguji_' . ($index + 1),
         ]);
       }
+
+      // Buat record ujian proposal langsung saat penguji ditetapkan,
+      // agar beban pengujian periode langsung terhitung.
+      $periodeAktifId = PeriodeAkademik::aktif()->value('id');
+
+      Ujian::firstOrCreate(
+        ['tugas_akhir_id' => $tugasAkhirId, 'jenis_ujian' => 'proposal'],
+        [
+          'status' => 'draft',
+          'periode_akademik_id' => $periodeAktifId,
+        ]
+      );
     });
   }
 
