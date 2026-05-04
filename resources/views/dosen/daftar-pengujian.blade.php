@@ -24,6 +24,8 @@
       Daftar mahasiswa yang Anda uji
       @if ($selectedPeriode)
         pada periode <span class="font-medium text-gray-700">{{ $selectedPeriode->tahun_ajaran }} — Semester {{ $selectedPeriode->semester }}</span>
+      @else
+        <span class="font-medium text-gray-700">(Semua Periode)</span>
       @endif
     </p>
   </div>
@@ -44,6 +46,7 @@
           <select name="periode_akademik_id"
             class="px-3.5 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-700 transition-all focus:outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10 bg-white"
             onchange="document.getElementById('filterForm').submit()">
+            <option value="semua" {{ $selectedPeriodeId === 'semua' ? 'selected' : '' }}>Semua Periode</option>
             @foreach ($semuaPeriode as $periode)
               <option value="{{ $periode->id }}" {{ $selectedPeriodeId == $periode->id ? 'selected' : '' }}>
                 {{ $periode->tahun_ajaran }} — Semester {{ $periode->semester }}
@@ -93,6 +96,21 @@
             </div>
           </div>
           <div>
+            <div class="text-xs text-gray-400">Status</div>
+            <div class="flex flex-wrap gap-1.5">
+              @foreach ($ujians as $ujian)
+                <span class="inline-block px-2 py-0.5 rounded-full text-xs font-semibold
+                  @if(str_contains($ujian->status, 'revisi')) bg-red-100 text-red-800
+                  @elseif($ujian->status === 'selesai') bg-emerald-100 text-emerald-800
+                  @elseif($ujian->status === 'draft') bg-gray-100 text-gray-700
+                  @else bg-amber-100 text-amber-800
+                  @endif">
+                  {{ str_replace('_', ' ', ucfirst($ujian->status)) }}
+                </span>
+              @endforeach
+            </div>
+          </div>
+          <div>
             <div class="text-xs text-gray-400">Judul</div>
             <div class="text-gray-700 leading-snug line-clamp-2">{{ $item->mahasiswa?->tugasAkhir?->judul ?? '-' }}</div>
           </div>
@@ -125,6 +143,9 @@
             Tahapan</th>
           <th
             class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
+            Status</th>
+          <th
+            class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
             Judul</th>
           <th
             class="px-4 py-3.5 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider border-b-2 border-gray-200">
@@ -149,6 +170,20 @@
                 @endforeach
               </div>
             </td>
+            <td class="p-4 text-sm border-b border-gray-100">
+              <div class="flex flex-wrap gap-1.5">
+                @foreach ($ujians as $ujian)
+                  <span class="inline-block px-2.5 py-1 rounded-full text-xs font-semibold
+                    @if(str_contains($ujian->status, 'revisi')) bg-red-100 text-red-800
+                    @elseif($ujian->status === 'selesai') bg-emerald-100 text-emerald-800
+                    @elseif($ujian->status === 'draft') bg-gray-100 text-gray-700
+                    @else bg-amber-100 text-amber-800
+                    @endif">
+                    {{ str_replace('_', ' ', ucfirst($ujian->status)) }}
+                  </span>
+                @endforeach
+              </div>
+            </td>
             <td class="p-4 text-sm text-gray-500 border-b border-gray-100">
               <div class="max-w-[300px] whitespace-normal leading-snug">
                 {{ $item->mahasiswa?->tugasAkhir?->judul ?? '-' }}
@@ -162,7 +197,7 @@
           </tr>
         @empty
           <tr>
-            <td colspan="6" class="p-6 text-sm text-gray-500 text-center">Belum ada data pengujian pada periode ini.</td>
+            <td colspan="7" class="p-6 text-sm text-gray-500 text-center">Belum ada data pengujian pada periode ini.</td>
           </tr>
         @endforelse
       </tbody>

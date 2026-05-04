@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dosen;
 
 use App\Http\Controllers\Controller;
 use App\Models\DosenPembimbing;
+use App\Models\DosenPenguji;
 use App\Models\PeriodeAkademik;
 use App\Models\PublikasiDosen;
 use App\Services\Dosen\PengujianService;
@@ -51,14 +52,22 @@ class DashboardController extends Controller
             ->get();
 
         $pengujianQuery = $this->pengujianService->getQuery($dosenId, $periodeAktif);
-        $totalPengujian = (clone $pengujianQuery)->count();
+        $totalPengujianPeriode = (clone $pengujianQuery)->count();
         $mahasiswaPengujian = (clone $pengujianQuery)->limit(5)->get();
+
+        // Pengujian aktif: mahasiswa yg sudah proposal tapi belum lulus (semua periode)
+        $totalPengujianAktif = DosenPenguji::where('dosen_id', $dosenId)
+            ->whereHas('mahasiswa', fn($q) => $q
+                ->where('status_akademik', 'aktif')
+                ->whereHas('tugasAkhir.ujian', fn($q2) => $q2->where('jenis_ujian', 'proposal')->where('status', 'selesai'))
+            )->count();
 
         return view('dosen.dashboard', compact(
             'totalMahasiswaBimbingan',
             'totalMahasiswaLulus',
             'totalPublikasi',
-            'totalPengujian',
+            'totalPengujianPeriode',
+            'totalPengujianAktif',
             'mahasiswaBimbingan',
             'mahasiswaLulus',
             'publikasiTerbaru',

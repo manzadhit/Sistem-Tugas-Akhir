@@ -24,7 +24,7 @@ class PengujianController extends Controller
         $semuaPeriode = PeriodeAkademik::orderByDesc('mulai_at')->get();
         $periodeAktif = PeriodeAkademik::aktif()->first();
         $selectedPeriodeId = $request->input('periode_akademik_id', $periodeAktif?->id);
-        $selectedPeriode = $semuaPeriode->firstWhere('id', $selectedPeriodeId);
+        $selectedPeriode = $selectedPeriodeId === 'semua' ? null : $semuaPeriode->firstWhere('id', $selectedPeriodeId);
 
         $daftarPengujian = $this->pengujianService
             ->getQuery($dosenId, $selectedPeriode, $search)

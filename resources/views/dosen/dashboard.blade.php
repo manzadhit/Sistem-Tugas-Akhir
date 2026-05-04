@@ -16,16 +16,22 @@
   </div>
 
   {{-- Stats --}}
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+  <div class="grid grid-cols-2 sm:grid-cols-3 gap-6 mb-8">
     <x-stats label="Bimbingan Aktif" :total="$totalMahasiswaBimbingan" bg-color="bg-blue-100" text-color='text-blue-600'>
       <x-slot:icon>
         <i class="fas fa-users"></i>
       </x-slot:icon>
     </x-stats>
 
-    <x-stats label="Mahasiswa Ujian" :total="$totalPengujian" bg-color="bg-violet-100" text-color='text-violet-600'>
+    <x-stats label="Pengujian Periode" :total="$totalPengujianPeriode" bg-color="bg-violet-100" text-color='text-violet-600'>
       <x-slot:icon>
         <i class="fas fa-gavel"></i>
+      </x-slot:icon>
+    </x-stats>
+
+    <x-stats label="Pengujian Aktif" :total="$totalPengujianAktif" bg-color="bg-orange-100" text-color='text-orange-600'>
+      <x-slot:icon>
+        <i class="fas fa-user-clock"></i>
       </x-slot:icon>
     </x-stats>
 

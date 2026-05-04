@@ -29,7 +29,8 @@
 
       {{-- Step 1: Bimbingan --}}
       <div class="flex flex-col items-center relative z-10 flex-1">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
           <i class="fas fa-check"></i>
         </div>
         <span class="text-[10px] sm:text-xs font-semibold text-center text-emerald-600">Bimbingan</span>
@@ -37,7 +38,8 @@
 
       {{-- Step 2: Kajur --}}
       <div class="flex flex-col items-center relative z-10 flex-1">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
           <i class="fas fa-check"></i>
         </div>
         <span class="text-[10px] sm:text-xs font-semibold text-center text-emerald-600">{{ $kajurStepLabel }}</span>
@@ -45,7 +47,8 @@
 
       {{-- Step 3: Selesai (aktif) --}}
       <div class="flex flex-col items-center relative z-10 flex-1">
-        <div class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
+        <div
+          class="w-10 h-10 rounded-full flex items-center justify-center text-base mb-2 bg-emerald-500 text-white shadow-[0_0_0_4px_rgba(16,185,129,0.2)]">
           <i class="fas fa-flag-checkered"></i>
         </div>
         <span class="text-[10px] sm:text-xs font-semibold text-center text-emerald-600">Selesai</span>
@@ -73,10 +76,17 @@
         class="w-full sm:w-auto px-6 py-3 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 text-sm font-semibold rounded-lg transition-colors flex justify-center items-center gap-2">
         <i class="fas fa-history"></i> Lihat Riwayat Bimbingan
       </a>
-      <a href="{{ route('mahasiswa.dashboard') }}"
-        class="w-full sm:w-auto px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-lg transition-colors flex justify-center items-center gap-2">
-        <i class="fas fa-home"></i> Kembali ke Beranda
-      </a>
+      @if ($jenis === 'proposal')
+        <a href="{{ route('mahasiswa.bimbingan.bimbingan', ['jenis' => 'hasil']) }}"
+          class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-emerald-300 focus:outline-none focus:ring-offset-2 flex justify-center items-center">
+          Lanjut Bimbingan Hasil <i class="fas fa-arrow-right ml-1.5 sm:ml-2"></i>
+        </a>
+      @elseif($jenis === 'hasil')
+        <a href="{{ route('mahasiswa.bimbingan.bimbingan', ['jenis' => 'skripsi']) }}"
+          class="w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold rounded-lg transition-colors shadow-sm focus:ring-2 focus:ring-emerald-300 focus:outline-none focus:ring-offset-2 flex justify-center items-center">
+          Lanjut Bimbingan Skripsi <i class="fas fa-arrow-right ml-1.5 sm:ml-2"></i>
+        </a>
+      @endif
     </div>
   </div>
 
